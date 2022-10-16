@@ -21,4 +21,5 @@ public class Tag {
 
     @Column(nullable = false, length = 50)
     private String tagName;
+
 }

@@ -46,4 +46,13 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Heart> hearts = new ArrayList<>();
+
+    protected User() {
+    }
+    public User(String email, String name) {
+        this.email = email;
+        this.name = name;
+        this.picture = "dummy";
+        this.role = Role.USER;
+    }
 }

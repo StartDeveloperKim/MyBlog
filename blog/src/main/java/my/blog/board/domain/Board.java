@@ -1,7 +1,10 @@
 package my.blog.board.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import my.blog.BaseTimeEntity;
+import my.blog.board.dto.request.BoardRegister;
+import my.blog.boardTag.domain.BoardTag;
 import my.blog.category.domain.Category;
 import my.blog.comments.domain.Comments;
 import my.blog.user.domain.User;
@@ -45,9 +48,60 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comments> commentsList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<BoardTag> boardTags = new ArrayList<>();
+
     protected Board() {
+    }
+
+    // 생성자를 private으로 지정하여 외부에서 생성자를 통한 인스턴스 생성을 막았다.
+    @Builder
+    private Board(BoardRegister boardRegister) {
+        this.title = boardRegister.getTitle();
+        this.content = boardRegister.getContent();
+        this.thumbnail = getThumbnailURL(boardRegister.getThumbnail());
+        this.hit = 0L;
+    }
+
+    private String getThumbnailURL(String thumbnail) {
+        // 사용자가 썸네일을 설정했다면 해당 썸네일 URL로 그렇지 않다면 기본 썸네일 링크를 설정하자.
+        String defaultURL = "https://images.pexels.com/photos/13916042/pexels-photo-13916042.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load";
+        if (thumbnail == null || thumbnail.equals("")) {
+            return defaultURL;
+        }
+
+        return thumbnail;
+    }
+
+    //==생성메서드==//
+    public static Board of(User user, Category category, BoardRegister boardRegister) {
+        Board board = new Board(boardRegister);
+        board.setUserAndCategory(user, category);
+
+        return board;
+    }
+
+    //==연관관계 편의 메서드==//
+    private void setUserAndCategory(User user, Category category) {
+        this.user = user;
+        this.category = category;
+        user.getBoards().add(this);
+    }
+
+    public void edit(String title, String content, String thumbnail, Category category) {
+        this.title = title;
+        this.content = content;
+        if (thumbnail != null) {
+            this.thumbnail = thumbnail;
+        }
+        this.category = category;
+    }
+
+    // dirty checking을 통한 조회수 증가
+    public void addHit() {
+        this.hit++;
     }
 }
