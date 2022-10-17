@@ -14,4 +14,5 @@ public class BoardUpdate {
     private String content;
     private String thumbnail;
     private String category;
+    private String tags;
 }

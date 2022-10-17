@@ -5,6 +5,7 @@ import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
+import my.blog.board.dto.response.BoardResponse;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.user.domain.User;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -70,7 +72,10 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Board> getBoardList() {
-        return boardRepository.findAll();
+    public List<BoardResponse> getBoardList() {
+        List<Board> all = boardRepository.findAll();
+
+        return all.stream().map(BoardResponse::new)
+                .collect(Collectors.toList());
     }
 }

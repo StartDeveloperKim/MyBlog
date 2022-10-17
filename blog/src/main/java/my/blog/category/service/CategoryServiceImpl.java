@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import my.blog.board.domain.BoardRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
+import my.blog.category.dto.CategoryDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -18,15 +21,13 @@ public class CategoryServiceImpl implements CategoryService{
     private final BoardRepository boardRepository;
 
     @Override
-    public Long saveCategory(String name) {
+    public void saveCategory(String name) {
         Category findCategory = categoryRepository.findByCategoryName(name);
         if (findCategory != null) {
             throw new IllegalArgumentException("이미 존재하는 카테고리 입니다.");
         }
         Category category = Category.from(name); // 생성메서드
-        Category saveCategory = categoryRepository.save(category);
-
-        return saveCategory.getId();
+        categoryRepository.save(category);
     }
 
     @Override
@@ -48,6 +49,13 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category getCategoryByName(String categoryName) {
         return categoryRepository.findByCategoryName(categoryName);
+    }
+
+    @Override
+    public List<CategoryDto> getCategoryList() {
+        List<Category> all = categoryRepository.findAll();
+        return all.stream().map(CategoryDto::new)
+                .collect(Collectors.toList());
     }
 
     @PostConstruct

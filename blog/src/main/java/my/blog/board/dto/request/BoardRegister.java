@@ -19,5 +19,5 @@ public class BoardRegister {
     private String content;
     private String category;
     private String thumbnail;
-    private List<String> tags;
+    private String tags;
 }

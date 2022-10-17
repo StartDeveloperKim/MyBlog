@@ -7,6 +7,7 @@ import my.blog.board.dto.request.BoardRegister;
 import my.blog.boardTag.domain.BoardTag;
 import my.blog.category.domain.Category;
 import my.blog.comments.domain.Comments;
+import my.blog.heart.domain.Heart;
 import my.blog.user.domain.User;
 
 import javax.persistence.*;
@@ -53,6 +54,9 @@ public class Board extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<BoardTag> boardTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Heart> hearts = new ArrayList<>();
 
     protected Board() {
     }
