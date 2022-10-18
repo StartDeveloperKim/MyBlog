@@ -11,6 +11,5 @@ public interface CategoryService {
     void deleteCategory(String name);
     void updateCategory(String name);
     Category getCategoryByName(String categoryName);
-
     List<CategoryDto> getCategoryList();
 }

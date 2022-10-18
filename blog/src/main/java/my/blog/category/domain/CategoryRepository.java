@@ -12,4 +12,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     void deleteByCategoryName(@Param("name") String categoryName);
 
     Category findByCategoryName(String categoryName);
+    Boolean existsByCategoryName(String categoryName); // 카테고리 존재여부
 }

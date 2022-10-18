@@ -3,19 +3,14 @@ package my.blog.heart.service;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.service.BoardService;
 import my.blog.category.domain.Category;
-import my.blog.category.dto.CategoryDto;
 import my.blog.category.service.CategoryService;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
-import my.blog.user.service.UserService;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class HeartServiceImplTest {

@@ -66,12 +66,14 @@ public class BoardController {
         return "board/boardEditForm";
     }
 
-    @PutMapping
+    @PutMapping("/edit/{id}")
+    @ResponseBody
     public String boardUpdate() {
         return null;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
     public String boardDelete() {
         return null;
     }

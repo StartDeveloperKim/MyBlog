@@ -5,6 +5,7 @@ import my.blog.BaseTimeEntity;
 import my.blog.board.domain.Board;
 import my.blog.comments.domain.Comments;
 import my.blog.heart.domain.Heart;
+import my.blog.user.dto.OAuthRequest;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -49,10 +50,18 @@ public class User extends BaseTimeEntity {
 
     protected User() {
     }
-    public User(String email, String name) {
-        this.email = email;
-        this.name = name;
-        this.picture = "dummy";
-        this.role = Role.USER;
+    private User(OAuthRequest oAuthRequest) {
+        this.email = oAuthRequest.getEmail();
+        this.name = oAuthRequest.getEmail();
+        this.picture = oAuthRequest.getPicture();
+        this.role = Role.GUEST; // 기본은 GUEST, 블로그 주인은 USER
+    }
+
+    public static User of(OAuthRequest oAuthRequest) {
+        return new User(oAuthRequest);
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
     }
 }

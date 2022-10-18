@@ -8,6 +8,7 @@ import my.blog.heart.domain.Heart;
 import my.blog.heart.domain.HeartRepository;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,7 @@ public class HeartServiceImpl implements HeartService {
     @Override
     public void saveHeart(Long userId, Long boardId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("회원이 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("회원이 없습니다."));
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
 
