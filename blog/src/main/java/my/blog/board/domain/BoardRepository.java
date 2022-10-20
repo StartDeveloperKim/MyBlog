@@ -15,4 +15,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select count(b) from Board b where b.category.categoryName = :categoryName")
     Long getBoardCountByCategory(String categoryName);
+
+    @Query("select count(b) from Board b")
+    Long getAllBoardCount();
 }

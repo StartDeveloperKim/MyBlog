@@ -3,8 +3,13 @@ package my.blog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.service.BoardService;
+import my.blog.category.dto.CategoryDto;
+import my.blog.category.service.CategoryService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -12,9 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     private final BoardService boardService;
+    private final CategoryService categoryService;
 
     @GetMapping("/")
-    public String homeForm() {
+    public String homeForm(Model model) {
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Long boardCount = boardService.getBoardCount();
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("boardCount", boardCount);
+
         return "index";
     }
 }

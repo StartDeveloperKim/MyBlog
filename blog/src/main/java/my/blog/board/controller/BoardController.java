@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.domain.Board;
 import my.blog.board.dto.request.BoardRegister;
+import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.service.BoardService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import static my.blog.board.dto.response.BoardResponse.*;
@@ -66,15 +69,23 @@ public class BoardController {
         return "board/boardEditForm";
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/edit")
     @ResponseBody
-    public String boardUpdate() {
-        return null;
+    public ResponseEntity<String> boardUpdate(@ModelAttribute BoardUpdate boardUpdate) {
+        try {
+            boardService.editBoard(boardUpdate);
+            return ResponseEntity.ok().body("success");
+        } catch (EntityNotFoundException e) {
+            log.info("/board/edit error : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+        }
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public String boardDelete() {
-        return null;
+    public ResponseEntity<String> boardDelete(@PathVariable("id") Long id) {
+        boardService.deleteBoard(id);
+
+        return ResponseEntity.ok().body("success");
     }
 }

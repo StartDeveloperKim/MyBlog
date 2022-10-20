@@ -20,4 +20,6 @@ public interface BoardService {
     Board getBoard(Long boardId);
 
     List<BoardResponse> getBoardList();
+
+    Long getBoardCount();
 }

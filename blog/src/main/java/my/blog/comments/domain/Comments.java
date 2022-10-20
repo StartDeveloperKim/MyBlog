@@ -3,6 +3,7 @@ package my.blog.comments.domain;
 import lombok.Getter;
 import my.blog.BaseTimeEntity;
 import my.blog.board.domain.Board;
+import my.blog.comments.dto.CommentRequest;
 import my.blog.user.domain.User;
 
 import javax.persistence.*;
@@ -31,4 +32,20 @@ public class Comments extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    private Comments(String content, Board board, User user) {
+        this.content = content;
+        this.board = board;
+        this.user = user;
+    }
+
+    //==생성 메서드==//
+    public static Comments of(Board board, User user, String content) {
+       return new Comments(content, board, user);
+    }
+
+    //==업데이트 메서드==//
+    public void editComment(String content) {
+        this.content = content;
+    }
 }

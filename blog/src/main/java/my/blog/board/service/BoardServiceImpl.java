@@ -78,4 +78,10 @@ public class BoardServiceImpl implements BoardService{
         return all.stream().map(BoardResponse::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getBoardCount() {
+        return boardRepository.getAllBoardCount();
+    }
 }
