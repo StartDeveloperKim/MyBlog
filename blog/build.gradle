@@ -30,6 +30,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'io.springfox', name: 'springfox-swagger2'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui'
+	// https://mvnrepository.com/artifact/com.google.code.gson/gson
+	implementation group: 'com.google.code.gson', name: 'gson'
+
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'

@@ -81,6 +81,13 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional(readOnly = true)
+    public List<BoardResponse> getBoardListRecent() {
+        return boardRepository.findTop4ByOrderByCreateDateDesc().stream().map(BoardResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Long getBoardCount() {
         return boardRepository.getAllBoardCount();
     }

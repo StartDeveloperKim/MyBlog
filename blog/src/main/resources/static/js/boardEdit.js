@@ -25,7 +25,8 @@ window.onload = function () {
         let content = editor.getHTML();
         let thumbnail = null; // 나중에 썸네일 등록 화면도 만들자
         let tags = document.getElementById("tags").value;
-        
+
+        console.log(typeof tags); // tags의 타입은 스트링이다. 그래서 서버에서 파싱을 해야한다.
 
         let responseData = {};
         responseData.userId = userId;

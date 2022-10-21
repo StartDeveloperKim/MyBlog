@@ -21,5 +21,7 @@ public interface BoardService {
 
     List<BoardResponse> getBoardList();
 
+    List<BoardResponse> getBoardListRecent();
+
     Long getBoardCount();
 }

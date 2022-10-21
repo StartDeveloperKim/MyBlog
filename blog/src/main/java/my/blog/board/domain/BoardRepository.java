@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 스프링데이터 JPA의 remove를 사용한다면 엔티티가 필요하다 따라서 쿼리를 직접 날렸다.
@@ -18,4 +20,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select count(b) from Board b")
     Long getAllBoardCount();
+
+    List<Board> findTop4ByOrderByCreateDateDesc();
 }

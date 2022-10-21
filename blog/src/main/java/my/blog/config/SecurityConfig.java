@@ -19,6 +19,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        /*권한에 따른 접근페이지 조정 필요 현재는 개발단계이기에 모두 열어놨음
+        * 현재 날짜 2022-10-21
+        * */
         http
                 .csrf().disable()
                 .headers().frameOptions().disable()

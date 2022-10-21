@@ -1,5 +1,6 @@
 package my.blog.board.controller;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.domain.Board;
@@ -8,6 +9,7 @@ import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.service.BoardService;
 import my.blog.category.service.CategoryService;
+import my.blog.tag.tool.ParsingTool;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static my.blog.board.dto.response.BoardResponse.*;
 
@@ -27,6 +31,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final CategoryService categoryService;
+//    private final TagService tagService;
 
     @GetMapping
     public String boardListForm(Model model) {
@@ -57,8 +62,19 @@ public class BoardController {
     @ResponseBody
     public ResponseEntity<Long> boardSave(@RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
-        // 태그
+        // 태그파싱작업 필요
         log.info("Get Data : {}", boardRegister.toString());
+
+        /*파싱작업 테스트 성공하면 TagServiceImpl에 구현하자
+        * 1. GSON 라이브러리로 파싱작업
+        * 2. 중복은 겹치기 또는 건너뛰기
+        * 3.
+        * */
+        List<Map<String, String>> arrayList = ParsingTool.getGson().fromJson(boardRegister.getTags(), ArrayList.class);
+        for (Map<String, String> stringStringMap : arrayList) {
+            System.out.println("stringStringMap.values() = " + stringStringMap.get("value"));
+        }
+        
         Long boardId = boardService.writeBoard(boardRegister);
 
         return ResponseEntity.ok().body(boardId);

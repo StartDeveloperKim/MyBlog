@@ -1,16 +1,14 @@
 package my.blog.board.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import my.blog.board.domain.Board;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
+@ToString
 public class BoardResponse {
 
     private String title;

@@ -63,17 +63,18 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     /*더미 카테고리 생성 -> 글을 작성할 때 카테고리 설정을 하지 않으면 해당 카테고리에 들어간다.*/
-    @PostConstruct
-    private void insertDummyCategory() {
-        Category category = categoryRepository.findByCategoryName("TOTAL");
-        String dummyCategoryName = "TOTAL";
-        if (category == null) {
-            saveCategory(dummyCategoryName);
-            //아래 세줄은 실험 코드
-            saveCategory("스프링");
-            saveCategory("JPA");
-            saveCategory("HTML/CSS");
-        }
-
-    }
+    /*ddl-auto 옵션을 create 할 때만 사용하자*/
+//    @PostConstruct
+//    private void insertDummyCategory() {
+//        Category category = categoryRepository.findByCategoryName("TOTAL");
+//        String dummyCategoryName = "TOTAL";
+//        if (category == null) {
+//            saveCategory(dummyCategoryName);
+//            //아래 세줄은 실험 코드
+//            saveCategory("스프링");
+//            saveCategory("JPA");
+//            saveCategory("HTML/CSS");
+//        }
+//
+//    }
 }
