@@ -33,9 +33,22 @@
   <form>
     <input type="text" id="title" class="form-control form-control-lg rounded-3 border-3 mt-1 mb-2" placeholder="제목을 입력하세요">
     <!-- <div class="border-top mt-2 mb-2"></div> -->
-    <!-- 태그 입력 -->
-    <input id="tags" type="text" name="tags" placeholder="태그를 입력하세요"
-           class="form-control tagify-outside rounded-3 border-3 mb-2" aria-describedby="tagHelp"/>
+    <div class="row">
+      <div class="col">
+        <!-- 태그 입력 -->
+        <label for="tags">태그</label>
+        <input id="tags" type="text" name="tags" placeholder="태그를 입력하세요"
+                                         class="form-control tagify-outside rounded-3 border-3 mb-2 my-auto" aria-describedby="tagHelp"/>
+      </div>
+      <div class="col">
+        <!--카테고리 선택-->
+        <label for="category">카테고리</label>
+        <select class="form-control rounded-3 border-3 my-auto mb-2" name="category" id="category">
+          <option th:each="category : ${categoryList}" th:text="${category.name}" ></option>
+        </select>
+      </div>
+    </div>
+
 
     <!-- 토스트 에디터 -->
     <div id="editor" style="background-color: white;"></div>

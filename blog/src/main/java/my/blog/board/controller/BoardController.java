@@ -7,6 +7,7 @@ import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.service.BoardService;
+import my.blog.category.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ import static my.blog.board.dto.response.BoardResponse.*;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public String boardListForm(Model model) {
@@ -45,7 +47,9 @@ public class BoardController {
     }
 
     @GetMapping("/edit")
-    public String boardEditForm() {
+    public String boardEditForm(Model model) {
+        model.addAttribute("categoryList", categoryService.getCategoryList());
+
         return "board/boardEditForm";
     }
 
@@ -53,6 +57,8 @@ public class BoardController {
     @ResponseBody
     public ResponseEntity<Long> boardSave(@RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
+        // 태그
+        log.info("Get Data : {}", boardRegister.toString());
         Long boardId = boardService.writeBoard(boardRegister);
 
         return ResponseEntity.ok().body(boardId);

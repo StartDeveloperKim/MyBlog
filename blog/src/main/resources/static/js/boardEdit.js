@@ -18,44 +18,47 @@ window.onload = function () {
     let registerBtn = document.getElementById("register-btn");
     let cancelBtn = document.getElementById("cancel-btn");
 
-    registerBtn.addEventListener("click", post());
-    cancelBtn.addEventListener("click", cancel());
-
-    function post() {
+    registerBtn.addEventListener("click", function () {
+        let userId = 1;
+        let category = document.getElementById("category").value;
         let title = document.getElementById('title').value;
         let content = editor.getHTML();
-        let thumbnail = null;
+        let thumbnail = null; // 나중에 썸네일 등록 화면도 만들자
+        let tags = document.getElementById("tags").value;
+        
 
-        let responseData = new Object();
+        let responseData = {};
+        responseData.userId = userId;
         responseData.title = title;
         responseData.content = content;
+        responseData.category = category;
         responseData.thumbnail = thumbnail;
+        responseData.tags = tags;
         httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = () => {
-            if (httpRequest.status === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    let result = httpRequest.response;
-                    console.log(result);
-                } else {
-                    alert('오류오류!!!')
-                }
-            }
-        };
+        
         httpRequest.open('POST', '/board', true);
         httpRequest.responseType = 'json';
         httpRequest.setRequestHeader('Content-Type', 'application/json');
 
-        httpRequest.send();
-    }
+        httpRequest.send(JSON.stringify(responseData));
 
-    function cancel() {
+        httpRequest.onload = function () {
+            if (httpRequest.status === 200) {
+                alert("글이 등록되었습니다.");
+                const boardId = httpRequest.response;
+                window.location.href = "/board/" + boardId;
+            } else {
+                alert("통신 실패!!!!!!");
+            }
+        };
+    });
+
+    cancelBtn.addEventListener("click", function () {
         let check = confirm("정말로 취소하시겠습니까?");
         if (check) {
             window.location.href = "/board"
-            alert("삭제되었습니다.");
         }
-    }
+    });
 
 };
 
