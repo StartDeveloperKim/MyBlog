@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>꾸준함이 목표인 블로그</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <!-- Font Awesome icons (free version)-->
+  <!-- <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script> -->
+  <script src="https://kit.fontawesome.com/2048666a6e.js" crossorigin="anonymous"></script>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="/css/styles.css" rel="stylesheet" />
+  <!-- TOAST UI Editor CDN URL(CSS)-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"/>
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+
+  <!-- tagify 라이브러리 css -->
+  <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+  <script src="https://unpkg.com/@yaireo/tagify"></script>
+  <style>
+    body {
+      background-color: whitesmoke;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <form>
+    <input type="text" id="title" class="form-control form-control-lg rounded-3 border-3 mt-1 mb-2" placeholder="제목을 입력하세요">
+    <!-- <div class="border-top mt-2 mb-2"></div> -->
+    <!-- 태그 입력 -->
+    <input id="tags" type="text" name="tags" placeholder="태그를 입력하세요"
+           class="form-control tagify-outside rounded-3 border-3 mb-2" aria-describedby="tagHelp"/>
+
+    <!-- 토스트 에디터 -->
+    <div id="editor" style="background-color: white;"></div>
+
+
+  </form>
+  <div class="row justify-content-evenly mt-4 g-0">
+    <button class="btn btn-outline-primary col-4 rounded-3" id="register-btn">수 정</button>
+    <button class="btn btn btn-outline-secondary col-4 rounded-3" id="cancel-btn">취 소</button>
+  </div>
+</div>
+
+</body>
+<!-- TOAST UI Editor CDN URL(JS) -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="/js/boardEdit.js"></script>
+</html>

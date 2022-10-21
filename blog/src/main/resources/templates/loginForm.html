@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>꾸준함이 목표인 블로그</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <!-- Font Awesome icons (free version)-->
+  <!-- <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script> -->
+  <script src="https://kit.fontawesome.com/2048666a6e.js" crossorigin="anonymous"></script>
+  <!-- Google fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    <a id="category-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"><i class="fa-solid fa-bars blog-logo"></i></a>
+    <a id="blog-title" class="navbar-bran" href="/"><strong>꾸준함이 목표인 블로그</strong></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
+        <!-- 링크 재설정 해야한다. -->
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">홈</a></li>
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/tag">태그</a></li>
+        <!--방명록 기능은 다른 기능구현 하고나서 구현하자.-->
+        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">방명록</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Steady Blog</h1>
+          <h2>구글 간편 로그인</h2>
+        </div>
+        <div class="d-flex flex-column card-body align-items-center justify-content-center">
+          <div class="col m-2">
+            <a href="/oauth2/authorization/google">
+              <button class="btn-lg btn-danger login-btn">구글 로그인</button>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<!--카테고리-->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h3 class="offcanvas-title" id="offcanvasExampleLabel">카테고리</h3>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <div class="border-top my-3" style="margin: auto 0;"></div>
+    <div class="container">
+      <div class="container">
+        <p th:if="${userInfo==null}"><a href="/login" ><i class="fa-solid fa-right-to-bracket log-icon-style">로그인</i></a></p>
+        <p th:if="${userInfo!=null}">
+          <span th:text="|${userInfo}님 어서오세요!!|">환영합니다!!</span>
+          <br>
+          <a href="/logout"><i class="fa-solid fa-right-from-bracket log-icon-style">로그아웃</i></a>
+        </p>
+      </div>
+    </div>
+    <div class="border-top my-3"></div>
+    <div class="mb-1 link-dark">
+      <div class="search">
+        <i id="search-icon" class="fas fa-search" aria-hidden="true"></i>
+        <!-- 13번 키가 눌리면 searchKeyword가 실행되는 것 같다. 자바스크립트 코드로 ajax통신을 구현하자 -->
+        <input type="text" id="searchInput" class="searchInput form-control ps-4"
+               placeholder="검색어를 입력해주세요"
+               onkeyup="if(window.even.keyCode==13){searchKeyword()}">
+      </div>
+    </div>
+
+    <div class="border-top my-3" style="margin: auto 0;"></div>
+
+    <div class="row mx-auto fs-1">
+      <div class="col-sm-6">
+        <a th:href="@{/category/edit}" class="me-0 ps-2 btn "><i class="fa-sharp fa-solid fa-gear"></i>카테고리수정</a>
+      </div>
+      <div class="col-sm-6">
+        <a th:href="@{/board/edit}" class="me-0 ps-2 btn"><i class="fa-solid fa-pen-to-square"></i>글쓰기</a>
+      </div>
+    </div>
+
+    <div class="border-top my-3" style="margin: auto 0;"></div>
+    <!--카테고리 리스트-->
+    <ul class="list-unstyled ps-0">
+      <li class="mb-1 superCategory btn fs-4 mx-3"><a href="/board" th:text="|전체글(${boardCount})|">전체글</a></li>
+
+      <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
+      <li class="mb-1 mx-4" th:each="category : ${categoryList}">
+        <div class="btn-group">
+          <a href="" class="mb-0 superCategory btn fs-5"
+             th:text="|${category.name}|">스프링(0)</a>
+        </div>
+      </li>
+    </ul>
+
+    <div class="border-top my-3" style="margin: auto 0;"></div>
+
+  </div>
+</div>
+
+
+<!-- Footer-->
+<footer class="border-top">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <ul class="list-inline text-center">
+          <li class="list-inline-item">
+            <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+            </a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                                    </span>
+            </a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+            </a>
+          </li>
+        </ul>
+        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2022</div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+</body>
+</html>

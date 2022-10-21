@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
 import my.blog.user.dto.OAuthRequest;
+import my.blog.user.dto.SessionUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -40,7 +41,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         User user = saveOrUpdate(oAuthRequest);
 
-        httpSession.setAttribute(LOGIN_USER, user);
+        httpSession.setAttribute(LOGIN_USER, new SessionUser(user));
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),

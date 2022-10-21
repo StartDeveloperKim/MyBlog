@@ -52,7 +52,7 @@ public class User extends BaseTimeEntity {
     }
     private User(OAuthRequest oAuthRequest) {
         this.email = oAuthRequest.getEmail();
-        this.name = oAuthRequest.getEmail();
+        this.name = oAuthRequest.getName();
         this.picture = oAuthRequest.getPicture();
         this.role = Role.GUEST; // 기본은 GUEST, 블로그 주인은 USER
     }
