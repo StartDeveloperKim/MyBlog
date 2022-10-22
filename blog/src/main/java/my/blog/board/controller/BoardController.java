@@ -62,18 +62,7 @@ public class BoardController {
     @ResponseBody
     public ResponseEntity<Long> boardSave(@RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
-        // 태그파싱작업 필요
         log.info("Get Data : {}", boardRegister.toString());
-
-        /*파싱작업 테스트 성공하면 TagServiceImpl에 구현하자
-        * 1. GSON 라이브러리로 파싱작업
-        * 2. 중복은 겹치기 또는 건너뛰기
-        * 3.
-        * */
-        List<Map<String, String>> arrayList = ParsingTool.getGson().fromJson(boardRegister.getTags(), ArrayList.class);
-        for (Map<String, String> stringStringMap : arrayList) {
-            System.out.println("stringStringMap.values() = " + stringStringMap.get("value"));
-        }
         
         Long boardId = boardService.writeBoard(boardRegister);
 

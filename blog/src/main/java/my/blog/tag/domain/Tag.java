@@ -1,8 +1,11 @@
 package my.blog.tag.domain;
 
 import lombok.Getter;
+import my.blog.boardTag.domain.BoardTag;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -22,4 +25,6 @@ public class Tag {
     @Column(nullable = false, length = 50)
     private String tagName;
 
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE)
+    private List<BoardTag> boardTags = new ArrayList<>();
 }

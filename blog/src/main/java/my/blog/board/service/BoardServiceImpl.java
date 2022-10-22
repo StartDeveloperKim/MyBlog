@@ -31,13 +31,13 @@ public class BoardServiceImpl implements BoardService{
         User user = userRepository.findById(boardRegister.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
 
-        if (boardRegister.getCategory() == null) {
-            boardRegister.setCategory("total");
-        }
-
         Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
         Board board = Board.of(user, category, boardRegister);
-        //아직 태그에 대한 기능을 넣지 않았다. 좀 더 고민해보자.
+        /*
+        * 1. 태그저장
+        * 2. 게시글 저장
+        * 3. BoardTag 생성 후 저장
+        * */
         Board save = boardRepository.save(board);
         return save.getId();
     }

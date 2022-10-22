@@ -27,4 +27,20 @@ public class BoardTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    protected BoardTag() {
+    }
+
+    //==연관관계 편의 메서드==//
+    private void setBoardAndTag(Board board, Tag tag) {
+        board.getBoardTags().add(this);
+        tag.getBoardTags().add(this);
+    }
+
+    //==생성 메서드==//
+    public static BoardTag from(Board board, Tag tag) {
+        BoardTag boardTag = new BoardTag();
+        boardTag.setBoardAndTag(board, tag);
+        return boardTag;
+    }
 }
