@@ -6,6 +6,7 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
+import my.blog.board.dto.response.Paging;
 import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
@@ -15,6 +16,9 @@ import my.blog.tag.domain.TagRepository;
 import my.blog.tag.tool.ParsingTool;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +40,7 @@ public class BoardServiceImpl implements BoardService{
     private final BoardTagRepository boardTagRepository;
 
     @Override
-    public Long writeBoard(BoardRegister boardRegister, List<String> tags) {
+    public Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags) {
         List<BoardTag> boardTags = new ArrayList<>();
 
         User user = userRepository.findById(boardRegister.getUserId())
@@ -52,6 +56,18 @@ public class BoardServiceImpl implements BoardService{
         }
 
         boardTagRepository.saveAll(boardTags);
+
+        return saveBoard.getId();
+    }
+
+    @Override
+    public Long writeBoard(BoardRegister boardRegister) {
+        User user = userRepository.findById(boardRegister.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
+        Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
+
+        Board board = Board.of(user, category, boardRegister);
+        Board saveBoard = boardRepository.save(board); // 게시글 저장
 
         return saveBoard.getId();
     }
@@ -86,8 +102,8 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponse> getBoardList() {
-        List<Board> all = boardRepository.findAll();
+    public List<BoardResponse> getBoardList(int page, int size) {
+        List<Board> all = boardRepository.findByOrderById(PageRequest.of(page, size)).getContent();
 
         return all.stream().map(BoardResponse::new)
                 .collect(Collectors.toList());
@@ -96,7 +112,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     @Transactional(readOnly = true)
     public List<BoardResponse> getBoardListRecent() {
-        return boardRepository.findTop4ByOrderByCreateDateDesc().stream().map(BoardResponse::new)
+        return boardRepository.findTop6ByOrderByCreateDateDesc().stream().map(BoardResponse::new)
                 .collect(Collectors.toList());
     }
 

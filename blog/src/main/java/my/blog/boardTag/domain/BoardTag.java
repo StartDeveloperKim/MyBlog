@@ -43,7 +43,7 @@ public class BoardTag {
     public static BoardTag from(Board board, Tag tag) {
         BoardTag boardTag = new BoardTag();
         boardTag.setBoardAndTag(board, tag);
-        
+
         return boardTag;
     }
 }

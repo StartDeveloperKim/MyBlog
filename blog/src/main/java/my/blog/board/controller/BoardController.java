@@ -1,16 +1,17 @@
 package my.blog.board.controller;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.domain.Board;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
+import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardService;
+import my.blog.category.dto.CategoryDto;
 import my.blog.category.service.CategoryService;
 import my.blog.tag.service.TagService;
-import my.blog.tag.tool.ParsingTool;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static my.blog.board.dto.response.BoardResponse.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,10 +31,24 @@ public class BoardController {
     private final CategoryService categoryService;
     private final TagService tagService;
 
+    private final int pagingSize = 6;
+
     @GetMapping
-    public String boardListForm(Model model) {
-        List<BoardResponse> boards = boardService.getBoardList();
+    public String boardListForm(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
+                                @RequestParam(value = "category", required = false) String category,
+                                Model model) {
+        Paging pagingInfo = Paging.of(page, boardService.getBoardCount());
+
+        log.info("Paging Information : {}", pagingInfo.toString());
+
+        List<BoardResponse> boards = boardService.getBoardList(page, pagingSize);
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Long boardCount = boardService.getBoardCount();
+
         model.addAttribute("boards", boards);
+        model.addAttribute("pagingInfo", pagingInfo);
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("boardCount", boardCount);
 
         return "board/boardListForm";
     }
@@ -64,10 +75,14 @@ public class BoardController {
     public ResponseEntity<Long> boardSave(@RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
         log.info("Get Data : {}", boardRegister.toString());
+        Long boardId;
 
-        List<String> tags = tagService.saveTags(boardRegister.getTags());
-
-        Long boardId = boardService.writeBoard(boardRegister, tags);
+        if (boardRegister.getTags().equals("")) {
+            boardId = boardService.writeBoard(boardRegister);
+        } else {
+            List<String> tags = tagService.saveTags(boardRegister.getTags());
+            boardId = boardService.writeBoardWithTag(boardRegister, tags);
+        }
 
         return ResponseEntity.ok().body(boardId);
     }

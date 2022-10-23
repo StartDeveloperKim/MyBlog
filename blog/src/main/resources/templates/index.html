@@ -96,12 +96,12 @@
         <div class="border-top my-3" style="margin: auto 0;"></div>
 
         <ul class="list-unstyled ps-0">
-            <li class="mb-1 superCategory btn fs-4 mx-3"><a href="/board" th:text="|전체글(${boardCount})|">전체글</a></li>
+            <li class="mb-1 superCategory btn fs-4 mx-3"><a th:href="@{/board(category=total)}" th:text="|전체글(${boardCount})|">전체글</a></li>
 
             <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
             <li class="mb-1 mx-4" th:each="category : ${categoryList}">
                 <div class="btn-group">
-                    <a href="" class="mb-0 superCategory btn fs-5"
+                    <a th:href="@{/board(category=${category.name})}" class="mb-0 superCategory btn fs-5"
                     th:text="|${category.name}|">스프링(0)</a>
                 </div>
             </li>
@@ -113,16 +113,32 @@
 </div>
 
 <!-- Main Content-->
-<div class="container text-center justify-content-center">
-    <div class="row row-cols-2">
-        <div th:each="board : ${boardList}">
+<!--<div class="container text-center justify-content-center">
+    <div class="row align-items-center">
+        <div class="col align-self-center" th:each="board : ${boardList}">
             <a th:href="@{/board/{id}(id=${board.id})}">
-                <div class="col mb-3 class-image mx-auto" th:style="'background-image:url(' + ${board.thumbnail} + ');'">
-                    <div class="class-title mt-5" th:text="${board.title}"></div>
-                    <div class="class-createDate" th:text="${board.createDate}"></div>
+                <div class="col mb-2 class-image mx-auto" th:style="'background-image:url(' + ${board.thumbnail} + ');'">
+                    <div class="class-title align-content-center" th:text="${board.title}"></div>
+                    <div class="class-createDate" th:text="|작성일 : ${board.createDate}|"></div>
                 </div>
             </a>
-            <div class="border-top"></div>
+            <div class="border-top mb-2"></div>
+        </div>
+    </div>
+</div>-->
+
+<div class="container justify-content-center">
+    <div class="container p-0">
+        <div class="row g-0 row-cols-2 row-cols-md-3">
+            <div class="col g-1 g-md-4" th:each="board : ${boardList}">
+                <a th:href="@{/board/{id}(id=${board.id})}">
+                    <div class="col mb-2 class-image mx-auto" th:style="'background-image:url(' + ${board.thumbnail} + ');'">
+                        <div class="class-title align-content-center" th:text="${board.title}"></div>
+                        <div class="class-createDate" th:text="|작성일 : ${board.createDate}|"></div>
+                    </div>
+                </a>
+                <div class="border-top mb-2"></div>
+            </div>
         </div>
     </div>
 </div>

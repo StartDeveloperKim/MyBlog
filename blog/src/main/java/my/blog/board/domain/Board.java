@@ -72,7 +72,7 @@ public class Board extends BaseTimeEntity {
 
     private String getThumbnailURL(String thumbnail) {
         // 사용자가 썸네일을 설정했다면 해당 썸네일 URL로 그렇지 않다면 기본 썸네일 링크를 설정하자.
-        String defaultURL = "https://images.pexels.com/photos/13916042/pexels-photo-13916042.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load";
+        String defaultURL = "https://dinfree.com/assets/img/13-title.png";
         if (thumbnail == null || thumbnail.equals("")) {
             return defaultURL;
         }
