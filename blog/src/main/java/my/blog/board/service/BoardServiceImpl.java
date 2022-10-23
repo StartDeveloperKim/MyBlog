@@ -6,15 +6,22 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
+import my.blog.boardTag.domain.BoardTag;
+import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
+import my.blog.tag.domain.Tag;
+import my.blog.tag.domain.TagRepository;
+import my.blog.tag.tool.ParsingTool;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,21 +32,28 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final BoardTagRepository boardTagRepository;
 
     @Override
-    public Long writeBoard(BoardRegister boardRegister) {
+    public Long writeBoard(BoardRegister boardRegister, List<String> tags) {
+        List<BoardTag> boardTags = new ArrayList<>();
+
         User user = userRepository.findById(boardRegister.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-
         Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
+
         Board board = Board.of(user, category, boardRegister);
-        /*
-        * 1. 태그저장
-        * 2. 게시글 저장
-        * 3. BoardTag 생성 후 저장
-        * */
-        Board save = boardRepository.save(board);
-        return save.getId();
+        Board saveBoard = boardRepository.save(board); // 게시글 저장
+
+        for (String tag : tags) {
+            Tag findTag = tagRepository.findByTagName(tag);
+            boardTags.add(BoardTag.from(saveBoard, findTag));
+        }
+
+        boardTagRepository.saveAll(boardTags);
+
+        return saveBoard.getId();
     }
 
     @Override

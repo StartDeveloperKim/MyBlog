@@ -27,4 +27,15 @@ public class Tag {
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE)
     private List<BoardTag> boardTags = new ArrayList<>();
+
+    private Tag(String tagName) {
+        this.tagName = tagName;
+    }
+
+    private Tag() {
+    }
+
+    public static Tag of(String tagName) {
+        return new Tag(tagName);
+    }
 }

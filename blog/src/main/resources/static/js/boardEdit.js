@@ -19,7 +19,7 @@ window.onload = function () {
     let cancelBtn = document.getElementById("cancel-btn");
 
     registerBtn.addEventListener("click", function () {
-        let userId = 1;
+        let userId = 1; // userId 수정하자....
         let category = document.getElementById("category").value;
         let title = document.getElementById('title').value;
         let content = editor.getHTML();

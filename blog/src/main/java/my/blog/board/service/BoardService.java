@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BoardService {
 
-    Long writeBoard(BoardRegister boardRegister);
+    Long writeBoard(BoardRegister boardRegister, List<String> tags);
 
     void editBoard(BoardUpdate boardUpdate);
 

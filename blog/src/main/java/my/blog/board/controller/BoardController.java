@@ -9,6 +9,7 @@ import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.service.BoardService;
 import my.blog.category.service.CategoryService;
+import my.blog.tag.service.TagService;
 import my.blog.tag.tool.ParsingTool;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final CategoryService categoryService;
-//    private final TagService tagService;
+    private final TagService tagService;
 
     @GetMapping
     public String boardListForm(Model model) {
@@ -63,8 +64,10 @@ public class BoardController {
     public ResponseEntity<Long> boardSave(@RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
         log.info("Get Data : {}", boardRegister.toString());
-        
-        Long boardId = boardService.writeBoard(boardRegister);
+
+        List<String> tags = tagService.saveTags(boardRegister.getTags());
+
+        Long boardId = boardService.writeBoard(boardRegister, tags);
 
         return ResponseEntity.ok().body(boardId);
     }

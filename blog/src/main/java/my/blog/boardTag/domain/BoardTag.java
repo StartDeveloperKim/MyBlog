@@ -33,6 +33,8 @@ public class BoardTag {
 
     //==연관관계 편의 메서드==//
     private void setBoardAndTag(Board board, Tag tag) {
+        this.board = board;
+        this.tag = tag;
         board.getBoardTags().add(this);
         tag.getBoardTags().add(this);
     }
@@ -41,6 +43,7 @@ public class BoardTag {
     public static BoardTag from(Board board, Tag tag) {
         BoardTag boardTag = new BoardTag();
         boardTag.setBoardAndTag(board, tag);
+        
         return boardTag;
     }
 }

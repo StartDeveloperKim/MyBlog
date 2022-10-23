@@ -56,4 +56,10 @@ class BoardServiceImplTest {
             System.out.println("boardResponse.toString() = " + boardResponse.toString());
         }
     }
+
+    @Test
+    void 태그_포함해서_게시판_저장테스트() {
+//        BoardRegister boardRegister = new BoardRegister(1L, "태그포함 저장테스트", "테스트 성공기원", "스프링", "null", "");
+
+    }
 }
