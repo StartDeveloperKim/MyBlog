@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface BoardService {
 
-    Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags);
+    Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags, Long userId);
 
-    Long writeBoard(BoardRegister boardRegister);
+    Long writeBoard(BoardRegister boardRegister, Long userId);
 
     void editBoard(BoardUpdate boardUpdate);
 

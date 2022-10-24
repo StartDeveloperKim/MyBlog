@@ -19,7 +19,6 @@ window.onload = function () {
     let cancelBtn = document.getElementById("cancel-btn");
 
     registerBtn.addEventListener("click", function () {
-        let userId = 1; // userId 수정하자....
         let category = document.getElementById("category").value;
         let title = document.getElementById('title').value;
         let content = editor.getHTML();
@@ -29,7 +28,6 @@ window.onload = function () {
         console.log(typeof tags); // tags의 타입은 스트링이다. 그래서 서버에서 파싱을 해야한다.
 
         let responseData = {};
-        responseData.userId = userId;
         responseData.title = title;
         responseData.content = content;
         responseData.category = category;
@@ -62,7 +60,6 @@ window.onload = function () {
     });
 
 };
-
 
 
 

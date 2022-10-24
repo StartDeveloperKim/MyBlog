@@ -7,6 +7,7 @@ import my.blog.board.service.BoardService;
 import my.blog.category.dto.CategoryDto;
 import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
+import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class HomeController {
         model.addAttribute("boardCount", boardCount);
 
         if (user != null) {
-            model.addAttribute("userInfo", user.getName());
+            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
         }
 
         return "index";

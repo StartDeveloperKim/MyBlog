@@ -66,7 +66,7 @@
         <div class="container">
             <p th:if="${userInfo==null}"><a href="/login" ><i class="fa-solid fa-right-to-bracket log-icon-style">로그인</i></a></p>
             <p th:if="${userInfo!=null}">
-                <strong><span th:text="|${userInfo}님 어서오세요!!|">환영합니다!!</span></strong>
+                <strong><span th:text="|${userInfo.name}님 어서오세요!!|">환영합니다!!</span></strong>
                 <br>
                 <a href="/logout"><i class="fa-solid fa-right-from-bracket log-icon-style">로그아웃</i></a>
             </p>

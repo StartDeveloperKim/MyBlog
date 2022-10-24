@@ -40,10 +40,10 @@ public class BoardServiceImpl implements BoardService{
     private final BoardTagRepository boardTagRepository;
 
     @Override
-    public Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags) {
+    public Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags, Long userId) {
         List<BoardTag> boardTags = new ArrayList<>();
 
-        User user = userRepository.findById(boardRegister.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
         Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
 
@@ -61,8 +61,8 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Long writeBoard(BoardRegister boardRegister) {
-        User user = userRepository.findById(boardRegister.getUserId())
+    public Long writeBoard(BoardRegister boardRegister, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
         Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
 

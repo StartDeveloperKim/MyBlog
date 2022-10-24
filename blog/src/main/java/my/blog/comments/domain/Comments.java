@@ -39,9 +39,23 @@ public class Comments extends BaseTimeEntity {
         this.user = user;
     }
 
+    private Comments() {
+
+    }
+
     //==생성 메서드==//
     public static Comments of(Board board, User user, String content) {
-       return new Comments(content, board, user);
+        Comments comments = new Comments(content, board, user);
+        comments.setUserAndBoard(user, board);
+
+        return comments;
+    }
+
+    //==연관관계 편의 메서드==//
+    private void setUserAndBoard(User user, Board board) {
+        this.user = user;
+        this.board = board;
+        board.getCommentsList().add(this);
     }
 
     //==업데이트 메서드==//

@@ -5,12 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import my.blog.board.domain.Board;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
+import my.blog.board.dto.response.BoardDetailResponse;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardService;
 import my.blog.category.dto.CategoryDto;
 import my.blog.category.service.CategoryService;
 import my.blog.tag.service.TagService;
+import my.blog.user.dto.SessionUser;
+import my.blog.user.dto.UserInfo;
+import my.blog.user.service.LoginUser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +43,6 @@ public class BoardController {
                                 Model model) {
         Paging pagingInfo = Paging.of(page, boardService.getBoardCount());
 
-        log.info("Paging Information : {}", pagingInfo.toString());
-
         List<BoardResponse> boards = boardService.getBoardList(page, pagingSize);
         List<CategoryDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
@@ -54,11 +56,20 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String boardDetailForm(@PathVariable("id") Long id, Model model) {
+    public String boardDetailForm(@LoginUser SessionUser user, @PathVariable("id") Long id, Model model) {
         Board board = boardService.getBoard(id);
-        BoardResponse boardResponse = new BoardResponse(board);
+        BoardDetailResponse boardResponse = new BoardDetailResponse(board);
+
+        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Long boardCount = boardService.getBoardCount();
+
+        if (user != null) {
+            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
+        }
 
         model.addAttribute("board", boardResponse);
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("boardCount", boardCount);
 
         return "board/boardDetailForm";
     }
@@ -72,16 +83,20 @@ public class BoardController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Long> boardSave(@RequestBody BoardRegister boardRegister) {
+    public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
+                                          @RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
         log.info("Get Data : {}", boardRegister.toString());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // null은 나중에 생각해보고 수정하자
+        }
         Long boardId;
 
         if (boardRegister.getTags().equals("")) {
-            boardId = boardService.writeBoard(boardRegister);
+            boardId = boardService.writeBoard(boardRegister, user.getUserId());
         } else {
             List<String> tags = tagService.saveTags(boardRegister.getTags());
-            boardId = boardService.writeBoardWithTag(boardRegister, tags);
+            boardId = boardService.writeBoardWithTag(boardRegister, tags, user.getUserId());
         }
 
         return ResponseEntity.ok().body(boardId);

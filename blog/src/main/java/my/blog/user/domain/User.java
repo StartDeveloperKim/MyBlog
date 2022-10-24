@@ -43,9 +43,6 @@ public class User extends BaseTimeEntity {
     private List<Board> boards = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Comments> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<Heart> hearts = new ArrayList<>();
 
     protected User() {

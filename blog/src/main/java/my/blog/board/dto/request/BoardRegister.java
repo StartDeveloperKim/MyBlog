@@ -6,13 +6,11 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class BoardRegister {
 
-    private Long userId;
     private String title;
     private String content;
     private String category;
