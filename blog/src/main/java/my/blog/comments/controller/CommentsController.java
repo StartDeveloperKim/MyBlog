@@ -28,23 +28,34 @@ public class CommentsController {
     public ResponseEntity<Map<String, Object>> getComments(@PathVariable("boardId") Long boardId) {
         Map<String, Object> map = new HashMap<>();
         List<CommentResponse> comments = commentsService.getComments(boardId);
+        int totalComment = commentsService.getTotalComment(boardId);
 
         map.put("comments", comments);
+        map.put("total", totalComment);
+
+        log.info("getComments {}", map);
 
         return ResponseEntity.ok().body(map);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<String> saveComment(@RequestBody CommentRequest commentRequest,
+    public ResponseEntity<Map<String, Object>> saveComment(@RequestBody CommentRequest commentRequest,
                                               @PathVariable("id") Long boardId,
                                               @LoginUser SessionUser user) {
+        Map<String, Object> map = new HashMap<>();
         try {
             log.info("comment:{}, boardId:{}", commentRequest.getComment(), boardId);
 
             commentsService.saveComment(commentRequest.getComment(), boardId, user.getUserId());
-            return ResponseEntity.ok().body("success");
+            List<CommentResponse> comments = commentsService.getComments(boardId);
+            int totalComment = commentsService.getTotalComment(boardId);
+
+            map.put("comments", comments);
+            map.put("total", totalComment);
+
+            return ResponseEntity.ok().body(map);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 }

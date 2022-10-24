@@ -11354,6 +11354,10 @@ a {
   border-radius: 10px;
 }
 
+.comment-box {
+  background-color: whitesmoke;
+}
+
 #comment-icon {
   font-size: 30px;
 }

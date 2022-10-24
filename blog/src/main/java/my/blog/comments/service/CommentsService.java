@@ -17,6 +17,8 @@ public interface CommentsService {
      * */
     List<CommentResponse> getComments(Long boardId);
 
+    int getTotalComment(Long boardId);
+
     void saveComment(String content, Long boardId, Long userId);
 
     void updateComment(CommentEditRequest editRequest);

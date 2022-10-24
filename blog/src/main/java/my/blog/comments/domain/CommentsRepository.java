@@ -10,4 +10,7 @@ public interface CommentsRepository extends JpaRepository<Comments, Long> {
 
     @Query("select c from Comments c where c.board.id = :boardId order by c.createDate desc")
     List<Comments> findCommentsByBoardId(@Param("boardId") Long boardId);
+
+    @Query("select count(c) from Comments c where c.board.id = :boardId")
+    int getCommentsCountByBoardId(@Param("boardId") Long boardId);
 }
