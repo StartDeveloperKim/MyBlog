@@ -23,9 +23,11 @@ public interface BoardService {
 
     Board getBoard(Long boardId);
 
-    List<BoardResponse> getBoardList(int page, int size);
+    List<BoardResponse> getBoardList(int page, int size, String category, String step);
 
     List<BoardResponse> getBoardListRecent();
 
     Long getBoardCount();
+
+    Long getBoardCountByCategory(String category);
 }

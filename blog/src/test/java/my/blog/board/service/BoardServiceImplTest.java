@@ -1,6 +1,7 @@
 package my.blog.board.service;
 
 import my.blog.board.domain.Board;
+import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.category.service.CategoryService;
@@ -9,6 +10,7 @@ import my.blog.user.domain.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ class BoardServiceImplTest {
     CategoryService categoryService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    BoardRepository boardRepository;
 
     @Test
     void 카테고리_없이_글_저장() {
@@ -61,5 +65,23 @@ class BoardServiceImplTest {
     void 태그_포함해서_게시판_저장테스트() {
 //        BoardRegister boardRegister = new BoardRegister(1L, "태그포함 저장테스트", "테스트 성공기원", "스프링", "null", "");
 
+    }
+    
+    @Test
+    void 카테고리별_게시글_조회_테스트() {
+        int pageSize=6;
+        List<Board> result1 = boardRepository.findByOrderByIdDesc(PageRequest.of(0, pageSize)).getContent();
+        List<Board> result2 = boardRepository.findByOrderByIdDesc(PageRequest.of(1, pageSize)).getContent();
+        List<Board> result3 = boardRepository.findByOrderByIdDesc(PageRequest.of(2, pageSize)).getContent();
+
+        for (Board board : result1) {
+            System.out.println("board.getTitle() + board.getId() = " + board.getTitle() + board.getId());
+        }
+        for (Board board : result2) {
+            System.out.println("board.getTitle() + board.getId() = " + board.getTitle() + board.getId());
+        }
+        for (Board board : result3) {
+            System.out.println("board.getTitle() + board.getId() = " + board.getTitle() + board.getId());
+        }
     }
 }

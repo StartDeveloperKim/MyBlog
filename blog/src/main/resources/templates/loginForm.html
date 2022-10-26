@@ -104,12 +104,12 @@
     <div class="border-top my-3" style="margin: auto 0;"></div>
     <!--카테고리 리스트-->
     <ul class="list-unstyled ps-0">
-      <li class="mb-1 superCategory btn fs-4 mx-3"><a href="/board" th:text="|전체글(${boardCount})|">전체글</a></li>
+      <li class="mb-1 superCategory btn fs-4 mx-3"><a th:href="@{/board(step=0)}" th:text="|전체글(${boardCount})|">전체글</a></li>
 
       <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
       <li class="mb-1 mx-4" th:each="category : ${categoryList}">
         <div class="btn-group">
-          <a href="" class="mb-0 superCategory btn fs-5"
+          <a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
              th:text="|${category.name}|">스프링(0)</a>
         </div>
       </li>

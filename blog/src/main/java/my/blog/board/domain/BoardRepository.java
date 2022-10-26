@@ -12,7 +12,10 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    Slice<Board> findByOrderById(Pageable pageable);
+    Slice<Board> findByOrderByIdDesc(Pageable pageable);
+
+    @Query("select b from Board b where b.category.categoryName=:categoryName order by b.id desc")
+    Slice<Board> findByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
 
     // 스프링데이터 JPA의 remove를 사용한다면 엔티티가 필요하다 따라서 쿼리를 직접 날렸다.
     // Cascade 옵션을 설정했기에 연관된 엔티티들이 모두 삭제된다.
@@ -25,6 +28,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select count(b) from Board b")
     Long getAllBoardCount();
+
+    @Query("select count(b) from Board b where b.category.categoryName = :categoryName")
+    Long getBoardCountByCategoryName(@Param("categoryName") String categoryName);
 
     List<Board> findTop6ByOrderByCreateDateDesc();
 }

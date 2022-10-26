@@ -43,17 +43,29 @@ public class BoardController {
     @GetMapping
     public String boardListForm(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
                                 @RequestParam(value = "category", required = false) String category,
+                                @RequestParam(value = "step", required = false, defaultValue = "0") String step,
+                                @LoginUser SessionUser user,
                                 Model model) {
-        Paging pagingInfo = Paging.of(page, boardService.getBoardCount());
+        Paging pagingInfo;
+        if (category == null) {
+            pagingInfo = Paging.of(page, boardService.getBoardCount());
+        } else {
+            pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(category));
+        }
 
-        List<BoardResponse> boards = boardService.getBoardList(page, pagingSize);
+        List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, category, step);
         List<CategoryDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
 
-        model.addAttribute("boards", boards);
+        model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("boardCount", boardCount);
+
+        /*로그인유저 인증코드가 중복되고 있다. 어떻게 멤버가 로그인되었다는 것을 확인해서 랜더링을 해야하지??*/
+        if (user != null) {
+            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
+        }
 
         return "board/boardListForm";
     }

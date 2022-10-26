@@ -99,12 +99,12 @@
         <div class="border-top my-3" style="margin: auto 0;"></div>
 
         <ul class="list-unstyled ps-0">
-            <li class="mb-1 superCategory btn fs-4 mx-3"><a th:href="@{/board(category=total)}" th:text="|전체글(${boardCount})|">전체글</a></li>
+            <li class="mb-1 superCategory btn fs-4 mx-3"><a th:href="@{/board(step=0)}" th:text="|전체글(${boardCount})|">전체글</a></li>
 
             <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
             <li class="mb-1 mx-4" th:each="category : ${categoryList}">
                 <div class="btn-group">
-                    <a th:href="@{/board(category=${category.name})}" class="mb-0 superCategory btn fs-5"
+                    <a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
                        th:text="|${category.name}|">스프링(0)
                     </a>
                 </div>
@@ -153,13 +153,11 @@
 
                             <div class="card-body p-2" th:each="comment : ${commentList}">
                                 <div class="d-flex flex-start">
-                                    <!--DTO 수정해서 User의 썸네일도 가져오게 하자-->
                                     <img class="rounded-circle shadow-1-strong me-3"
                                          th:src="${comment.userThumbnail}" alt="avatar" width="40"
                                          height="40" />
                                     <div>
-                                        <!--이또한 DTO를 수정해서 User의 닉네임을 이름을 가져오자-->
-                                        <h6 class="fw-bold mb-1" th:text="|${comment.userName}  |">Maggie Marsh</h6>
+                                        <h6 class="fw-bold mb-1" th:text="|${comment.userName}|">Maggie Marsh</h6>
                                         <div class="d-flex align-items-center mb-1 fs-6" th:text="|작성일 : ${comment.createDate}|">
                                                 March 07, 2022
                                         </div>

@@ -102,8 +102,18 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponse> getBoardList(int page, int size) {
-        List<Board> all = boardRepository.findByOrderById(PageRequest.of(page, size)).getContent();
+    public List<BoardResponse> getBoardList(int page, int size, String category, String step) {
+        // 코드 중복발생....
+        List<Board> all = null;
+        if (step.equals("0")) {
+             all = boardRepository.findByOrderByIdDesc(PageRequest.of(page-1, size)).getContent();
+        } else if (step.equals("1")) {
+            all = boardRepository.findByCategoryName(category, PageRequest.of(page-1, size)).getContent();
+        }
+
+        if (all == null) {
+            throw new EntityNotFoundException("게시글이 없습니다.");
+        }
 
         return all.stream().map(BoardResponse::new)
                 .collect(Collectors.toList());
@@ -120,5 +130,10 @@ public class BoardServiceImpl implements BoardService{
     @Transactional(readOnly = true)
     public Long getBoardCount() {
         return boardRepository.getAllBoardCount();
+    }
+
+    @Override
+    public Long getBoardCountByCategory(String category) {
+        return boardRepository.getBoardCountByCategoryName(category);
     }
 }
