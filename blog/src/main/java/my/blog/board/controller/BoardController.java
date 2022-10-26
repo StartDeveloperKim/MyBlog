@@ -11,6 +11,8 @@ import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardService;
 import my.blog.category.dto.CategoryDto;
 import my.blog.category.service.CategoryService;
+import my.blog.comments.dto.CommentResponse;
+import my.blog.comments.service.CommentsService;
 import my.blog.tag.service.TagService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
@@ -34,6 +36,7 @@ public class BoardController {
     private final BoardService boardService;
     private final CategoryService categoryService;
     private final TagService tagService;
+    private final CommentsService commentsService;
 
     private final int pagingSize = 6;
 
@@ -67,9 +70,12 @@ public class BoardController {
             model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
         }
 
+        List<CommentResponse> comments = commentsService.getComments(id);
+
         model.addAttribute("board", boardResponse);
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("boardCount", boardCount);
+        model.addAttribute("commentList", comments);
 
         return "board/boardDetailForm";
     }
@@ -109,6 +115,7 @@ public class BoardController {
         BoardResponse boardResponse = new BoardResponse(board);
 
         model.addAttribute("board", boardResponse);
+
 
         return "board/boardEditForm";
     }

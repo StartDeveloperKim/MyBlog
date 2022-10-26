@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/customStyles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
     <!-- TOAST UI Editor CDN URL(CSS)-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"/>
@@ -140,18 +141,42 @@
                         </div>
                         <textarea th:if="${userInfo!=null}" class="form-control comment-area" id="comment-area-login" rows="3" placeholder="댓글을 입력해주세요"></textarea>
                         <textarea th:if="${userInfo==null}" class="form-control comment-area" id="comment-area" rows="3" placeholder="로그인이 필요합니다" readonly></textarea>
-                        <button th:if="${userInfo!=null}" id="comment-btn" type="button" class="btn btn-outline-dark mt-3 btn-sm">등록</button>
+                        <button id="comment-btn" type="button" class="btn btn-outline-dark mt-3 btn-sm" onclick="postComment()">등록</button>
                     </li>
                 </ul>
             </div>
-            <div class="col">
-                <div id="comment-container">
-                    <div class="mt-2 comment-box" id="commentBox">
+            <!--댓글-->
+            <div class="container py-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-12 col-lg-10">
+                        <div class="card text-dark" style="border-radius: 10px;" id="cardList">
 
+                            <div class="card-body p-2" th:each="comment : ${commentList}">
+                                <div class="d-flex flex-start">
+                                    <!--DTO 수정해서 User의 썸네일도 가져오게 하자-->
+                                    <img class="rounded-circle shadow-1-strong me-3"
+                                         th:src="${comment.userThumbnail}" alt="avatar" width="40"
+                                         height="40" />
+                                    <div>
+                                        <!--이또한 DTO를 수정해서 User의 닉네임을 이름을 가져오자-->
+                                        <h6 class="fw-bold mb-1" th:text="|${comment.userName}  |">Maggie Marsh</h6>
+                                        <div class="d-flex align-items-center mb-1 fs-6" th:text="|작성일 : ${comment.createDate}|">
+                                                March 07, 2022
+                                        </div>
+                                        <p class="mb-0 fs-7" th:text="${comment.content}">
+                                            오류오류
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr class="my-1" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
+
     </div>
 
 </div>

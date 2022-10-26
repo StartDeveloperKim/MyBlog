@@ -11,13 +11,17 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class CommentResponse {
 
+    private String userName;
+    private String userThumbnail;
     private Long commentId;
-    private String comment;
+    private String content;
     private String createDate;
 
     public CommentResponse(Comments comments) {
+        this.userName = comments.getUser().getName();
+        this.userThumbnail = comments.getUser().getPicture();
         this.commentId = comments.getId();
-        this.comment = comments.getContent();
+        this.content = comments.getContent();
         this.createDate = comments.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
