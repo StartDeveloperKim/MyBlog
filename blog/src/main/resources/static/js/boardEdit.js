@@ -17,27 +17,61 @@ window.onload = function () {
     let httpRequest;
     let registerBtn = document.getElementById("register-btn");
     let cancelBtn = document.getElementById("cancel-btn");
+    const formFile = document.getElementById('formFile');
+    const thumbnailURL = document.getElementById("thumbnailURL");
 
+    formFile.addEventListener("change", e => {
+        /*이미지 서버에서 업로드 후 저장된 URL을 반환하고 이를 DB에 저장하는 방식*/
+        uploadImg(e.target);
+    });
+
+    /*이미지 업로드*/
+    function uploadImg(data) {
+
+        if (data.files && data.files[0]) {
+            let formData = new FormData();
+            formData.append('img', data.files[0]);
+
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open('POST', '/board/thumbnail', false);
+            httpRequest.setRequestHeader("contentType", "multipart/form-data");
+
+            httpRequest.onload = function () {
+                alert("통신완료");
+                console.log(httpRequest.response);
+                if (httpRequest.status === 200) {
+                    thumbnailURL.value = httpRequest.response;
+                    alert("썸네일이 등록되었습니다!!");
+                } else {
+                    alert("이미지가 정상적으로 업로드되지 못했습니다!!");
+                }
+            };
+
+            httpRequest.send(formData);
+        }
+    }
+    
     registerBtn.addEventListener("click", function () {
-        let category = document.getElementById("category").value;
-        let title = document.getElementById('title').value;
-        let content = editor.getHTML();
-        let thumbnail = null; // 나중에 썸네일 등록 화면도 만들자
-        let tags = document.getElementById("tags").value;
-
-        console.log(typeof tags); // tags의 타입은 스트링이다. 그래서 서버에서 파싱을 해야한다.
+        
+        const category = document.getElementById("category").value;
+        const title = document.getElementById('title').value;
+        const content = editor.getHTML();
+        const tags = document.getElementById("tags").value;
+        
 
         let responseData = {};
         responseData.title = title;
         responseData.content = content;
         responseData.category = category;
-        responseData.thumbnail = thumbnail;
+        responseData.thumbnail = thumbnailURL.value;
         responseData.tags = tags;
         httpRequest = new XMLHttpRequest();
         
         httpRequest.open('POST', '/board', true);
         httpRequest.responseType = 'json';
         httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+        console.log(JSON.stringify(responseData));
 
         httpRequest.send(JSON.stringify(responseData));
 
@@ -60,7 +94,6 @@ window.onload = function () {
     });
 
 };
-
 
 
 
