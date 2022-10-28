@@ -32,8 +32,10 @@ public class Tag {
         this.tagName = tagName;
     }
 
-    private Tag() {
+    protected Tag() {
     }
+
+
 
     public static Tag of(String tagName) {
         return new Tag(tagName);

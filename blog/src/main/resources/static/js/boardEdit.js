@@ -95,7 +95,5 @@ window.onload = function () {
 
 };
 
-
-
 /*나중에 임시저장 기능을 만들자*/
 

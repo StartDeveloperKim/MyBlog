@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 public class BoardDetailResponse {
 
     private Long boardId;
+    private Long userId;
     private String title;
     private String content;
     private String createDate;
@@ -24,6 +25,7 @@ public class BoardDetailResponse {
 
     public BoardDetailResponse(Board board) {
         this.boardId = board.getId();
+        this.userId = board.getUser().getId();
         this.title = board.getTitle();
         this.content = board.getContent();
         this.createDate = board.getCreateDate().format(DateTimeFormatter.ISO_DATE);

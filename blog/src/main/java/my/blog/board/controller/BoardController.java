@@ -95,6 +95,7 @@ public class BoardController {
     @GetMapping("/edit")
     public String boardEditForm(Model model) {
         model.addAttribute("categoryList", categoryService.getCategoryList());
+        model.addAttribute("editFlag", true); // 작성
 
         return "board/boardEditForm";
     }
@@ -121,8 +122,7 @@ public class BoardController {
     }
 
     @GetMapping("/edit/{id}")
-    public String boardDetailEditForm(@PathVariable("id") Long id,
-                                      Model model) {
+    public String boardDetailEditForm(@PathVariable("id") Long id, Model model) {
         Board board = boardService.getBoard(id);
         BoardResponse boardResponse = new BoardResponse(board);
 
@@ -132,7 +132,7 @@ public class BoardController {
         return "board/boardEditForm";
     }
 
-    @PutMapping("/edit")
+    @PostMapping("/edit")
     @ResponseBody
     public ResponseEntity<String> boardUpdate(@ModelAttribute BoardUpdate boardUpdate) {
         try {
@@ -144,7 +144,7 @@ public class BoardController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     @ResponseBody
     public ResponseEntity<String> boardDelete(@PathVariable("id") Long id) {
         boardService.deleteBoard(id);

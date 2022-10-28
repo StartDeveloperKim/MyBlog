@@ -51,7 +51,7 @@ public class User extends BaseTimeEntity {
         this.email = oAuthRequest.getEmail();
         this.name = oAuthRequest.getName();
         this.picture = oAuthRequest.getPicture();
-        this.role = Role.GUEST; // 기본은 GUEST, 블로그 주인은 USER
+        this.role = Role.GUEST; // 기본은 GUEST, 블로그 주인은 ADMIN
     }
 
     public static User of(OAuthRequest oAuthRequest) {

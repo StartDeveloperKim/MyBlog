@@ -1,0 +1,67 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="sidebarFragment">
+    <!--카테고리-->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title" id="offcanvasExampleLabel">카테고리</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="border-top my-3"></div>
+            <div class="container">
+                <!--            <p th:if="${userInfo==null}"><a href="/login" ><i class="fa-solid fa-right-to-bracket log-icon-style">로그인</i></a></p>-->
+                <p sec:authorize="!isAuthenticated()"><a href="/login" ><i class="fa-solid fa-right-to-bracket log-icon-style">로그인</i></a></p>
+                <p sec:authorize="isAuthenticated()">
+                    <strong><span th:text="|${userInfo.name}님 어서오세요!!|">환영합니다!!</span></strong>
+                    <br>
+                    <a href="/logout"><i class="fa-solid fa-right-from-bracket log-icon-style">로그아웃</i></a>
+                </p>
+                <!--            <p sec:authorize="isAuthenticated()">-->
+                <!--                <strong><span th:text="|${#authentication.name}님 어서오세요!!|">환영합니다!!</span></strong>-->
+                <!--                <br>-->
+                <!--                <a href="/logout"><i class="fa-solid fa-right-from-bracket log-icon-style">로그아웃</i></a>-->
+                <!--            </p>-->
+            </div>
+            <div class="border-top my-3"></div>
+            <div class="mb-1 link-dark">
+                <div class="search">
+                    <i id="search-icon" class="fas fa-search" aria-hidden="true"></i>
+                    <!-- 13번 키가 눌리면 searchKeyword가 실행되는 것 같다. 자바스크립트 코드로 ajax통신을 구현하자 -->
+                    <input type="text" id="searchInput" class="searchInput form-control ps-4"
+                           placeholder="검색어를 입력해주세요"
+                           onkeyup="if(window.even.keyCode==13){searchKeyword()}">
+                </div>
+            </div>
+
+            <div class="border-top my-3" style="margin: auto 0;"></div>
+
+            <div class="row mx-auto fs-1">
+                <div class="col-sm-6" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <!--                <a th:href="@{/category/edit}" class="me-0 ps-2 btn "><i class="fa-sharp fa-solid fa-gear"></i>카테고리수정</a>-->
+                    <a th:href="@{/category/edit}" class="me-0 ps-2 btn "><i class="fa-sharp fa-solid fa-gear"></i>카테고리수정</a>
+                </div>
+                <div class="col-sm-6" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/board/edit}" class="me-0 ps-2 btn"><i class="fa-solid fa-pen-to-square"></i>글쓰기</a>
+                </div>
+            </div>
+
+            <div class="border-top my-3" style="margin: auto 0;"></div>
+
+            <ul class="list-unstyled ps-0">
+                <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
+                <li class="mb-1 mx-4" th:each="category : ${categoryList}">
+                    <div class="btn-group">
+                    <span th:if="${category.name!='total'}"><a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
+                                                               th:text="|${category.name}|">스프링(0)</a></span>
+                        <span th:if="${category.name=='total'}"><a th:href="@{/board(category=${category.name}, step=0)}" class="mb-0 superCategory btn fs-5"
+                                                                   th:text="|전체글|">전체글</a></span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="border-top my-3" style="margin: auto 0;"></div>
+
+        </div>
+    </div>
+</div>
+</html>

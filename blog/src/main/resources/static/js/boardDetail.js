@@ -88,4 +88,30 @@ function postComment() {
     };
 }
 
+/*수정 삭제 버튼 이벤트*/
+const editBtn = document.getElementById("edit-btn");
+const deleteBtn = document.getElementById("delete-btn");
+
+editBtn.addEventListener("click", function () {
+    location.href = "/board/edit/" + boardId;
+});
+
+deleteBtn.addEventListener("click", function () {
+    if (confirm("정말로 삭제하시겠습니까??")) {
+        httpRequest = new XMLHttpRequest();
+        httpRequest.open('POST', '/board/delete/' + boardId, true);
+
+        httpRequest.send();
+
+        httpRequest.onload = function () {
+            if (httpRequest.status === 200) {
+                alert("삭제되었습니다!!");
+                location.href = "/board";
+            } else {
+                alert("오류가 발생하였습니다!!");
+            }
+        };
+    }
+});
+
 

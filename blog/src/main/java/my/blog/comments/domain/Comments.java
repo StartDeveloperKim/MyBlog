@@ -39,7 +39,7 @@ public class Comments extends BaseTimeEntity {
         this.user = user;
     }
 
-    private Comments() {
+    protected Comments() {
 
     }
 
