@@ -18,6 +18,7 @@ import my.blog.tag.service.TagService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
+import my.blog.web.layout.LayoutService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +36,10 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-    private final CategoryService categoryService;
     private final TagService tagService;
     private final CommentsService commentsService;
     private final BoardTagService boardTagService;
+    private final LayoutService layoutService;
 
     private final int pagingSize = 6;
 
@@ -58,13 +59,11 @@ public class BoardController {
         log.info("Paging Infomation = {}", pagingInfo.toString());
 
         List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, category, step);
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
-        Long boardCount = boardService.getBoardCount();
 
         model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);
-        model.addAttribute("categoryList", categoryList);
-        model.addAttribute("boardCount", boardCount);
+
+        layoutService.getLayoutInfo(model);
 
         /*로그인유저 인증코드가 중복되고 있다. 어떻게 멤버가 로그인되었다는 것을 확인해서 랜더링을 해야하지??*/
         if (user != null) {
@@ -79,8 +78,6 @@ public class BoardController {
         Board board = boardService.getBoard(id);
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
-        Long boardCount = boardService.getBoardCount();
         List<String> tagList = boardTagService.getTagList(id);
         log.info("tagList {}", tagList);
 
@@ -91,17 +88,20 @@ public class BoardController {
         List<CommentResponse> comments = commentsService.getComments(id);
 
         model.addAttribute("board", boardResponse);
-        model.addAttribute("categoryList", categoryList);
-        model.addAttribute("boardCount", boardCount);
         model.addAttribute("commentList", comments);
         model.addAttribute("tagList", tagList);
+
+        layoutService.getLayoutInfo(model);
 
         return "board/boardDetailForm";
     }
 
-    @GetMapping("/edit")
-    public String boardEditForm(Model model) {
-        model.addAttribute("categoryList", categoryService.getCategoryList());
+    @GetMapping("/edit/{id}")
+    public String boardEditForm(@PathVariable("id") Long boardId, Model model) {
+        Board board = boardService.getBoard(boardId);
+        BoardResponse boardResponse = new BoardResponse(board);
+
+        model.addAttribute("boardResponse", boardResponse);
         model.addAttribute("editFlag", true); // 작성
 
         return "board/boardEditForm";
