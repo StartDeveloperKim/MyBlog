@@ -13,4 +13,6 @@ public interface TagService {
     * */
     List<String> saveTags(String tags);
 
+    Long findTagIdByTagName(String tagName);
+
 }

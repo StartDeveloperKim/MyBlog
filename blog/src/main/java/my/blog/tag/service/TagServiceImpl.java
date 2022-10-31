@@ -41,4 +41,10 @@ public class TagServiceImpl implements TagService{
 
         return tagList;
     }
+
+    @Override
+    public Long findTagIdByTagName(String tagName) {
+        return tagRepository.findTagIdByTagName(tagName);
+    }
+
 }

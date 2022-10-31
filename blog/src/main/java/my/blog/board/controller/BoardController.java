@@ -9,6 +9,7 @@ import my.blog.board.dto.response.BoardDetailResponse;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardService;
+import my.blog.boardTag.service.BoardTagService;
 import my.blog.category.dto.CategoryDto;
 import my.blog.category.service.CategoryService;
 import my.blog.comments.dto.CommentResponse;
@@ -37,6 +38,7 @@ public class BoardController {
     private final CategoryService categoryService;
     private final TagService tagService;
     private final CommentsService commentsService;
+    private final BoardTagService boardTagService;
 
     private final int pagingSize = 6;
 
@@ -47,11 +49,13 @@ public class BoardController {
                                 @LoginUser SessionUser user,
                                 Model model) {
         Paging pagingInfo;
-        if (category == null) {
+        if (category.equals("total")) {
             pagingInfo = Paging.of(page, boardService.getBoardCount());
         } else {
             pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(category));
         }
+
+        log.info("Paging Infomation = {}", pagingInfo.toString());
 
         List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, category, step);
         List<CategoryDto> categoryList = categoryService.getCategoryList();
@@ -77,6 +81,8 @@ public class BoardController {
 
         List<CategoryDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
+        List<String> tagList = boardTagService.getTagList(id);
+        log.info("tagList {}", tagList);
 
         if (user != null) {
             model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
@@ -88,6 +94,7 @@ public class BoardController {
         model.addAttribute("categoryList", categoryList);
         model.addAttribute("boardCount", boardCount);
         model.addAttribute("commentList", comments);
+        model.addAttribute("tagList", tagList);
 
         return "board/boardDetailForm";
     }

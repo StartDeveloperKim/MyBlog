@@ -1,6 +1,7 @@
 package my.blog.boardTag.domain;
 
 import lombok.Getter;
+import lombok.ToString;
 import my.blog.board.domain.Board;
 import my.blog.tag.domain.Tag;
 

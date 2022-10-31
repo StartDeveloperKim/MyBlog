@@ -20,7 +20,7 @@ public class Paging {
     private boolean isPreviousPage;
     private boolean isNextPage;
 
-    private final int displayPageNum = 6;
+    private final int displayPageNum = 6; // pagingSize
 
     public static Paging of(int page, Long totalBoard) {
         Paging paging = new Paging();
@@ -35,7 +35,7 @@ public class Paging {
             paging.endPage = paging.realEndPage;
         }
 
-        paging.isPreviousPage = paging.startPage > 1;
+        paging.isPreviousPage = paging.currentPage > 1;
         paging.isNextPage = paging.endPage < paging.realEndPage;
 
         return paging;

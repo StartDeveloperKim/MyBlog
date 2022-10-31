@@ -61,6 +61,9 @@
         <div class="col-4" sec:authorize="hasRole('ROLE_ADMIN')">
             <button class="btn btn-outline-danger" id="delete-btn">삭제</button>
         </div>
+        <div th:each="tag : ${tagList}">
+            <strong><a th:href="@{/board/tag(tagName=${tag})}" th:text="${tag}"></a></strong>
+        </div>
     </div>
 
     <!-- Comment -->

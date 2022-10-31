@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
+    @Query("select b from Board b order by b.id desc")
     Slice<Board> findByOrderByIdDesc(Pageable pageable);
 
     @Query("select b from Board b where b.category.categoryName=:categoryName order by b.id desc")

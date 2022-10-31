@@ -1,6 +1,7 @@
 package my.blog.board.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -106,6 +108,7 @@ public class BoardServiceImpl implements BoardService{
         // 코드 중복발생....
         List<Board> all = null;
         if (step.equals("0")) {
+            log.info("BoardService Step={}", step);
              all = boardRepository.findByOrderByIdDesc(PageRequest.of(page-1, size)).getContent();
         } else if (step.equals("1")) {
             all = boardRepository.findByCategoryName(category, PageRequest.of(page-1, size)).getContent();

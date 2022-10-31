@@ -24,9 +24,17 @@
 
 <!--헤더를 게시물의 썸네일이 보이도록하자 -->
 <!-- Page Header-->
-<div th:with="title=${param.category}">
-    <th:block th:replace="fragments/header.html::headerFragment(${title})"></th:block>
+<div th:if="${param.category!=null}">
+    <div th:with="title=${param.category}">
+        <th:block th:replace="fragments/header.html::headerFragment(${title})"></th:block>
+    </div>
 </div>
+<div th:if="${param.tagName!=null}">
+    <div th:with="title=${param.tagName}">
+        <th:block th:replace="fragments/header.html::headerFragment(${title})"></th:block>
+    </div>
+</div>
+
 
 
 <!--SideBard-->
@@ -55,10 +63,12 @@
 
             <span th:each="num : ${#numbers.sequence(start, end)}">
                 <li class="page-item active" th:if="${num == pagingInfo.currentPage && num!=0}">
-                    <a class="page-link" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
+                    <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
+                    <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
                 </li>
                 <li class="page-item" th:if="${num != pagingInfo.currentPage && num!=0}">
-                    <a class="page-link" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
+                    <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
+                    <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
                 </li>
             </span>
 
