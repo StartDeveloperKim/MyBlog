@@ -36,7 +36,8 @@ public class Paging {
         }
 
         paging.isPreviousPage = paging.currentPage > 1;
-        paging.isNextPage = paging.endPage < paging.realEndPage;
+        paging.isNextPage = paging.currentPage < paging.realEndPage;
+
 
         return paging;
     }

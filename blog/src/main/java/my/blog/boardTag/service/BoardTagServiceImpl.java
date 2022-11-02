@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
+import my.blog.tag.dto.TagResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +29,9 @@ public class BoardTagServiceImpl implements BoardTagService {
     }
 
     @Override
-    public List<String> getTagList(Long boardId) {
+    public List<TagResponse> getTagList(Long boardId) {
         return boardTagRepository.findBoardTagsByBoardId(boardId)
-                .stream().map(boardTag -> boardTag.getTag().getTagName())
+                .stream().map(boardTag -> new TagResponse(boardTag.getTag().getTagName()))
                 .collect(Collectors.toList());
     }
 

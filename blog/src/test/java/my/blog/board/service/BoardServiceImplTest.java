@@ -4,9 +4,12 @@ import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.response.BoardResponse;
+import my.blog.boardTag.domain.BoardTag;
 import my.blog.category.service.CategoryService;
+import my.blog.comments.domain.Comments;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -84,4 +87,5 @@ class BoardServiceImplTest {
             System.out.println("board.getTitle() + board.getId() = " + board.getTitle() + board.getId());
         }
     }
+
 }

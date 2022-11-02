@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf().disable() // csrf  설정 꺼놓기
                 .headers().frameOptions().disable()
                 .and()
-                
+
                 // 페이지와 HttpMethod 별 권한 설정
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET, "/board/edit").hasRole(ADMIN.name())
@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/board/**").hasRole(ADMIN.name())
                 .antMatchers(HttpMethod.PATCH, "/board/**").hasRole(ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
+                .antMatchers("/category/**").hasRole(ADMIN.name())
                 .anyRequest().permitAll()
                 .and()
 

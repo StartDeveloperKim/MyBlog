@@ -12,6 +12,7 @@ import my.blog.category.domain.Category;
 public class CategoryDto {
 
     private String name;
+
     public CategoryDto(Category category) {
         this.name = category.getCategoryName();
     }

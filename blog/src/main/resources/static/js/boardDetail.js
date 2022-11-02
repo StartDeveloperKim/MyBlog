@@ -106,7 +106,7 @@ deleteBtn.addEventListener("click", function () {
         httpRequest.onload = function () {
             if (httpRequest.status === 200) {
                 alert("삭제되었습니다!!");
-                location.href = "/board";
+                location.href = "/";
             } else {
                 alert("오류가 발생하였습니다!!");
             }

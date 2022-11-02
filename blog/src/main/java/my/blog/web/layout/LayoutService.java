@@ -28,4 +28,8 @@ public class LayoutService {
         model.addAttribute("boardCount", boardCount);
     }
 
+    public void getCategoryList(Model model) {
+        model.addAttribute("categoryList", categoryService.getCategoryList());
+    }
+
 }

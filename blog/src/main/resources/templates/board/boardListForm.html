@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/customStyles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
 
 </head>
@@ -22,60 +23,90 @@
 
 <th:block th:replace="fragments/navigation.html::navfragment"></th:block>
 
+
 <!--헤더를 게시물의 썸네일이 보이도록하자 -->
 <!-- Page Header-->
-<div th:if="${param.category!=null}">
-    <div th:with="title=${param.category}">
-        <th:block th:replace="fragments/header.html::headerFragment(${title})"></th:block>
-    </div>
+<div th:each="board : ${boardList}">
+    <header class="masthead slide-header" th:style="'background-image:url(' + ${board.thumbnail} + ');'">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <a th:href="@{/board/{id}(id=${board.id})}"><h2 class="str" th:text="${board.title}">글 제목</h2></a>
+                        <span class="meta" th:text="|작성일 : ${board.createDate}|"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 </div>
-<div th:if="${param.tagName!=null}">
-    <div th:with="title=${param.tagName}">
-        <th:block th:replace="fragments/header.html::headerFragment(${title})"></th:block>
-    </div>
-</div>
+
 
 
 
 <!--SideBard-->
 <th:block th:replace="fragments/sidebar.html::sidebarFragment"></th:block>
 
-<div class="container justify-content-center">
-    <div class="container p-0">
-        <div class="row g-0 row-cols-2 row-cols-md-3">
-            <div class="col g-1 g-md-4" th:each="board : ${boardList}">
-                <a th:href="@{/board/{id}(id=${board.id})}">
-                    <div class="col mb-2 class-image mx-auto" th:style="'background-image:url(' + ${board.thumbnail} + ');'">
-                        <div class="class-title align-content-center" th:text="${board.title}"></div>
-                        <div class="class-createDate" th:text="|작성일 : ${board.createDate}|"></div>
-                    </div>
-                </a>
-                <div class="border-top mb-2"></div>
+<section class="container-xl">
+    <!--<div class="container justify-content-center">
+        <div class="container p-0">
+            <div class="row g-0 row-cols-2 row-cols-md-3">
+                <div class="col g-1 g-md-4" th:each="board : ${boardList}">
+                    <a th:href="@{/board/{id}(id=${board.id})}">
+                        <div class="col mb-2 class-image mx-auto" th:style="'background-image:url(' + ${board.thumbnail} + ');'">
+                            <div class="class-title align-content-center" th:text="${board.title}"></div>
+                            <div class="class-createDate" th:text="|작성일 : ${board.createDate}|"></div>
+                        </div>
+                    </a>
+                    <div class="border-top mb-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-preview" th:each="board : ${boardList}">
+                    <a th:href="@{/board/{id}(id=${board.id})}">
+                        <h2 class="post-title" th:text="${board.title}"></h2>
+                    </a>
+                    <h5 class="post-subtitle">
+                            <span th:each="tag : ${board.tags}">
+                                <a type="button" class="rounded-2" style="background-color: lightgray" th:href="@{/board/tag(tagName=${tag.tagName})}">
+                                    <i class="fa-solid fa-tag fs-6"></i>
+                                    <span th:text="|${tag.tagName}  |"></span>
+                                </a>
+                            </span>
+                    </h5>
+                    <p class="post-meta" th:text="|작성일.${board.createDate}|"></p>
+                    <hr class="my-4" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="justify-content-center">
-    <nav aria-label="...">
-        <ul class="pagination pagination-lg justify-content-center" th:with="start=${pagingInfo.startPage}, end=${pagingInfo.endPage}">
-            <li class="page-item" th:if="${pagingInfo.previousPage}"><a class="page-link" th:href="@{/board(page=${pagingInfo.currentPage}-1, category=${param.category}, step=${param.step})}">이전</a></li>
+    <div class="justify-content-center">
+        <nav aria-label="...">
+            <ul class="pagination pagination-lg justify-content-center" th:with="start=${pagingInfo.startPage}, end=${pagingInfo.endPage}">
+                <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}"><a class="page-link" th:href="@{/board(page=${pagingInfo.currentPage}-1, category=${param.category}, step=${param.step})}">이전</a></li>
 
-            <span th:each="num : ${#numbers.sequence(start, end)}">
-                <li class="page-item active" th:if="${num == pagingInfo.currentPage && num!=0}">
-                    <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
-                    <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
-                </li>
-                <li class="page-item" th:if="${num != pagingInfo.currentPage && num!=0}">
-                    <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
-                    <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
-                </li>
-            </span>
+                <span th:each="num : ${#numbers.sequence(start, end)}">
+                    <li class="page-item active rounded-3" th:if="${num == pagingInfo.currentPage && num!=0}">
+                        <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
+                    </li>
+                    <li class="page-item rounded-3" th:if="${num != pagingInfo.currentPage && num!=0}">
+                        <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
+                    </li>
+                </span>
 
-            <li class="page-item" th:if="${pagingInfo.previousPage}"><a class="page-link" th:href="@{/board(page=${pagingInfo.currentPage}+1, category=${param.category}, step=${param.step})}">다음</a></li>
-        </ul>
-    </nav>
-</div>
+                <li class="page-item rounded-3" th:if="${pagingInfo.nextPage}"><a class="page-link" th:href="@{/board(page=${pagingInfo.currentPage}+1, category=${param.category}, step=${param.step})}">다음</a></li>
+            </ul>
+        </nav>
+    </div>
+</section>
+
 
 <th:block th:replace="fragments/footer.html::footerFragment"></th:block>
 <!-- Bootstrap core JS-->

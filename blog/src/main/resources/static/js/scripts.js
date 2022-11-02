@@ -4,6 +4,8 @@
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-clean-blog/blob/master/LICENSE)
 */
 window.addEventListener('DOMContentLoaded', () => {
+    slideShow();
+
     let scrollPos = 0;
     const mainNav = document.getElementById('mainNav');
     const headerHeight = mainNav.clientHeight;
@@ -27,3 +29,21 @@ window.addEventListener('DOMContentLoaded', () => {
         scrollPos = currentTop;
     });
 })
+
+let index = 0;
+
+function slideShow() {
+    let slideHeader = document.getElementsByClassName("slide-header");
+    for (let i = 0; i < slideHeader.length; i++) {
+        slideHeader[i].style.display = "none";
+        // slideHeader[i].style.visibility = "hidden";
+    }
+
+    index++;
+    if (index > slideHeader.length) {
+        index = 1;
+    }
+
+    slideHeader[index - 1].style.display= "block";
+    setTimeout(slideShow, 3000);
+}

@@ -10,16 +10,14 @@ import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardService;
 import my.blog.boardTag.service.BoardTagService;
-import my.blog.category.dto.CategoryDto;
-import my.blog.category.service.CategoryService;
 import my.blog.comments.dto.CommentResponse;
 import my.blog.comments.service.CommentsService;
+import my.blog.tag.dto.TagResponse;
 import my.blog.tag.service.TagService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
 import my.blog.web.layout.LayoutService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -56,8 +54,6 @@ public class BoardController {
             pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(category));
         }
 
-        log.info("Paging Infomation = {}", pagingInfo.toString());
-
         List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, category, step);
 
         model.addAttribute("boardList", boards);
@@ -78,7 +74,7 @@ public class BoardController {
         Board board = boardService.getBoard(id);
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
-        List<String> tagList = boardTagService.getTagList(id);
+        List<TagResponse> tagList = boardTagService.getTagList(id);
         log.info("tagList {}", tagList);
 
         if (user != null) {
@@ -96,13 +92,9 @@ public class BoardController {
         return "board/boardDetailForm";
     }
 
-    @GetMapping("/edit/{id}")
-    public String boardEditForm(@PathVariable("id") Long boardId, Model model) {
-        Board board = boardService.getBoard(boardId);
-        BoardResponse boardResponse = new BoardResponse(board);
-
-        model.addAttribute("boardResponse", boardResponse);
-        model.addAttribute("editFlag", true); // 작성
+    @GetMapping("/edit")
+    public String boardEditForm(Model model) {
+        layoutService.getCategoryList(model);
 
         return "board/boardEditForm";
     }
