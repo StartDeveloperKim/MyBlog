@@ -48,8 +48,24 @@ $(document).ready(function () {
     {
         const check = confirm("카테고리를 삭제하시겠습니까?");
         if (check) {
-            $(this).parent().remove();
-            localStorage.setItem('listItems', $('#list-items').html());
+            const id = $(this).attr('value');
+            console.log(id);
+            $.ajax({
+                url: "/category/remove/" + id,
+                type: 'GET',
+                async: false,
+                success: function (result) {
+                    if (result === "success") {
+                        alert("카테고리가 삭제되었습니다.");
+                        window.location.href = "/category";
+                    } else {
+                        alert("오류가 발생했습니다!!")
+                    }
+                },
+                error: function () {
+                    alert("통신실패");
+                }
+            });
         }
     });
 });

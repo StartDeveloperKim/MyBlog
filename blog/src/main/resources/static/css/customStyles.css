@@ -271,3 +271,38 @@ textarea {
 #comment-btn {
     border-radius: 10px;
 }
+
+.section2_btn {
+    border-radius: 35px;
+    padding: 10px 12px;
+    width: 100%;
+    height: 52px;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 42px;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.btn11 {
+    background: transparent;
+    border: 2px solid #ff4157;
+    color: #ff4157;
+}
+.btn11:hover {
+    background: #ff4157;
+    color: #fff;
+}
+
+.btn22 {
+    background: transparent;
+    border: 2px solid #4285f4;
+    color: #4285f4;
+}
+.btn22:hover {
+    background: #4285f4;
+    color: #fff;
+}

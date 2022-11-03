@@ -56,15 +56,29 @@
         </div>
     </div>
 
-    <div class="row justify-content-end">
-        <div class="col-4 justify-content-center" sec:authorize="hasRole('ROLE_ADMIN')">
-            <button class="btn btn-outline-secondary" id="edit-btn">수정</button>
+    <div class="container justify-content-center mx-auto my-auto mb-3 d-flex border-top" sec:authorize="hasRole('ROLE_ADMIN')">
+        <div class="row">
+            <div class="col justify-content-center align-self-auto">
+                <!--<button class="btn-lg btn-outline-secondary rounded-4" id="edit-btn">수정</button>-->
+                <button class="section2_btn btn22" type="button" id="edit-btn">수정</button>
+            </div>
+            <div class="col justify-content-center align-self-auto">
+                <!--<button class="btn-lg btn-outline-danger rounded-4" id="delete-btn">삭제</button>-->
+                <button class="section2_btn btn11" type="button" id="delete-btn">삭제</button>
+            </div>
         </div>
-        <div class="col-4" sec:authorize="hasRole('ROLE_ADMIN')">
-            <button class="btn btn-outline-danger" id="delete-btn">삭제</button>
-        </div>
-        <div th:each="tag : ${tagList}">
-            <strong><a th:href="@{/board/tag(tagName=${tag.tagName})}" th:text="${tag.tagName}"></a></strong>
+    </div>
+
+    <div class="container-md border-top my-auto"></div>
+    <!--태그-->
+    <div class="container justify-content-center mx-auto my-auto mb-3 d-flex w-75 rounded-3">
+        <div class="card-header bg-light">
+        <span th:each="tag : ${tagList}">
+            <a type="button" class="rounded-1 border" style="background-color: lightgray" th:href="@{/board/tag(tagName=${tag.tagName})}">
+                <i class="fa-solid fa-tag fs-6"></i>
+                <span th:text="|${tag.tagName}|"></span>
+            </a>
+        </span>
         </div>
     </div>
 
@@ -73,6 +87,7 @@
         <div class="card w-75">
             <div class="card-header bg-light">
                 <i class="fa fa-comment fa"></i> 댓글
+
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">

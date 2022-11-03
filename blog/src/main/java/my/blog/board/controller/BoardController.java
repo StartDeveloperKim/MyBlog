@@ -43,7 +43,7 @@ public class BoardController {
 
     @GetMapping
     public String boardListForm(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
-                                @RequestParam(value = "category", required = false) String category,
+                                @RequestParam(value = "category", defaultValue = "total", required = false) String category,
                                 @RequestParam(value = "step", required = false, defaultValue = "0") String step,
                                 @LoginUser SessionUser user,
                                 Model model) {

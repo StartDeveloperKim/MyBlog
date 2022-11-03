@@ -34,13 +34,13 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void deleteCategory(String name) {
+    public void deleteCategory(Long id) {
         // 해당 카테고리 아래에 글이 하나라도 있다면 삭제x
-        Long boardCount = boardRepository.getBoardCountByCategory(name);
-        if (boardCount == 0L) {
+        Long boardCount = boardRepository.getBoardCountByCategory(id);
+        if (boardCount != 0L) {
             throw new WritingExistException("카테고리 아래에 글이 존재합니다.");
         }
-        categoryRepository.deleteByCategoryName(name);
+        categoryRepository.deleteByCategoryName(id);
     }
 
     @Override
@@ -61,7 +61,8 @@ public class CategoryServiceImpl implements CategoryService{
         List<CategoryDto> categoryDtos = new ArrayList<>();
         List<CategoryRespInterface> categoryInfo = categoryRepository.findCategoryDto();
         for (CategoryRespInterface categoryRespInterface : categoryInfo) {
-            categoryDtos.add(new CategoryDto(categoryRespInterface.getName(), categoryRespInterface.getCategoryNum()));
+            categoryDtos.add(new CategoryDto(categoryRespInterface.getId(),
+                    categoryRespInterface.getName(), categoryRespInterface.getCategoryNum()));
         }
 
         return categoryDtos;

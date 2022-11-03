@@ -24,8 +24,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 //    @Query("delete from Board b where b.id = :id")
 //    void deleteById(@Param("id") Long boardId);
 
-    @Query("select count(b) from Board b where b.category.categoryName = :categoryName")
-    Long getBoardCountByCategory(String categoryName);
+    @Query("select count(b) from Board b where b.category.id = :categoryId")
+    Long getBoardCountByCategory(@Param("categoryId") Long categoryId);
 
     @Query("select count(b) from Board b")
     Long getAllBoardCount();

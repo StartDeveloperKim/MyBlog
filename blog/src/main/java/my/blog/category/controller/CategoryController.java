@@ -51,11 +51,11 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("/remove")
+    @GetMapping("/remove/{id}")
     @ResponseBody
-    public String categoryRemove(@RequestBody CategoryDto categoryDto) {
+    public String categoryRemove(@PathVariable("id") Long id) {
         try {
-            categoryService.deleteCategory(categoryDto.getName());
+            categoryService.deleteCategory(id);
             return "success";
         } catch (WritingExistException e) {
             log.info("This Category has writing : {}", e.getMessage());

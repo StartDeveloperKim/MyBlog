@@ -29,7 +29,7 @@ public class Board extends BaseTimeEntity {
     @Column(name = "board_id", nullable = false)
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @Column(length = 10000, nullable = false)
