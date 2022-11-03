@@ -50,7 +50,7 @@
         <div class="main-todo-input fl-wrap todo-listing">
           <ul id="list-items">
             <li th:each="category : ${categoryList}">
-              <span class='todo-text' th:text="${category.name}">카테고리</span><a class='remove text-right'><i class='fa fa-trash'></i></a><hr>
+              <span class='todo-text' th:text="${category.name}">카테고리</span><a th:if="${category.categoryNum==0}" class='remove text-right'><i class='fa fa-trash'></i></a><hr>
             </li>
           </ul>
         </div>

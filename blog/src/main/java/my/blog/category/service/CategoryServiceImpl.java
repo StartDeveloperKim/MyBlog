@@ -5,12 +5,13 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryRespInterface;
 import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,9 +58,13 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional(readOnly = true)
     @Override
     public List<CategoryDto> getCategoryList() {
-        List<Category> all = categoryRepository.findAll();
-        return all.stream().map(CategoryDto::new)
-                .collect(Collectors.toList());
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        List<CategoryRespInterface> categoryInfo = categoryRepository.findCategoryDto();
+        for (CategoryRespInterface categoryRespInterface : categoryInfo) {
+            categoryDtos.add(new CategoryDto(categoryRespInterface.getName(), categoryRespInterface.getCategoryNum()));
+        }
+
+        return categoryDtos;
     }
 
     /*더미 카테고리 생성 -> 글을 작성할 때 카테고리 설정을 하지 않으면 해당 카테고리에 들어간다.*/

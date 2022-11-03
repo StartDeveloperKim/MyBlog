@@ -12,8 +12,9 @@ import my.blog.category.domain.Category;
 public class CategoryDto {
 
     private String name;
-
-    public CategoryDto(Category category) {
-        this.name = category.getCategoryName();
+    private Long categoryNum; // 카테고리당 글 개수
+    public CategoryDto(String categoryName, Long count) {
+        this.name = categoryName;
+        this.categoryNum = (count == null) ? 0 : count;
     }
 }

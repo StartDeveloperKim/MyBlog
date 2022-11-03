@@ -52,7 +52,7 @@
                 <li class="mb-1 mx-4" th:each="category : ${categoryList}">
                     <div class="btn-group">
                     <span th:if="${category.name!='total'}"><a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
-                                                               th:text="|${category.name}|">스프링(0)</a></span>
+                                                               th:text="|${category.name}(${category.categoryNum})|">스프링(0)</a></span>
                         <span th:if="${category.name=='total'}"><a th:href="@{/board(category=${category.name}, step=0)}" class="mb-0 superCategory btn fs-5"
                                                                    th:text="|전체글|">전체글</a></span>
                     </div>
