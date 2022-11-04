@@ -24,13 +24,15 @@ public class CategoryServiceImpl implements CategoryService{
     private final BoardRepository boardRepository;
 
     @Override
-    public void saveCategory(String name) {
+    public Long saveCategory(String name) {
         Boolean categoryCheck = categoryRepository.existsByCategoryName(name);
         if (categoryCheck) {
             throw new DuplicateCategoryException("이미 존재하는 카테고리 입니다.");
         }
         Category category = Category.from(name); // 생성메서드
-        categoryRepository.save(category);
+        Category saveCategory = categoryRepository.save(category);
+
+        return saveCategory.getId();
     }
 
     @Override

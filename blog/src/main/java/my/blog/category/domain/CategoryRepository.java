@@ -21,6 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = "SELECT C.CATEGORY_ID AS id, CATEGORY_NAME AS name , COUNT AS categoryNum " +
             "FROM (SELECT CATEGORY_ID, COUNT(CATEGORY_ID) AS COUNT " +
             "FROM BOARD GROUP BY CATEGORY_ID) AS SQ " +
-            "RIGHT OUTER JOIN CATEGORY AS C ON SQ.CATEGORY_ID = C.CATEGORY_ID ORDER BY C.CATEGORY_ID ASC", nativeQuery = true)
+            "RIGHT OUTER JOIN CATEGORY AS C ON SQ.CATEGORY_ID = C.CATEGORY_ID ORDER BY C.CATEGORY_ID ASC"
+            , nativeQuery = true)
     List<CategoryRespInterface> findCategoryDto();
 }

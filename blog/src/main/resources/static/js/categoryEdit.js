@@ -4,16 +4,17 @@ $(document).ready(function () {
         $.ajax({
             url: "/category/add",
             type: 'POST',
-            async:false,
+            async: false,
             data: JSON.stringify(data),
             contentType: 'application/json',
-            success: function (result) {
-                if (result === "success") {
+            success: function (data) {
+                console.log(data);
+                if (data.status === "success") {
                     alert("카테고리가 등록되었습니다.");
-                    $('#list-items').append("<li><span class='todo-text'>" + categoryName + "</span><a class='remove text-right'><i class='fa fa-trash'></i></a><hr></li>");
+                    $('#list-items').append("<li><span class='todo-text'>" + categoryName + "</span><a class='remove text-right' th:value=" + data.categoryId + "> <i class='fa fa-trash'></i></a><hr></li>");
                     localStorage.setItem('listItems', $('#list-items').html());
                     $('#todo-list-item').val("");
-                } else {
+                } else if (data.status === "duplicate") {
                     alert("카테고리가 중복되었습니다.");
                     $('#todo-list-item').focus();
                 }
@@ -24,8 +25,7 @@ $(document).ready(function () {
         });
     }
 
-    $('.add-items').click(function(event)
-    {
+    $('.add-items').click(function (event) {
         event.preventDefault();
         let item = $('#todo-list-item').val();
 
@@ -44,15 +44,19 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', '.remove', function()
-    {
+    $(document).on('click', '.remove', function () {
         const check = confirm("카테고리를 삭제하시겠습니까?");
         if (check) {
-            const id = $(this).attr('value');
-            console.log(id);
+            const categoryId = $(this).attr('value');
+            const data = {};
+            data.categoryId = categoryId;
+
+            console.log(categoryId);
             $.ajax({
-                url: "/category/remove/" + id,
-                type: 'GET',
+                url: "/category/remove",
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
                 async: false,
                 success: function (result) {
                     if (result === "success") {

@@ -3,12 +3,15 @@ package my.blog.category.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryRemoveDto;
+import my.blog.category.dto.CategoryResponseDto;
 import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
 import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,21 +44,25 @@ public class CategoryController {
 
     @PostMapping("/add")
     @ResponseBody
-    public String categoryAdd(@RequestBody CategoryDto categoryDto) {
+    public CategoryResponseDto categoryAdd(@RequestBody CategoryDto categoryDto) {
+
         try {
-            categoryService.saveCategory(categoryDto.getName());
-            return "success";
+            Long categoryId = categoryService.saveCategory(categoryDto.getName());
+            return new CategoryResponseDto(categoryId, "success");
         } catch (DuplicateCategoryException e) {
             log.info("Category Duplicate Exception : {}", e.getMessage());
-            return "duplicate";
+            return new CategoryResponseDto(null, "duplicate");
         }
+
     }
 
-    @GetMapping("/remove/{id}")
+    @PostMapping("/remove")
     @ResponseBody
-    public String categoryRemove(@PathVariable("id") Long id) {
+    public String categoryRemove(@RequestBody CategoryRemoveDto removeDto) {
         try {
-            categoryService.deleteCategory(id);
+            log.info("삭제요청 {}", removeDto.getCategoryId());
+
+            categoryService.deleteCategory(removeDto.getCategoryId());
             return "success";
         } catch (WritingExistException e) {
             log.info("This Category has writing : {}", e.getMessage());
