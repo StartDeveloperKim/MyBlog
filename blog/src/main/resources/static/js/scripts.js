@@ -4,7 +4,6 @@
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-clean-blog/blob/master/LICENSE)
 */
 window.addEventListener('DOMContentLoaded', () => {
-    slideShow();
 
     let scrollPos = 0;
     const mainNav = document.getElementById('mainNav');
@@ -31,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 let index = 0;
-
+/*
 function slideShow() {
     let slideHeader = document.getElementsByClassName("slide-header");
     for (let i = 0; i < slideHeader.length; i++) {
@@ -46,4 +45,25 @@ function slideShow() {
 
     slideHeader[index - 1].style.display= "block";
     setTimeout(slideShow, 3000);
-}
+}*/
+
+/*$(document).ready(function () {
+    const headerImg = $(".slide-header").length;
+    let now = 0;
+
+    function slide() {
+        now = now === headerImg ? 0 : now += 1;
+
+        $(".imgs>.header-img").eq(now-1).css({"margin-left": "-1400px"});
+        $(".imgs>.header-img").eq(now).css({"margin-left": "0px"})
+    }
+
+    function start() {
+        $(".imgs>.header-img").eq(0).siblings().css({"margin-left": "-1400px"});
+        setInterval(function () {
+            slide()
+        }, 3000);
+    }
+
+    start();
+});*/

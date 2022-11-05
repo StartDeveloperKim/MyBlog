@@ -306,3 +306,10 @@ textarea {
     background: #4285f4;
     color: #fff;
 }
+
+.main-image {
+    filter: brightness(70%);
+}
+.cover {
+    object-fit: cover;
+}
