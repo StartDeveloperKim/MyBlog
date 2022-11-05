@@ -80,6 +80,13 @@ window.onload = function () {
                 alert("글이 등록되었습니다.");
                 const boardId = httpRequest.response;
                 window.location.href = "/board/" + boardId;
+            } else if(httpRequest.status === 400) {
+                const JsonData = httpRequest.response
+
+                console.log(Object.keys(JsonData));
+                for (let k of Object.keys(JsonData)) {
+                    alert(JsonData[k]);
+                }
             } else {
                 alert("통신 실패!!!!!!");
             }

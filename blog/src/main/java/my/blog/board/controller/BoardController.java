@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -75,13 +76,14 @@ public class BoardController {
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
         List<TagResponse> tagList = boardTagService.getTagList(id);
-        log.info("tagList {}", tagList);
+        List<CommentResponse> comments = commentsService.getComments(id);
+        boardService.addHit(id);
+
+        //log.info("tagList {}", tagList);
 
         if (user != null) {
             model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
         }
-
-        List<CommentResponse> comments = commentsService.getComments(id);
 
         model.addAttribute("board", boardResponse);
         model.addAttribute("commentList", comments);
@@ -102,7 +104,7 @@ public class BoardController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
-                                          @RequestBody BoardRegister boardRegister) {
+                                          @Valid @RequestBody BoardRegister boardRegister) {
         // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
         log.info("Get Data : {}", boardRegister.toString());
         if (user == null) {
@@ -127,13 +129,12 @@ public class BoardController {
 
         model.addAttribute("board", boardResponse);
 
-
         return "board/boardEditForm";
     }
 
     @PostMapping("/edit")
     @ResponseBody
-    public ResponseEntity<String> boardUpdate(@ModelAttribute BoardUpdate boardUpdate) {
+    public ResponseEntity<String> boardUpdate(@RequestBody BoardUpdate boardUpdate) {
         try {
             boardService.editBoard(boardUpdate);
             return ResponseEntity.ok().body("success");

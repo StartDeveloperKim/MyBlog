@@ -19,6 +19,7 @@ public class BoardResponse {
     private String title;
     private String thumbnail;
     private String createDate;
+    private Long hit;
     private List<TagResponse> tags;
 
     public BoardResponse(Board board) {
@@ -26,6 +27,7 @@ public class BoardResponse {
         this.title = board.getTitle();
         this.thumbnail = board.getThumbnail();
         this.createDate = board.getCreateDate().format(DateTimeFormatter.ISO_DATE);
+        this.hit = board.getHit();
         this.tags = board.getBoardTags().stream().map(boardTag -> new TagResponse(boardTag.getTag().getTagName())).collect(Collectors.toList());
     }
 

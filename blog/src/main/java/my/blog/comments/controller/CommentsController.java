@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class CommentsController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> saveComment(@RequestBody CommentRequest commentRequest,
+    public ResponseEntity<Map<String, Object>> saveComment(@Valid @RequestBody CommentRequest commentRequest,
                                               @PathVariable("id") Long boardId,
                                               @LoginUser SessionUser user) {
         Map<String, Object> map = new HashMap<>();

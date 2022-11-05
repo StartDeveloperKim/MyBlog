@@ -82,6 +82,9 @@ function postComment() {
             const response = httpRequest.response;
             alert("댓글이 등록되었습니다!!");
             addCommentHtml(response);
+        }else if (httpRequest.status === 400) {
+            const error = JSON.parse(httpRequest.response);
+            alert(error.comment);
         } else {
             alert("통신 실패!!!!!!");
         }
