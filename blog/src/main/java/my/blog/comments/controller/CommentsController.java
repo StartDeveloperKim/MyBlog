@@ -45,9 +45,9 @@ public class CommentsController {
                                                            @LoginUser SessionUser user) {
         Map<String, Object> map = new HashMap<>();
         try {
-            log.info("comment:{}, boardId:{}", commentRequest.getComment(), boardId);
+            log.info("comment Info {}", commentRequest.toString());
 
-            commentsService.saveComment(commentRequest.getComment(), boardId, user.getUserId());
+            commentsService.saveComment(commentRequest, boardId, user.getUserId());
             Map<Long, CommentResponse> comments = commentsService.getComments(boardId);
             int totalComment = commentsService.getTotalComment(boardId);
 

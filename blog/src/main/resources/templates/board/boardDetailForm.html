@@ -135,7 +135,7 @@
                                         <div class="row justify-content-center">
                                             <textarea sec:authorize="isAuthenticated()" class="form-control comment-area" th:id="|child-comment-area${comment.commentId}|" rows="1" placeholder="답글을 입력해주세요"></textarea>
                                             <textarea sec:authorize="!isAuthenticated()" class="form-control comment-area" rows="1" placeholder="답글을 등록하려면 로그인이 필요합니다." onclick=location.href='/login' readonly></textarea>
-                                            <button sec:authorize="isAuthenticated()" id="child-comment-btn" type="button" class="btn btn-outline-dark mt-3 btn-sm rounded-3" th:attrappend="parentId=${comment.commentId}" onclick="postChildComment()">답글등록</button>
+                                            <button sec:authorize="isAuthenticated()" th:id="|child-comment-btn${comment.commentId}|" type="button" class="btn btn-outline-dark mt-3 btn-sm rounded-3" th:attrappend="parentId=${comment.commentId}" onclick="postChildComment(this)">답글등록</button>
                                         </div>
                                     </div>
                                 </div>

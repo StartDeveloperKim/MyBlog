@@ -78,15 +78,47 @@ function getCommentList() {
     };
 }
 
-function postChildComment() {
-    let childCommentBtn = document.getElementById(this);
-    console.log(childCommentBtn);
+function sendComment(comment, parentId) {
+    let requestsData = {};
+    requestsData.comment = comment;
+    requestsData.parentId = parentId;
+    httpRequest = new XMLHttpRequest();
+
+    httpRequest.open('POST', '/comment/' + boardId, true);
+    httpRequest.responseType = 'json';
+    httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+    httpRequest.send(JSON.stringify(requestsData));
+
+    httpRequest.onload = function () {
+        if (httpRequest.status === 200) {
+            const response = httpRequest.response;
+            alert("댓글이 등록되었습니다!!");
+            addCommentHtml(response);
+        } else if (httpRequest.status === 400) {
+            const error = JSON.parse(httpRequest.response);
+            alert(error.comment);
+        } else {
+            alert("통신 실패!!!!!!");
+        }
+    };
+}
+
+function postChildComment(e) {
+    let childCommentBtn = document.getElementById(e.getAttribute('id'));
+    console.log('버튼ID'+childCommentBtn.getAttribute('id'));
 
     const parentId = childCommentBtn.getAttribute('parentId');
     console.log(parentId);
 
-    const childComment = document.getElementById("child-comment-area" + parentId);
+    const childComment = document.getElementById("child-comment-area" + parentId).value;
     console.log(childComment);
+
+    if (childComment === "") {
+        alert("댓글을 입력해주세요");
+    } else {
+        sendComment(childComment, parentId);
+    }
 }
 
 function postComment() {
@@ -102,28 +134,7 @@ function postComment() {
         }
     }
 
-    let responseData = {};
-    responseData.comment = comment;
-    httpRequest = new XMLHttpRequest();
-
-    httpRequest.open('POST', '/comment/' + boardId, true);
-    httpRequest.responseType = 'json';
-    httpRequest.setRequestHeader('Content-Type', 'application/json');
-
-    httpRequest.send(JSON.stringify(responseData));
-
-    httpRequest.onload = function () {
-        if (httpRequest.status === 200) {
-            const response = httpRequest.response;
-            alert("댓글이 등록되었습니다!!");
-            addCommentHtml(response);
-        } else if (httpRequest.status === 400) {
-            const error = JSON.parse(httpRequest.response);
-            alert(error.comment);
-        } else {
-            alert("통신 실패!!!!!!");
-        }
-    };
+    sendComment(comment, null);
 }
 
 /*수정 삭제 버튼 이벤트*/

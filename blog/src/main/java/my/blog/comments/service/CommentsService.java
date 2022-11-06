@@ -20,7 +20,7 @@ public interface CommentsService {
 
     int getTotalComment(Long boardId);
 
-    void saveComment(String content, Long boardId, Long userId);
+    void saveComment(CommentRequest commentRequest, Long boardId, Long userId);
 
     void updateComment(CommentEditRequest editRequest);
 
