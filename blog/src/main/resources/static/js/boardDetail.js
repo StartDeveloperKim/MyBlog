@@ -1,6 +1,7 @@
 let httpRequest;
 let boardId = document.getElementById("boardId").value;
-const commentArea = document.getElementById("comment-area-login").value;
+
+//const commentArea = document.getElementById("comment-area-login").value;
 
 function addCommentHtml(data) {
     const cardList = document.getElementById("cardList")
@@ -10,14 +11,15 @@ function addCommentHtml(data) {
     let total = data.total;
     if (total > 0) {
         let comments = data.comments;
-        console.log("댓글과 개수");
-        for (let i = 0; i < comments.length; i++) {
-            console.log(comments[i]);
-            let commentId = comments[i].commentId;
-            let comment = comments[i].content;
-            let createDate = comments[i].createDate;
-            let userName = comments[i].userName;
-            let userThumbnail = comments[i].userThumbnail;
+
+        for (let k of Object.keys(comments)) {
+            console.log(comments[k]);
+            let commentId = comments[k].commentId;
+            let comment = comments[k].content;
+            let createDate = comments[k].createDate;
+            let userName = comments[k].userName;
+            let userThumbnail = comments[k].userThumbnail;
+            let childComments = comments[k].childCommentDtos;
 
             let comment_html =
                 "<div class='card-body p-2'>" +
@@ -26,12 +28,34 @@ function addCommentHtml(data) {
                 "       <div>" +
                 "           <h6 class='fw-bold mb-1'>" + userName + "  </h6>" +
                 "           <div class='d-flex align-items-center mb-1 fs-6'>" + "작성일: " + createDate + "</div>" +
-                "       <p class='fw-bold fs-7'>" + comment + "</p>" +
+                "       <div class='mb-0 fs-7'>" + comment + "</div></div>" +
                 "   </div>" +
-                "</div>" +
-                "<hr class=\"my-1\" />";
+                "</div>";
+            if (childComments.length === 0) {
+                cardList.innerHTML += comment_html;
+            } else {
+                let childComment_html =
+                    "<div>" +
+                    "<button type='button' class='btn btn-outline-success btn-sm rounded-3' data-bs-toggle='collapse' data-bs-target='#comment" + commentId + "' aria-expanded='false' aria-controls='comment" + commentId + "' style='cursor: pointer; float: right'>답글</button>" +
+                    "</div>" +
+                    "<div class='collapse' id='comment" + commentId + "'>"
+                for (let i = 0; i < childComments.length; i++) {
+                    childComment_html +=
+                        "   <div class='d-flex mt-4 collapse'>" +
+                        "       <div class='d-flex flex-start ms-4'>" +
+                        "       <img class='rounded-circle shadow-1-strong me-1' src='" + childComments[i].userThumbnail + "' width='40' height='40'>" +
+                        "       <div>" +
+                        "           <h6 class='fw-bold mb-1'>" + childComments[i].userName + "</h6>" +
+                        "           <div class='d-flex align-items-center mb-1 fs-6'>" + childComments[i].createDate + "</div>" +
+                        "           <div class='mb-0 fs-6'>" + childComments[i].content + "</div>" +
+                        "       </div></div>" +
+                        "   </div>";
+                }
+                cardList.innerHTML += comment_html;
+                childComment_html+="<hr class='my-1'></div>"
+                cardList.innerHTML += childComment_html;
+            }
 
-            cardList.innerHTML += comment_html;
         }
     } else {
         let comment_html = "<div class='container'></div>";
@@ -52,6 +76,17 @@ function getCommentList() {
             alert("통신 실패!!!!!!");
         }
     };
+}
+
+function postChildComment() {
+    let childCommentBtn = document.getElementById(this);
+    console.log(childCommentBtn);
+
+    const parentId = childCommentBtn.getAttribute('parentId');
+    console.log(parentId);
+
+    const childComment = document.getElementById("child-comment-area" + parentId);
+    console.log(childComment);
 }
 
 function postComment() {
@@ -82,7 +117,7 @@ function postComment() {
             const response = httpRequest.response;
             alert("댓글이 등록되었습니다!!");
             addCommentHtml(response);
-        }else if (httpRequest.status === 400) {
+        } else if (httpRequest.status === 400) {
             const error = JSON.parse(httpRequest.response);
             alert(error.comment);
         } else {

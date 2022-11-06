@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -76,7 +77,7 @@ public class BoardController {
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
         List<TagResponse> tagList = boardTagService.getTagList(id);
-        List<CommentResponse> comments = commentsService.getComments(id);
+        Map<Long, CommentResponse> comments = commentsService.getComments(id);
         boardService.addHit(id);
 
         //log.info("tagList {}", tagList);

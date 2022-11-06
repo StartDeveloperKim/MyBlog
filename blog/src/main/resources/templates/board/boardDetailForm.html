@@ -108,7 +108,7 @@
                     <div class="col-md-12 col-lg-10">
                         <div class="card text-dark" style="border-radius: 10px;" id="cardList">
 
-                            <div class="card-body p-2" th:each="comment : ${commentList}">
+                            <div class="card-body p-2" th:each="comment : ${commentList.values()}" th:classappend="${comment.childCommentDtos.size()}!=0 ? 'mb-4':''">
                                 <div class="d-flex flex-start">
                                     <img class="rounded-circle shadow-1-strong me-3"
                                          th:src="${comment.userThumbnail}" alt="avatar" width="40"
@@ -118,13 +118,50 @@
                                         <div class="d-flex align-items-center mb-1 fs-6" th:text="|작성일 : ${comment.createDate}|">
                                             March 07, 2022
                                         </div>
-                                        <p class="mb-0 fs-7" th:text="${comment.content}">
+                                        <div class="mb-0 fs-5" th:text="${comment.content}">
                                             오류오류
-                                        </p>
+                                        </div>
+                                        <div class="fs-6">
+                                            <a class="mx-auto my-auto"  data-bs-toggle="collapse" th:attr="data-bs-target='#comment'+${comment.commentId}"
+                                               aria-expanded="false" th:attrappend="aria-controls=|comment${comment.commentId}|" th:if="${comment.childCommentDtos.size()!=0}" th:text="답글보기" style="cursor: pointer; color: #0d6efd">답글</a>
+                                            <a class="mx-auto my-auto"  data-bs-toggle="collapse" th:attr="data-bs-target='#commentArea'+${comment.commentId}"
+                                               aria-expanded="false" th:attrappend="aria-controls=|commentArea${comment.commentId}|" th:text="답글쓰기" style="cursor: pointer; color: black">답글쓰기</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div th:id="|commentArea${comment.commentId}|" class="collapse">
+                                    <div class="container">
+                                        <div class="row justify-content-center">
+                                            <textarea sec:authorize="isAuthenticated()" class="form-control comment-area" th:id="|child-comment-area${comment.commentId}|" rows="1" placeholder="답글을 입력해주세요"></textarea>
+                                            <textarea sec:authorize="!isAuthenticated()" class="form-control comment-area" rows="1" placeholder="답글을 등록하려면 로그인이 필요합니다." onclick=location.href='/login' readonly></textarea>
+                                            <button sec:authorize="isAuthenticated()" id="child-comment-btn" type="button" class="btn btn-outline-dark mt-3 btn-sm rounded-3" th:attrappend="parentId=${comment.commentId}" onclick="postChildComment()">답글등록</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <hr class="my-1" />
+                                <div th:id="|comment${comment.commentId}|" class="collapse">
+
+                                    <div class="d-flex mt-4 collapse" th:each="childComment : ${comment.childCommentDtos}">
+                                        <div class="d-flex flex-start ms-4">
+                                            <img class="rounded-circle shadow-1-strong me-1"
+                                                 th:src="${childComment.userThumbnail}" alt="avatar" width="40"
+                                                 height="40" />
+                                            <div>
+                                                <h6 class="fw-bold mb-1" th:text="|${childComment.userName}|">Maggie Marsh</h6>
+                                                <div class="d-flex align-items-center mb-1 fs-6" th:text="|작성일 : ${childComment.createDate}|">
+                                                    March 07, 2022
+                                                </div>
+                                                <div class="mb-0 fs-6" th:text="${childComment.content}">
+                                                    오류오류
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="my-1" />
+                                </div>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -133,6 +170,33 @@
         </div>
 
     </div>
+    <!-- Comments section-->
+    <!--<section class="container mb-5 mx-auto my-auto">
+        <div class="card bg-light">
+            <div class="card-body">
+                &lt;!&ndash; Comment form&ndash;&gt;
+                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="댓글을 입력해주세요!!"></textarea></form>
+                &lt;!&ndash; Comment with nested comments&ndash;&gt;
+                <div class="d-flex" th:each="comment : ${commentList.values()}" th:classappend="${comment.childCommentDtos.size()}!=0 ? 'mb-4' : ''">
+                    &lt;!&ndash; Parent comment&ndash;&gt;
+                    <div class="flex-shrink-0"><img class="rounded-circle shadow-1-strong me-3" th:src="${comment.userThumbnail}" alt="..." /></div>
+                    <div class="ms-3">
+                        <div class="fw-bold" th:text="|${comment.userName}, 작성일:${comment.createDate}|">Commenter Name</div>
+                        <span th:text="${comment.content}"></span>
+                        &lt;!&ndash; Child comment &ndash;&gt;
+                        <div class="d-flex mt-4" th:each="childComment : ${comment.childCommentDtos}">
+                            <div class="flex-shrink-0"><img class="rounded-circle shadow-1-strong me-4" th:src="${childComment.userThumbnail}" alt="..." /></div>
+                            <div class="ms-3">
+                                <div class="fw-bold" th:text="${childComment.userName}">Commenter Name</div>
+                                <span th:text="${childComment.content}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>-->
+
 </article>
 
 

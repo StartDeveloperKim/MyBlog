@@ -28,7 +28,7 @@ public class CommentsController {
     @GetMapping("/{boardId}")
     public ResponseEntity<Map<String, Object>> getComments(@PathVariable("boardId") Long boardId) {
         Map<String, Object> map = new HashMap<>();
-        List<CommentResponse> comments = commentsService.getComments(boardId);
+        Map<Long, CommentResponse> comments = commentsService.getComments(boardId);
         int totalComment = commentsService.getTotalComment(boardId);
 
         map.put("comments", comments);
@@ -41,14 +41,14 @@ public class CommentsController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Map<String, Object>> saveComment(@Valid @RequestBody CommentRequest commentRequest,
-                                              @PathVariable("id") Long boardId,
-                                              @LoginUser SessionUser user) {
+                                                           @PathVariable("id") Long boardId,
+                                                           @LoginUser SessionUser user) {
         Map<String, Object> map = new HashMap<>();
         try {
             log.info("comment:{}, boardId:{}", commentRequest.getComment(), boardId);
 
             commentsService.saveComment(commentRequest.getComment(), boardId, user.getUserId());
-            List<CommentResponse> comments = commentsService.getComments(boardId);
+            Map<Long, CommentResponse> comments = commentsService.getComments(boardId);
             int totalComment = commentsService.getTotalComment(boardId);
 
             map.put("comments", comments);

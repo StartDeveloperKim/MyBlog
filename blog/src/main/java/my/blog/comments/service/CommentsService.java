@@ -5,6 +5,7 @@ import my.blog.comments.dto.CommentRequest;
 import my.blog.comments.dto.CommentResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CommentsService {
 
@@ -15,7 +16,7 @@ public interface CommentsService {
      * 3. 댓글 수정
      * 4. 댓글 가져오기
      * */
-    List<CommentResponse> getComments(Long boardId);
+    Map<Long, CommentResponse> getComments(Long boardId);
 
     int getTotalComment(Long boardId);
 
