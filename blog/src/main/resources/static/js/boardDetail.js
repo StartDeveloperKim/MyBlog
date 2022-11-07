@@ -28,38 +28,48 @@ function addCommentHtml(data) {
                 "       <div>" +
                 "           <h6 class='fw-bold mb-1'>" + userName + "  </h6>" +
                 "           <div class='d-flex align-items-center mb-1 fs-6'>" + "작성일: " + createDate + "</div>" +
-                "       <div class='mb-0 fs-7'>" + comment + "</div></div>" +
+                "           <div class='mb-0 fs-7'>" + comment + "</div>" +
+                "           <div class='fs-6'>";
+            if (childComments.length > 0) {
+                comment_html += "               <a class='mx-auto my-auto' data-bs-toggle='collapse' data-bs-target='#comment" + commentId + "' aria-expanded='false' aria-controls='comment" + commentId + "' style='cursor: pointer; color: #0d6efd'>답글보기</a>";
+            }
+            comment_html +=
+                "                               <a class='mx-auto my-auto' data-bs-toggle='collapse' data-bs-target='#commentArea" + commentId + "' aria-expanded='false' aria-controls='commentArea" + commentId + "' style='cursor: pointer; color: black'>답글쓰기</a>" +
+                "           </div>" +
+                "       </div>" +
                 "   </div>" +
                 "</div>";
-            if (childComments.length === 0) {
-                cardList.innerHTML += comment_html;
-            } else {
-                let childComment_html =
-                    "<div>" +
-                    "<button type='button' class='btn btn-outline-success btn-sm rounded-3' data-bs-toggle='collapse' data-bs-target='#comment" + commentId + "' aria-expanded='false' aria-controls='comment" + commentId + "' style='cursor: pointer; float: right'>답글</button>" +
+
+            cardList.innerHTML += comment_html;
+
+            let childComment_html =
+                    "<div id='commentArea" + commentId + "' class='collapse'>" +
+                    "   <div class='container'>" +
+                    "       <div class='row justify-content-center'>" +
+                    "           <textarea class='form-control comment-area' id='child-comment-area" + commentId + "'rows='1' placeholder='답글을 입력해주세요'></textarea>" +
+                    "           <button id='child-comment-btn" + commentId + "' type='button' class='btn btn-outline-dark mt-3 btn-sm rounded-3' parentId='" + commentId + "' onclick='postChildComment(this)'>답글등록</button>" +
+                    "       </div>" +
+                    "   </div>" +
                     "</div>" +
-                    "<div class='collapse' id='comment" + commentId + "'>"
-                for (let i = 0; i < childComments.length; i++) {
+                    "<div id='comment" + commentId + "' class='collapse'>"
+            for (let i = 0; i < childComments.length; i++) {
                     childComment_html +=
                         "   <div class='d-flex mt-4 collapse'>" +
                         "       <div class='d-flex flex-start ms-4'>" +
-                        "       <img class='rounded-circle shadow-1-strong me-1' src='" + childComments[i].userThumbnail + "' width='40' height='40'>" +
-                        "       <div>" +
-                        "           <h6 class='fw-bold mb-1'>" + childComments[i].userName + "</h6>" +
-                        "           <div class='d-flex align-items-center mb-1 fs-6'>" + childComments[i].createDate + "</div>" +
-                        "           <div class='mb-0 fs-6'>" + childComments[i].content + "</div>" +
-                        "       </div></div>" +
+                        "           <img class='rounded-circle shadow-1-strong me-1' src='" + childComments[i].userThumbnail + "' width='40' height='40'>" +
+                        "           <div>" +
+                        "               <h6 class='fw-bold mb-1'>" + childComments[i].userName + "</h6>" +
+                        "               <div class='d-flex align-items-center mb-1 fs-6'>" + childComments[i].createDate + "</div>" +
+                        "               <div class='mb-0 fs-6'>" + childComments[i].content + "</div>" +
+                        "           </div>" +
+                        "       </div>" +
                         "   </div>";
-                }
-                cardList.innerHTML += comment_html;
-                childComment_html+="<hr class='my-1'></div>"
-                cardList.innerHTML += childComment_html;
             }
-
-        }
-    } else {
-        let comment_html = "<div class='container'></div>";
+            childComment_html += "<hr class='my-1'></div>"
+            cardList.innerHTML += childComment_html;
+            }
     }
+
 }
 
 function getCommentList() {
@@ -106,7 +116,7 @@ function sendComment(comment, parentId) {
 
 function postChildComment(e) {
     let childCommentBtn = document.getElementById(e.getAttribute('id'));
-    console.log('버튼ID'+childCommentBtn.getAttribute('id'));
+    console.log('버튼ID' + childCommentBtn.getAttribute('id'));
 
     const parentId = childCommentBtn.getAttribute('parentId');
     console.log(parentId);
