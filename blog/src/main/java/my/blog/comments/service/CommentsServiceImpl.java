@@ -7,10 +7,7 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.comments.domain.Comments;
 import my.blog.comments.domain.CommentsRepository;
-import my.blog.comments.dto.ChildCommentDto;
-import my.blog.comments.dto.CommentEditRequest;
-import my.blog.comments.dto.CommentRequest;
-import my.blog.comments.dto.CommentResponse;
+import my.blog.comments.dto.*;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
@@ -52,6 +49,7 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getTotalComment(Long boardId) {
         return commentsRepository.getCommentsCountByBoardId(boardId);
     }
@@ -73,7 +71,13 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public void removeComment(CommentEditRequest editRequest) {
-
+    public void removeComment(CommentDeleteRequest commentDeleteRequest) {
+        if (commentDeleteRequest.isParentComment()) {
+            commentsRepository.deleteParentComment(commentDeleteRequest.getCommentId(),
+                    commentDeleteRequest.getBoardId());
+        } else {
+            commentsRepository.deleteChildComment(commentDeleteRequest.getCommentId(),
+                    commentDeleteRequest.getBoardId());
+        }
     }
 }

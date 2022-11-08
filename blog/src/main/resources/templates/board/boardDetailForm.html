@@ -126,6 +126,7 @@
                                                aria-expanded="false" th:attrappend="aria-controls=|comment${comment.commentId}|" th:if="${comment.childCommentDtos.size()!=0}" th:text="답글보기" style="cursor: pointer; color: #0d6efd">답글</a>
                                             <a class="mx-auto my-auto"  data-bs-toggle="collapse" th:attr="data-bs-target='#commentArea'+${comment.commentId}"
                                                aria-expanded="false" th:attrappend="aria-controls=|commentArea${comment.commentId}|" th:text="답글쓰기" style="cursor: pointer; color: black">답글쓰기</a>
+                                            <a th:if="${comment.userId==userInfo.userId}" th:id="|comment-deleteBtn${comment.commentId}|" th:attr="commentId=${comment.commentId}" onclick="deleteComment(this)" class="mx-auto my-auto" style="cursor: pointer; color: red">댓글삭제</a>
                                         </div>
                                     </div>
 
@@ -154,13 +155,15 @@
                                                 <div class="mb-0 fs-6" th:text="${childComment.content}">
                                                     오류오류
                                                 </div>
+                                                <div class="fs-6">
+                                                    <a th:if="${childComment.userId==userInfo.userId}" th:id="|child-comment-deleteBtn${childComment.commentId}|" th:attr="commentId=${childComment.commentId}" onclick="deleteChildComment(this)" class="mx-auto my-auto" style="cursor: pointer; color: red">답글삭제</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <hr class="my-1" />
                                 </div>
                             </div>
-
 
                         </div>
                     </div>
@@ -171,31 +174,6 @@
 
     </div>
     <!-- Comments section-->
-    <!--<section class="container mb-5 mx-auto my-auto">
-        <div class="card bg-light">
-            <div class="card-body">
-                &lt;!&ndash; Comment form&ndash;&gt;
-                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="댓글을 입력해주세요!!"></textarea></form>
-                &lt;!&ndash; Comment with nested comments&ndash;&gt;
-                <div class="d-flex" th:each="comment : ${commentList.values()}" th:classappend="${comment.childCommentDtos.size()}!=0 ? 'mb-4' : ''">
-                    &lt;!&ndash; Parent comment&ndash;&gt;
-                    <div class="flex-shrink-0"><img class="rounded-circle shadow-1-strong me-3" th:src="${comment.userThumbnail}" alt="..." /></div>
-                    <div class="ms-3">
-                        <div class="fw-bold" th:text="|${comment.userName}, 작성일:${comment.createDate}|">Commenter Name</div>
-                        <span th:text="${comment.content}"></span>
-                        &lt;!&ndash; Child comment &ndash;&gt;
-                        <div class="d-flex mt-4" th:each="childComment : ${comment.childCommentDtos}">
-                            <div class="flex-shrink-0"><img class="rounded-circle shadow-1-strong me-4" th:src="${childComment.userThumbnail}" alt="..." /></div>
-                            <div class="ms-3">
-                                <div class="fw-bold" th:text="${childComment.userName}">Commenter Name</div>
-                                <span th:text="${childComment.content}"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>-->
 
 </article>
 

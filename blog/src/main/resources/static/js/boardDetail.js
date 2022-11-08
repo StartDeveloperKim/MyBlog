@@ -11,6 +11,7 @@ function addCommentHtml(data) {
     let total = data.total;
     if (total > 0) {
         let comments = data.comments;
+        const userInfo = data.userInfo;
 
         for (let k of Object.keys(comments)) {
             console.log(comments[k]);
@@ -20,6 +21,7 @@ function addCommentHtml(data) {
             let userName = comments[k].userName;
             let userThumbnail = comments[k].userThumbnail;
             let childComments = comments[k].childCommentDtos;
+            const commentUserId = comments[k].userId;
 
             let comment_html =
                 "<div class='card-body p-2'>" +
@@ -34,7 +36,11 @@ function addCommentHtml(data) {
                 comment_html += "               <a class='mx-auto my-auto' data-bs-toggle='collapse' data-bs-target='#comment" + commentId + "' aria-expanded='false' aria-controls='comment" + commentId + "' style='cursor: pointer; color: #0d6efd'>답글보기</a>";
             }
             comment_html +=
-                "                               <a class='mx-auto my-auto' data-bs-toggle='collapse' data-bs-target='#commentArea" + commentId + "' aria-expanded='false' aria-controls='commentArea" + commentId + "' style='cursor: pointer; color: black'>답글쓰기</a>" +
+                "                               <a class='mx-auto my-auto' data-bs-toggle='collapse' data-bs-target='#commentArea" + commentId + "' aria-expanded='false' aria-controls='commentArea" + commentId + "' style='cursor: pointer; color: black'>답글쓰기</a>";
+            if (commentUserId === userInfo.userId) {
+                comment_html += "<a id='comment-deleteBtn" + commentId + "' commentId='" + commentId + "' onclick='deleteComment(this)' class='mx-auto my-auto' style='cursor: pointer; color: red'>댓글삭제</a>"
+            }
+            comment_html +=
                 "           </div>" +
                 "       </div>" +
                 "   </div>" +
@@ -43,31 +49,40 @@ function addCommentHtml(data) {
             cardList.innerHTML += comment_html;
 
             let childComment_html =
-                    "<div id='commentArea" + commentId + "' class='collapse'>" +
-                    "   <div class='container'>" +
-                    "       <div class='row justify-content-center'>" +
-                    "           <textarea class='form-control comment-area' id='child-comment-area" + commentId + "'rows='1' placeholder='답글을 입력해주세요'></textarea>" +
-                    "           <button id='child-comment-btn" + commentId + "' type='button' class='btn btn-outline-dark mt-3 btn-sm rounded-3' parentId='" + commentId + "' onclick='postChildComment(this)'>답글등록</button>" +
-                    "       </div>" +
-                    "   </div>" +
-                    "</div>" +
-                    "<div id='comment" + commentId + "' class='collapse'>"
+                "<div id='commentArea" + commentId + "' class='collapse'>" +
+                "   <div class='container'>" +
+                "       <div class='row justify-content-center'>" +
+                "           <textarea class='form-control comment-area' id='child-comment-area" + commentId + "'rows='1' placeholder='답글을 입력해주세요'></textarea>" +
+                "           <button id='child-comment-btn" + commentId + "' type='button' class='btn btn-outline-dark mt-3 btn-sm rounded-3' parentId='" + commentId + "' onclick='postChildComment(this)'>답글등록</button>" +
+                "       </div>" +
+                "   </div>" +
+                "</div>" +
+                "<div id='comment" + commentId + "' class='collapse'>"
             for (let i = 0; i < childComments.length; i++) {
+                const childCommentUserId = childComments[i].userId;
+                childComment_html +=
+                    "   <div class='d-flex mt-4 collapse'>" +
+                    "       <div class='d-flex flex-start ms-4'>" +
+                    "           <img class='rounded-circle shadow-1-strong me-1' src='" + childComments[i].userThumbnail + "' width='40' height='40'>" +
+                    "           <div>" +
+                    "               <h6 class='fw-bold mb-1'>" + childComments[i].userName + "</h6>" +
+                    "               <div class='d-flex align-items-center mb-1 fs-6'>" + childComments[i].createDate + "</div>" +
+                    "               <div class='mb-0 fs-6'>" + childComments[i].content + "</div>";
+
+                if (childCommentUserId === userInfo.userId) {
                     childComment_html +=
-                        "   <div class='d-flex mt-4 collapse'>" +
-                        "       <div class='d-flex flex-start ms-4'>" +
-                        "           <img class='rounded-circle shadow-1-strong me-1' src='" + childComments[i].userThumbnail + "' width='40' height='40'>" +
-                        "           <div>" +
-                        "               <h6 class='fw-bold mb-1'>" + childComments[i].userName + "</h6>" +
-                        "               <div class='d-flex align-items-center mb-1 fs-6'>" + childComments[i].createDate + "</div>" +
-                        "               <div class='mb-0 fs-6'>" + childComments[i].content + "</div>" +
-                        "           </div>" +
-                        "       </div>" +
-                        "   </div>";
+                        "<div class='fs-6'>" +
+                        "   <a id='child-comment-deleteBtn" + childComments[i].commentId + "' commentId='" + childComments[i].commentId + "' onclick='deleteChildComment(this)' class='mx-auto my-auto' style='cursor: pointer; color: red'>답글삭제</a>" +
+                        "</div>"
+                }
+                childComment_html +=
+                    "           </div>" +
+                    "       </div>" +
+                    "   </div>";
             }
             childComment_html += "<hr class='my-1'></div>"
             cardList.innerHTML += childComment_html;
-            }
+        }
     }
 
 }
@@ -116,13 +131,8 @@ function sendComment(comment, parentId) {
 
 function postChildComment(e) {
     let childCommentBtn = document.getElementById(e.getAttribute('id'));
-    console.log('버튼ID' + childCommentBtn.getAttribute('id'));
-
     const parentId = childCommentBtn.getAttribute('parentId');
-    console.log(parentId);
-
     const childComment = document.getElementById("child-comment-area" + parentId).value;
-    console.log(childComment);
 
     if (childComment === "") {
         alert("댓글을 입력해주세요");
@@ -147,7 +157,56 @@ function postComment() {
     sendComment(comment, null);
 }
 
-/*수정 삭제 버튼 이벤트*/
+/*삭제요청 전송*/
+function sendCommentDeleteRequest(data) {
+    console.log(data);
+    console.log(JSON.stringify(data));
+    httpRequest = new XMLHttpRequest();
+
+    httpRequest.open('POST', '/comment/delete', true);
+    httpRequest.responseType = 'json';
+    httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+    httpRequest.send(JSON.stringify(data));
+
+    httpRequest.onload = function () {
+        if (httpRequest.status === 200) {
+            const response = httpRequest.response;
+            alert("댓글이 삭제되었습니다");
+            addCommentHtml(response);
+        } else {
+            alert("통신 실패!!!!!!");
+        }
+    };
+}
+
+/*댓글 삭제 이벤트*/
+function deleteComment(e) {
+    let deleteBtn = document.getElementById(e.getAttribute('id'));
+    const commentId = deleteBtn.getAttribute('commentId');
+
+    const data = {};
+    data.boardId = boardId;
+    data.commentId = commentId;
+    data.parentComment = true;
+
+    sendCommentDeleteRequest(data);
+}
+
+/*대댓글 삭제 이벤트*/
+function deleteChildComment(e) {
+    let childCommentDeleteBtn = document.getElementById(e.getAttribute('id'));
+    const commentId = childCommentDeleteBtn.getAttribute('commentId');
+
+    const data = {};
+    data.boardId = boardId;
+    data.commentId = commentId;
+    data.parentComment = false;
+
+    sendCommentDeleteRequest(data);
+}
+
+/*게시글 수정 삭제 버튼 이벤트*/
 const editBtn = document.getElementById("edit-btn");
 const deleteBtn = document.getElementById("delete-btn");
 

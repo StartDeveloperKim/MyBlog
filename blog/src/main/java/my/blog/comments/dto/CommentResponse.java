@@ -15,6 +15,7 @@ public class CommentResponse {
 
     private Long commentId;
     private Long parentId;
+    private Long userId;
     private String userName;
     private String userThumbnail;
     private String content;
@@ -22,6 +23,7 @@ public class CommentResponse {
     private List<ChildCommentDto> childCommentDtos = new ArrayList<>();
 
     public CommentResponse(Comments comments) {
+        this.userId = comments.getUser().getId();
         this.commentId = comments.getId();
         this.userName = comments.getUser().getName();
         this.userThumbnail = comments.getUser().getPicture();

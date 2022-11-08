@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class ChildCommentDto {
 
+    private Long userId;
     private Long commentId;
     private String content;
     private String createDate;
@@ -19,6 +20,7 @@ public class ChildCommentDto {
     private String userThumbnail;
 
     public ChildCommentDto(Comments comments) {
+        this.userId = comments.getUser().getId();
         this.commentId = comments.getId();
         this.content = comments.getContent();
         this.createDate = comments.getCreateDate().format(DateTimeFormatter.ISO_DATE);

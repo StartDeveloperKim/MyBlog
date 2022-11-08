@@ -1,5 +1,6 @@
 package my.blog.comments.service;
 
+import my.blog.comments.dto.CommentDeleteRequest;
 import my.blog.comments.dto.CommentEditRequest;
 import my.blog.comments.dto.CommentRequest;
 import my.blog.comments.dto.CommentResponse;
@@ -24,5 +25,5 @@ public interface CommentsService {
 
     void updateComment(CommentEditRequest editRequest);
 
-    void removeComment(CommentEditRequest editRequest);
+    void removeComment(CommentDeleteRequest commentDeleteRequest);
 }

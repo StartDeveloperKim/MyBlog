@@ -76,15 +76,16 @@ public class BoardController {
         Board board = boardService.getBoard(id);
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
+        if (user != null) {
+            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
+        } else {
+            model.addAttribute("userInfo", new UserInfo(null, null));
+        }
         List<TagResponse> tagList = boardTagService.getTagList(id);
         Map<Long, CommentResponse> comments = commentsService.getComments(id);
         boardService.addHit(id);
 
         //log.info("tagList {}", tagList);
-
-        if (user != null) {
-            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
-        }
 
         model.addAttribute("board", boardResponse);
         model.addAttribute("commentList", comments);
