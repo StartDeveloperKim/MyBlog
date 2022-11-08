@@ -6,6 +6,7 @@ import my.blog.comments.domain.CommentsRepository;
 import my.blog.comments.dto.CommentDeleteRequest;
 import my.blog.comments.dto.CommentRequest;
 import my.blog.comments.dto.CommentResponse;
+import my.blog.comments.service.CommentLayout;
 import my.blog.comments.service.CommentsService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
@@ -26,41 +27,26 @@ import java.util.Map;
 public class CommentsController {
 
     private final CommentsService commentsService;
+    private final CommentLayout commentLayout;
 
     /*댓글 레이아웃에 필요한 정보들이 반복되고 있다 이를 리팩토링하자.*/
     @GetMapping("/{boardId}")
     public ResponseEntity<Map<String, Object>> getComments(@LoginUser SessionUser user, @PathVariable("boardId") Long boardId) {
-        Map<String, Object> map = new HashMap<>();
 
-        Map<Long, CommentResponse> comments = commentsService.getComments(boardId);
-        int totalComment = commentsService.getTotalComment(boardId);
-
-        map.put("comments", comments);
-        map.put("total", totalComment);
-
-        log.info("getComments {}", map);
-
-        return ResponseEntity.ok().body(map);
+        Map<String, Object> commentLayoutResult = this.commentLayout.getCommentLayout(boardId, user);
+        return ResponseEntity.ok().body(commentLayoutResult);
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<Map<String, Object>> saveComment(@Valid @RequestBody CommentRequest commentRequest,
                                                            @PathVariable("id") Long boardId,
                                                            @LoginUser SessionUser user) {
-        Map<String, Object> map = new HashMap<>();
-
         try {
             log.info("comment Info {}", commentRequest.toString());
-
             commentsService.saveComment(commentRequest, boardId, user.getUserId());
-            Map<Long, CommentResponse> comments = commentsService.getComments(boardId);
-            int totalComment = commentsService.getTotalComment(boardId);
 
-            map.put("comments", comments);
-            map.put("total", totalComment);
-            map.put("userInfo", new UserInfo(user.getUserId(), user.getName()));
-
-            return ResponseEntity.ok().body(map);
+            Map<String, Object> commentLayoutResult = commentLayout.getCommentLayout(boardId, user);
+            return ResponseEntity.ok().body(commentLayoutResult);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -69,19 +55,12 @@ public class CommentsController {
     @PostMapping("/delete")
     public ResponseEntity<Map<String, Object>> deleteComment(@RequestBody CommentDeleteRequest commentDeleteRequest,
                                                              @LoginUser SessionUser user) {
-        Map<String, Object> map = new HashMap<>();
-        log.info("삭제댓글 정보 {}", commentDeleteRequest.toString());
         try {
+            log.info("삭제댓글 정보 {}", commentDeleteRequest.toString());
             commentsService.removeComment(commentDeleteRequest);
 
-            Map<Long, CommentResponse> comments = commentsService.getComments(commentDeleteRequest.getBoardId());
-            int totalComment = commentsService.getTotalComment(commentDeleteRequest.getBoardId());
-
-            map.put("comments", comments);
-            map.put("total", totalComment);
-            map.put("userInfo", new UserInfo(user.getUserId(), user.getName()));
-
-            return ResponseEntity.ok().body(map);
+            Map<String, Object> commentLayoutResult = commentLayout.getCommentLayout(commentDeleteRequest.getBoardId(), user);
+            return ResponseEntity.ok().body(commentLayoutResult);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
