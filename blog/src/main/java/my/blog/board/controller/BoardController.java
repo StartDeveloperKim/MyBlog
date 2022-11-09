@@ -98,7 +98,7 @@ public class BoardController {
 
     @GetMapping("/edit")
     public String boardEditForm(Model model) {
-        layoutService.getCategoryList(model);
+        layoutService.getCategoryList(model);// EditForm에 카테고리의 개수가 필요할까? 리팩토링 필요코드
 
         return "board/boardEditForm";
     }
@@ -111,7 +111,7 @@ public class BoardController {
         log.info("Get Data : {}", boardRegister.toString());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // null은 나중에 생각해보고 수정하자
-        }
+        } // 근데 생각해보면 Spring Security 설정에서 이미 이 곳 접근을 막고있다. 따라서 user가 null일 경우 400을 return할 이유가 없다.
         Long boardId;
 
         if (boardRegister.getTags().equals("")) {

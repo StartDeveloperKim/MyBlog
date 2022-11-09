@@ -52,7 +52,7 @@ function addCommentHtml(data) {
                 "<div id='commentArea" + commentId + "' class='collapse'>" +
                 "   <div class='container'>" +
                 "       <div class='row justify-content-center'>" +
-                "           <textarea class='form-control comment-area' id='child-comment-area" + commentId + "'rows='1' placeholder='답글을 입력해주세요'></textarea>" +
+                "           <textarea class='form-control comment-area' id='child-comment-area" + commentId + "' rows='1' placeholder='답글을 입력해주세요'></textarea>" +
                 "           <button id='child-comment-btn" + commentId + "' type='button' class='btn btn-outline-dark mt-3 btn-sm rounded-3' parentId='" + commentId + "' onclick='postChildComment(this)'>답글등록</button>" +
                 "       </div>" +
                 "   </div>" +

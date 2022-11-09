@@ -33,28 +33,34 @@
                 </div>
             </div>
 
-            <div class="border-top my-3" style="margin: auto 0;"></div>
 
-            <div class="row mx-auto fs-1">
-                <div class="col-sm-6" sec:authorize="hasRole('ROLE_ADMIN')">
+
+            <div class="row mx-auto fs-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="border-top my-3" style="margin: auto 0;"></div>
+                <div class="col-sm-6">
                     <!--                <a th:href="@{/category/edit}" class="me-0 ps-2 btn "><i class="fa-sharp fa-solid fa-gear"></i>카테고리수정</a>-->
                     <a th:href="@{/category}" class="me-0 ps-2 btn "><i class="fa-sharp fa-solid fa-gear"></i>카테고리수정</a>
                 </div>
-                <div class="col-sm-6" sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="col-sm-6">
                     <a th:href="@{/board/edit}" class="me-0 ps-2 btn"><i class="fa-solid fa-pen-to-square"></i>글쓰기</a>
                 </div>
             </div>
 
             <div class="border-top my-3" style="margin: auto 0;"></div>
-
+            <div class="mb-1 mx-4">
+                <a th:href="@{/board(category='total', step=0, page=1)}" class="mb-0 superCategory btn fs-5" th:text="|전체글(${boardCount})|">전체글</a>
+            </div>
             <ul class="list-unstyled ps-0">
                 <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
-                <li class="mb-1 mx-4" th:each="category : ${categoryList}">
-                    <div class="btn-group">
+                <li class="mb-1 mx-4" th:each="category : ${categoryList.values()}">
+                    <a th:id="|collapseSpace${category.id}|" data-bs-toggle="collapse" th:attr="href='#childCategory'+${category.id}" role="button" aria-expanded="false" th:attrappend="aria-controls=|childCategory${category.id}|" onclick="iconRotate(this)"><i class="fa-solid fa-chevron-right collapse-btn"></i></a>
+                    <!--<i class="fa-solid fa-chevron-down"></i>-->
                     <span th:if="${category.name!='total'}"><a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
                                                                th:text="|${category.name}(${category.categoryNum})|">스프링(0)</a></span>
-                        <span th:if="${category.name=='total'}"><a th:href="@{/board(category=${category.name}, step=0)}" class="mb-0 superCategory btn fs-5"
-                                                                   th:text="|전체글|">전체글</a></span>
+                    <div class="collapse" th:id="|childCategory${category.id}|">
+                        <ul class="ms-4 list-unstyled fw-normal pb-1" th:each="childCategory : ${category.childCategory}">
+                            <li class="fs-6"><a class="link-dark rounded fw-bold" th:href="@{/board(category=${childCategory.name}, step=1)}" th:text="|${childCategory.name}(${childCategory.categoryNum})|"></a></li>
+                        </ul>
                     </div>
                 </li>
             </ul>

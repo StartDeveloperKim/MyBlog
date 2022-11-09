@@ -25,16 +25,20 @@ public class Category {
     @Column(nullable = false, length = 50, unique = true)
     private String categoryName;
 
-    private Category(String categoryName) {
+    @Column(name = "parent_category_id")
+    private Long parentCategoryId;
+
+    private Category(String categoryName, Long parentCategoryId) {
         this.categoryName = categoryName;
+        this.parentCategoryId = parentCategoryId;
     }
 
     protected Category() {
     }
 
     //==생성메서드==//
-    public static Category from(String categoryName) {
-        return new Category(categoryName);
+    public static Category from(String categoryName, Long parentCategoryId) {
+        return new Category(categoryName, parentCategoryId);
     }
 
     //==업데이트 메서드==//

@@ -125,6 +125,12 @@ body {
     color: #757575 !important;
     font-size: 14px;
 }
+.plus {
+    font-size: 14px;
+}
+.collapse-btn:hover {
+    transform: rotate(90deg);
+}
 
 #list-items{
     padding-left: 20px;

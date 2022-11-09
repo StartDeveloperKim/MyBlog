@@ -62,10 +62,12 @@ window.onload = function () {
         let responseData = {};
         responseData.title = title;
         responseData.content = content;
-        responseData.category = category;
+        responseData.category = category === "" ? 'total' : category;
         responseData.thumbnail = thumbnailURL.value;
         responseData.tags = tags;
         httpRequest = new XMLHttpRequest();
+
+        console.log(responseData);
         
         httpRequest.open('POST', '/board', true);
         httpRequest.responseType = 'json';

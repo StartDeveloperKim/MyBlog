@@ -2,6 +2,7 @@ package my.blog.category.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.blog.category.dto.CategoryAddDto;
 import my.blog.category.dto.CategoryDto;
 import my.blog.category.dto.CategoryRemoveDto;
 import my.blog.category.dto.CategoryResponseDto;
@@ -11,16 +12,12 @@ import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +29,7 @@ public class CategoryController {
 
     @GetMapping
     public String categoryEditForm(@LoginUser SessionUser user, Model model) {
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
         model.addAttribute("categoryList", categoryList);
 
         if (user != null) {
@@ -44,10 +41,11 @@ public class CategoryController {
 
     @PostMapping("/add")
     @ResponseBody
-    public CategoryResponseDto categoryAdd(@RequestBody CategoryDto categoryDto) {
+    public CategoryResponseDto categoryAdd(@RequestBody CategoryAddDto categoryAddDto) {
+        log.info("CategoryAddDto {}", categoryAddDto.toString());
 
         try {
-            Long categoryId = categoryService.saveCategory(categoryDto.getName());
+            Long categoryId = categoryService.saveCategory(categoryAddDto);
             return new CategoryResponseDto(categoryId, "success");
         } catch (DuplicateCategoryException e) {
             log.info("Category Duplicate Exception : {}", e.getMessage());

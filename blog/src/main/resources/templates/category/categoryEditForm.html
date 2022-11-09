@@ -49,8 +49,26 @@
       <div class="main-todo-input-wrap">
         <div class="main-todo-input fl-wrap todo-listing">
           <ul id="list-items">
-            <li th:each="category : ${categoryList}">
-              <span class='todo-text' th:text="${category.name}">카테고리</span><a th:if="${category.categoryNum==0}" th:value="${category.id}" class='remove text-right'><i class='fa fa-trash'></i></a><hr>
+            <li th:each="category : ${categoryList.values()}">
+              <span class='todo-text' th:text="${category.name}">카테고리</span>
+              <a class="plus" data-bs-toggle="collapse" th:attr="href='#childCategoryForm'+${category.id}" aria-expanded="false" th:attrappend="aria-controls=|childCategoryForm${category.id}|"><i class="fa-regular fa-plus"></i></a>
+              <a th:if="${category.categoryNum==0}" th:value="${category.id}" class='remove text-right'><i class='fa fa-trash'></i></a>
+
+              <br>
+              <div th:id="|childCategoryForm${category.id}|" class="container collapse">
+                <div class="row justify-content-center">
+                  <div class="col-8">
+                    <input class="form-control rounded-3" th:id="|child-category-form${category.id}|" placeholder="카테고리를 입력하세요">
+                  </div>
+                  <div class="col-4">
+                    <button type="button" class="btn-sm btn-outline-dark ms-3 rounded-3" th:id="|childCategoryBtn${category.id}|" th:attrappend="parentId=${category.id}" onclick="clickChildCategoryPost(this)">추가</button>
+                  </div>
+                </div>
+              </div>
+              <div th:each="childCategory : ${category.childCategory}">
+                <span class="todo-text"  th:text="| - ${childCategory.name}|"></span><a th:if="${childCategory.categoryNum==0}" th:value="${childCategory.id}" class='remove text-right'><i class='fa fa-trash'></i></a>
+              </div>
+              <hr>
             </li>
           </ul>
         </div>

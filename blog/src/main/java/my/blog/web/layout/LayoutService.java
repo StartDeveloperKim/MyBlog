@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,7 +22,7 @@ public class LayoutService {
     private final BoardService boardService;
 
     public void getLayoutInfo(Model model) {
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
 
         model.addAttribute("categoryList", categoryList);

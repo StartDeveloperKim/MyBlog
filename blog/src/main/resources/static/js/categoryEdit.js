@@ -1,29 +1,45 @@
-$(document).ready(function () {
 
-    function postCategory(data, categoryName) {
-        $.ajax({
-            url: "/category/add",
-            type: 'POST',
-            async: false,
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            success: function (data) {
-                console.log(data);
-                if (data.status === "success") {
-                    alert("카테고리가 등록되었습니다.");
-                    $('#list-items').append("<li><span class='todo-text'>" + categoryName + "</span><a class='remove text-right' th:value=" + data.categoryId + "> <i class='fa fa-trash'></i></a><hr></li>");
-                    localStorage.setItem('listItems', $('#list-items').html());
-                    $('#todo-list-item').val("");
-                } else if (data.status === "duplicate") {
-                    alert("카테고리가 중복되었습니다.");
-                    $('#todo-list-item').focus();
+function postCategory(data, categoryName) {
+    $.ajax({
+        url: "/category/add",
+        type: 'POST',
+        async: false,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (data) {
+            console.log(data);
+            if (data.status === "success") {
+                alert("카테고리가 등록되었습니다.");
+                /*$('#list-items').append("<li><span class='todo-text'>" + categoryName + "</span><a class='remove text-right' th:value=" + data.categoryId + "> <i class='fa fa-trash'></i></a><hr></li>");
+                localStorage.setItem('listItems', $('#list-items').html());
+                $('#todo-list-item').val("");*/
+                window.location.href = "/category";
+            } else if (data.status === "duplicate") {
+                alert("카테고리가 중복되었습니다.");
+                $('#todo-list-item').focus();
                 }
             },
-            error: function () {
-                alert("통신실패");
-            }
-        });
-    }
+        error: function () {
+            alert("통신실패");
+        }
+    });
+}
+
+
+function clickChildCategoryPost(e) {
+    console.log("자식카테고리 추가")
+    let childCategoryBtn = document.getElementById(e.getAttribute('id'));
+    const parentId = childCategoryBtn.getAttribute('parentId');
+    const childCategoryName = document.getElementById("child-category-form" + parentId).value;
+
+    const data = {};
+    data.categoryName = childCategoryName;
+    data.parentCategoryId = parentId;
+
+    console.log(data);
+
+    postCategory(data, childCategoryName);
+}
 
     $('.add-items').click(function (event) {
         event.preventDefault();
@@ -33,7 +49,7 @@ $(document).ready(function () {
             const check = confirm("카테고리를 추가하시겠습까?")
             if (check) {
                 const data = {};
-                data.name = item;
+                data.categoryName = item;
 
                 $('#todo-list-item').val("");
                 postCategory(data, item);
@@ -72,4 +88,5 @@ $(document).ready(function () {
             });
         }
     });
-});
+
+

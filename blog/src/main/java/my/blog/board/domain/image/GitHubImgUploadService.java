@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@PropertySource(value = {"application-github.properties"})
+@PropertySource(value = {"classpath:application-github.properties"})
 @Service
 public class GitHubImgUploadService {
 

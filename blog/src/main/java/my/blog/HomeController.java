@@ -9,12 +9,12 @@ import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class HomeController {
     @GetMapping("/")
     public String homeForm(@LoginUser SessionUser user, Model model) {
         List<BoardResponse> boardList = boardService.getBoardListRecent();
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
 
         model.addAttribute("boardList", boardList);

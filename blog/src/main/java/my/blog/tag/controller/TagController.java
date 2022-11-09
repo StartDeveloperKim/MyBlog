@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -37,7 +38,7 @@ public class TagController {
         List<BoardResponse> tagBoardList = boardTagService.getTagBoardList(page, pageSize, tagName);
         Paging pagingInfo = Paging.of(page, boardTagService.getCountBoardByTagName(tagName));
 
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
 
         model.addAttribute("boardList", tagBoardList);
         model.addAttribute("pagingInfo", pagingInfo);

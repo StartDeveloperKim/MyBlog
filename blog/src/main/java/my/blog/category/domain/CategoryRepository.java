@@ -1,6 +1,5 @@
 package my.blog.category.domain;
 
-import my.blog.category.dto.CategoryDto;
 import my.blog.category.dto.CategoryRespInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,10 +17,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category findByCategoryName(String categoryName);
     Boolean existsByCategoryName(String categoryName); // 카테고리 존재여부
 
-    @Query(value = "SELECT C.CATEGORY_ID AS id, CATEGORY_NAME AS name , COUNT AS categoryNum " +
+    @Query(value = "SELECT C.CATEGORY_ID AS id, C.PARENT_CATEGORY_ID AS parentCategoryId, CATEGORY_NAME AS name , COUNT AS categoryNum " +
             "FROM (SELECT CATEGORY_ID, COUNT(CATEGORY_ID) AS COUNT " +
             "FROM BOARD GROUP BY CATEGORY_ID) AS SQ " +
-            "RIGHT OUTER JOIN CATEGORY AS C ON SQ.CATEGORY_ID = C.CATEGORY_ID ORDER BY C.CATEGORY_ID ASC"
+            "RIGHT OUTER JOIN CATEGORY AS C ON SQ.CATEGORY_ID = C.CATEGORY_ID " +
+            "WHERE C.CATEGORY_NAME != 'total' " +
+            "ORDER BY C.CATEGORY_ID ASC"
             , nativeQuery = true)
     List<CategoryRespInterface> findCategoryDto();
 }
