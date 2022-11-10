@@ -7,6 +7,7 @@ import my.blog.tag.domain.Tag;
 
 import javax.persistence.*;
 
+@ToString
 @Getter
 @Entity
 @SequenceGenerator(
@@ -22,11 +23,11 @@ public class BoardTag {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", insertable = false, updatable = false)
+    @JoinColumn(name = "board_id")
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", insertable = false, updatable = false)
+    @JoinColumn(name = "tag_id")
     private Tag tag;
 
     protected BoardTag() {

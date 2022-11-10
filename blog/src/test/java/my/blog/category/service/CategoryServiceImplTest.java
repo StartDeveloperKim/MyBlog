@@ -47,15 +47,4 @@ class CategoryServiceImplTest {
             System.out.println("categoryRespInterface.getCategoryNum() = " + categoryRespInterface.getCategoryNum());
         }
     }
-
-    @Test
-    @Transactional
-    void 계층형_카테고리_등록_테스트() {
-        CategoryAddDto categoryAddDto = new CategoryAddDto("의존주입", 2L);
-        categoryService.saveCategory(categoryAddDto);
-
-        List<CategoryDto> categoryList = categoryService.getCategoryList();
-
-        Assertions.assertEquals(4, categoryList.size());
-    }
 }

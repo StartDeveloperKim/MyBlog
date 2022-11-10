@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BoardServiceImplTest {
@@ -30,6 +32,9 @@ class BoardServiceImplTest {
     UserRepository userRepository;
     @Autowired
     BoardRepository boardRepository;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     void 카테고리_없이_글_저장() {
@@ -57,22 +62,14 @@ class BoardServiceImplTest {
     }
 
     @Test
-    void 최신글_4개_가져오기() {
+    void 최신글_6개_가져오기() {
         List<BoardResponse> boardListRecent = boardService.getBoardListRecent();
-        for (BoardResponse boardResponse : boardListRecent) {
-            System.out.println("boardResponse.toString() = " + boardResponse.toString());
-        }
+        assertEquals(boardListRecent.size(), 6);
     }
 
-    @Test
-    void 태그_포함해서_게시판_저장테스트() {
-//        BoardRegister boardRegister = new BoardRegister(1L, "태그포함 저장테스트", "테스트 성공기원", "스프링", "null", "");
-
-    }
-    
     @Test
     void 카테고리별_게시글_조회_테스트() {
-        int pageSize=6;
+        int pageSize = 6;
         List<Board> result1 = boardRepository.findByOrderByIdDesc(PageRequest.of(0, pageSize)).getContent();
         List<Board> result2 = boardRepository.findByOrderByIdDesc(PageRequest.of(1, pageSize)).getContent();
         List<Board> result3 = boardRepository.findByOrderByIdDesc(PageRequest.of(2, pageSize)).getContent();
@@ -88,4 +85,18 @@ class BoardServiceImplTest {
         }
     }
 
+    @Test
+    void 태그리스트_가져오기_테스트() {
+        List<Board> findBoards = em.createQuery("select b from Board b join fetch b.boardTags", Board.class)
+                .getResultList();
+
+        for (Board findBoard : findBoards) {
+            System.out.println("=====" + findBoard.getTitle() + "====");
+            for (BoardTag boardTag : findBoard.getBoardTags()) {
+                System.out.println("boardTag.toString() = " + boardTag.toString());
+            }
+        }
+
+        org.junit.jupiter.api.Assertions.assertEquals(7, findBoards.size());
+    }
 }

@@ -28,7 +28,9 @@ public class BoardResponse {
         this.thumbnail = board.getThumbnail();
         this.createDate = board.getCreateDate().format(DateTimeFormatter.ISO_DATE);
         this.hit = board.getHit();
-        this.tags = board.getBoardTags().stream().map(boardTag -> new TagResponse(boardTag.getTag().getTagName())).collect(Collectors.toList());
+        this.tags = board.getBoardTags().stream()
+                .map(b->new TagResponse(b.getTag().getTagName()))
+                .collect(Collectors.toList());
     }
 
 }

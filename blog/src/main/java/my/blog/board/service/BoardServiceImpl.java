@@ -14,6 +14,7 @@ import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
+import my.blog.tag.dto.TagResponse;
 import my.blog.tag.tool.ParsingTool;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
@@ -56,7 +57,6 @@ public class BoardServiceImpl implements BoardService{
             Tag findTag = tagRepository.findByTagName(tag);
             boardTags.add(BoardTag.from(saveBoard, findTag));
         }
-
         boardTagRepository.saveAll(boardTags);
 
         return saveBoard.getId();
@@ -105,21 +105,19 @@ public class BoardServiceImpl implements BoardService{
     @Override
     @Transactional(readOnly = true)
     public List<BoardResponse> getBoardList(int page, int size, String category, String step) {
-        // 코드 중복발생....
-        List<Board> all = null;
+        List<Board> findBoards = null;
         if (step.equals("0")) {
-            log.info("BoardService Step={}", step);
-             all = boardRepository.findByOrderByIdDesc(PageRequest.of(page-1, size)).getContent();
+            findBoards = boardRepository.findByOrderByIdDesc(PageRequest.of(page-1, size)).getContent();
         } else if (step.equals("1")) {
-            all = boardRepository.findByCategoryName(category, PageRequest.of(page-1, size)).getContent();
+            findBoards = boardRepository.findByCategoryName(category, PageRequest.of(page-1, size)).getContent();
         }
 
-        if (all == null) {
+        if (findBoards == null) {
             throw new EntityNotFoundException("게시글이 없습니다.");
         }
 
-        return all.stream().map(BoardResponse::new)
-                .collect(Collectors.toList());
+        return findBoards.stream()
+                .map(BoardResponse::new).collect(Collectors.toList());
     }
 
     @Override
