@@ -1,50 +1,80 @@
 package my.blog.category.service;
 
+import my.blog.board.domain.BoardRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
-import my.blog.category.dto.CategoryAddDto;
-import my.blog.category.dto.CategoryDto;
-import my.blog.category.dto.CategoryRespInterface;
+import my.blog.category.dto.CategoryInfoDto;
+import my.blog.category.dto.CategoryLayoutDto;
+import my.blog.category.dto.HierarchicalCategory;
+import my.blog.category.exception.WritingExistException;
+import my.blog.category.stub.CategoryRepositoryStub;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class CategoryServiceImplTest {
 
-    @Autowired
-    CategoryService categoryService;
-    @Autowired
-    CategoryRepository categoryRepository;
+
+    CategoryRepositoryStub categoryRepositoryStub;
+    @Mock
+    BoardRepository boardRepository;
+    @InjectMocks
+    CategoryServiceImpl categoryService;
+
+    @BeforeEach
+    void setUp() {
+        categoryRepositoryStub = new CategoryRepositoryStub();
+    }
 
     @Test
-    void 중복_카테고리_등록_테스트() {
+    void 카테고리_삭제시_아래에_글이_하나이상_존재한다면_카테고리_삭제못함() {
         //given
-        CategoryAddDto addCategory = new CategoryAddDto("스프링", null);
-        categoryService.saveCategory(addCategory);
+        given(boardRepository.getBoardCountByCategory(1L)).willReturn(3L);
+
+        //when, then
+        assertThrows(WritingExistException.class,
+                () -> categoryService.deleteCategory(1L));
+    }
+
+    @Test
+    void 계층형_카테고리_테스트() {
+        //given
+        Category parentCategory = Category.from("부모카테고리", null);
+        Long parentCategoryId = categoryRepositoryStub.saveParentCategory(parentCategory);
+
+        Category childCategory = Category.from("자식카레고리", parentCategoryId);
+        Long childCategoryId = categoryRepositoryStub.saveChildCategory(childCategory);
+
+        List<CategoryInfoDto> response = new ArrayList<>();
+        response.add(new CategoryInfoDto(parentCategoryId, null,
+                parentCategory.getCategoryName(), 0L));
+        response.add(new CategoryInfoDto(childCategoryId, parentCategoryId,
+                childCategory.getCategoryName(), 0L));
 
         //when
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> categoryService.saveCategory(addCategory));
+        Map<Long, CategoryLayoutDto> result = HierarchicalCategory.from(response);
 
         //then
-        assertEquals("이미 존재하는 카테고리 입니다.", thrown.getMessage());
-    }
-    
-    @Test
-    void 카테고리이름_및_카테고리당_글_개수_가져오기() {
-        List<CategoryRespInterface> categoryDto = categoryRepository.findCategoryDto();
-        for (CategoryRespInterface categoryRespInterface : categoryDto) {
-            System.out.println("categoryRespInterface.getName() = " + categoryRespInterface.getName());
-            System.out.println("categoryRespInterface.getCategoryNum() = " + categoryRespInterface.getCategoryNum());
-        }
+        CategoryLayoutDto categoryLayoutDto = result.get(parentCategoryId);
+        assertEquals(parentCategoryId, categoryLayoutDto.getId());
+        assertEquals(parentCategory.getCategoryName(), categoryLayoutDto.getName());
+
+        List<CategoryLayoutDto> childCategory1 = categoryLayoutDto.getChildCategory();
+        CategoryLayoutDto categoryLayoutDto1 = childCategory1.get(0);
+        assertEquals(childCategoryId, categoryLayoutDto1.getId());
+        assertEquals(childCategory.getCategoryName(), categoryLayoutDto1.getName());
     }
 }

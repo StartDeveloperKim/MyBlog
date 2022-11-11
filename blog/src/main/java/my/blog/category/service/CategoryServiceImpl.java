@@ -4,16 +4,11 @@ import lombok.RequiredArgsConstructor;
 import my.blog.board.domain.BoardRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
-import my.blog.category.dto.CategoryAddDto;
-import my.blog.category.dto.CategoryDto;
-import my.blog.category.dto.CategoryRespInterface;
-import my.blog.category.exception.DuplicateCategoryException;
+import my.blog.category.dto.*;
 import my.blog.category.exception.WritingExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Long saveCategory(CategoryAddDto categoryAddDto) {
-        Boolean categoryCheck = categoryRepository.existsByCategoryName(categoryAddDto.getCategoryName());
-        if (categoryCheck) {
-            throw new DuplicateCategoryException("이미 존재하는 카테고리 입니다.");
-            // 서브카테고리는 중복이 되도 될거같다. 음... 이 때 확인하는 로직을 만들어보자
-        }
+        //카테고리는 중복되도 된다.
         Category category = Category.from(categoryAddDto.getCategoryName(), categoryAddDto.getParentCategoryId()); // 생성메서드
         Category saveCategory = categoryRepository.save(category);
 
@@ -45,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (boardCount != 0L) {
             throw new WritingExistException("카테고리 아래에 글이 존재합니다.");
         }
-        categoryRepository.deleteByCategoryName(id);
+        categoryRepository.deleteById(id); // 메서드이름 고치자
     }
 
     @Override
@@ -61,23 +52,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Map<Long, CategoryDto> getCategoryList() {
-        Map<Long, CategoryDto> categoryResult = new HashMap<>();
-        List<CategoryRespInterface> categoryDto = categoryRepository.findCategoryDto();
+    public Map<Long, CategoryLayoutDto> getCategoryList() {
+        List<CategoryInfoDto> categoryDto = categoryRepository.findCategoryDto();
 
-        for (CategoryRespInterface category : categoryDto) {
-            System.out.println("category.getParentCategoryId() + category.getName() = " + category.getParentCategoryId() + category.getName());
-            if (category.getParentCategoryId() == null) {
-                categoryResult.put(category.getId(), new CategoryDto(
-                        category.getId(), category.getName(), category.getCategoryNum()));
-            } else {
-                categoryResult.get(category.getParentCategoryId())
-                        .getChildCategory()
-                        .add(new CategoryDto(category.getId(), category.getName(), category.getCategoryNum()));
-            }
-        }
-
-        return categoryResult;
+        return HierarchicalCategory.from(categoryDto);
     }
 
     /*더미 카테고리 생성 -> 글을 작성할 때 카테고리 설정을 하지 않으면 해당 카테고리에 들어간다.*/

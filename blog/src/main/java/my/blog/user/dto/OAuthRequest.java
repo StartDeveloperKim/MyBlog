@@ -2,11 +2,13 @@ package my.blog.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import my.blog.user.domain.User;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class OAuthRequest {
     private Map<String, Object> attributes;
     private String nameAttributeKey;

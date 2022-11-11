@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.service.BoardService;
-import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryLayoutDto;
 import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
@@ -27,7 +27,7 @@ public class HomeController {
     @GetMapping("/")
     public String homeForm(@LoginUser SessionUser user, Model model) {
         List<BoardResponse> boardList = boardService.getBoardListRecent();
-        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
 
         model.addAttribute("boardList", boardList);

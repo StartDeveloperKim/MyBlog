@@ -3,7 +3,7 @@ package my.blog.category.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.category.dto.CategoryAddDto;
-import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryLayoutDto;
 import my.blog.category.dto.CategoryRemoveDto;
 import my.blog.category.dto.CategoryResponseDto;
 import my.blog.category.exception.DuplicateCategoryException;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -29,7 +28,7 @@ public class CategoryController {
 
     @GetMapping
     public String categoryEditForm(@LoginUser SessionUser user, Model model) {
-        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
         model.addAttribute("categoryList", categoryList);
 
         if (user != null) {

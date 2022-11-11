@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.boardTag.service.BoardTagService;
-import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryLayoutDto;
 import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
@@ -38,7 +38,7 @@ public class TagController {
         List<BoardResponse> tagBoardList = boardTagService.getTagBoardList(page, pageSize, tagName);
         Paging pagingInfo = Paging.of(page, boardTagService.getCountBoardByTagName(tagName));
 
-        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
 
         model.addAttribute("boardList", tagBoardList);
         model.addAttribute("pagingInfo", pagingInfo);

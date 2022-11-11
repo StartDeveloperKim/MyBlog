@@ -12,13 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoryDto {
+public class CategoryLayoutDto {
 
     private Long id;
     private String name;
     private Long categoryNum; // 카테고리당 글 개수
-    private List<CategoryDto> childCategory = new ArrayList<>();
-    public CategoryDto(Long categoryId, String categoryName, Long count) {
+    private List<CategoryLayoutDto> childCategory = new ArrayList<>();
+    public CategoryLayoutDto(Long categoryId, String categoryName, Long count) {
         this.id = categoryId;
         this.name = categoryName;
         this.categoryNum = (count == null) ? 0 : count;

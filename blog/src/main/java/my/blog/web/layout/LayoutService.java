@@ -3,13 +3,12 @@ package my.blog.web.layout;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.service.BoardService;
-import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryLayoutDto;
 import my.blog.category.service.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class LayoutService {
     private final BoardService boardService;
 
     public void getLayoutInfo(Model model) {
-        Map<Long, CategoryDto> categoryList = categoryService.getCategoryList();
+        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
         Long boardCount = boardService.getBoardCount();
 
         model.addAttribute("categoryList", categoryList);

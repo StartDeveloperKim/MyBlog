@@ -2,9 +2,8 @@ package my.blog.category.service;
 
 import my.blog.category.domain.Category;
 import my.blog.category.dto.CategoryAddDto;
-import my.blog.category.dto.CategoryDto;
+import my.blog.category.dto.CategoryLayoutDto;
 
-import java.util.List;
 import java.util.Map;
 
 public interface CategoryService {
@@ -13,5 +12,5 @@ public interface CategoryService {
     void deleteCategory(Long id);
     void updateCategory(String name);
     Category getCategoryByName(String categoryName);
-    Map<Long, CategoryDto> getCategoryList();
+    Map<Long, CategoryLayoutDto> getCategoryList();
 }
