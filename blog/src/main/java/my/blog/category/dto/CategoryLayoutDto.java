@@ -23,4 +23,8 @@ public class CategoryLayoutDto {
         this.name = categoryName;
         this.categoryNum = (count == null) ? 0 : count;
     }
+
+    public void addCategoryNum(Long count) {
+        this.categoryNum += (count == null) ? 0 : count;
+    }
 }

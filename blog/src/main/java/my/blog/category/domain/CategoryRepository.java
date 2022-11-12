@@ -9,6 +9,13 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
+    @Query("select c from Category c where c.categoryName=:categoryName and c.parentCategoryId is null")
+    Category findByNameAndParentIdIsNull(@Param("categoryName") String name);
+
+//    @Query("select c from Category c where c.categoryName=:categoryName and c.")
+//    Category findByNameAndParentId(@Param("categoryName") String name,
+//                                   @Param("parentId") Long parentId)
+
     Category findByCategoryName(String categoryName);
     boolean existsByCategoryName(String categoryName);
 
