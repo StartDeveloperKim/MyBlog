@@ -1,14 +1,15 @@
 package my.blog.category.domain;
 
 import my.blog.category.dto.CategoryInfoDto;
-import my.blog.category.dto.CategoryRespInterface;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,54 +19,29 @@ class CategoryRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Test
-    void 카테고리_저장_테스트() {
-        //given
-        Category category = Category.from("테스트", null);
-        //when
-        Category saveCategory = categoryRepository.save(category);
-        //then
-        assertEquals("테스트", saveCategory.getCategoryName());
+    private Category savedParentCategory;
+    private Category savedChildCategory;
+
+    @BeforeEach
+    void setUp() {
+        Category parentCategory = Category.from("테스트1", null);
+        savedParentCategory = categoryRepository.save(parentCategory);
+
+        Category childCategory = Category.from("테스트2", savedParentCategory.getId());
+        savedChildCategory = categoryRepository.save(childCategory);
     }
 
     @Test
     void 카테고리이름으로_찾기_테스트() {
-        //given
-        Category category = Category.from("테스트", null);
-        categoryRepository.save(category);
         //when
-        Category findCategory = categoryRepository.findByCategoryName("테스트");
+        Category findCategory = categoryRepository.findByCategoryName("테스트1");
         //then
-        assertEquals("테스트", findCategory.getCategoryName());
-    }
-
-    @Test
-    void 카테고리_레이아웃_정보_가져오기_테스트() {
-        //given
-        Category category1 = Category.from("테스트1", null);
-        Category category2 = Category.from("테스트2", null);
-        Category savedCategory1 = categoryRepository.save(category1);
-        Category savedCategory2 = categoryRepository.save(category2);
-        //when
-        List<CategoryInfoDto> categoryDto = categoryRepository.findCategoryDto();
-        //then
-        CategoryInfoDto respInterface1 = categoryDto.get(0);
-        assertEquals(savedCategory1.getId(), respInterface1.getId());
-        assertEquals(savedCategory1.getCategoryName(), respInterface1.getName());
-
-        CategoryInfoDto respInterface2 = categoryDto.get(1);
-        assertEquals(savedCategory2.getId(), respInterface2.getId());
-        assertEquals(savedCategory2.getCategoryName(), respInterface2.getName());
+        assertEquals("테스트1", findCategory.getCategoryName());
     }
 
     @Test
     void 카테고리정보_가져오기_테스트() {
-        //given
-        Category parentCategory = Category.from("테스트1", null);
-        Category savedParentCategory = categoryRepository.save(parentCategory);
 
-        Category childCategory = Category.from("테스트2", savedParentCategory.getId());
-        Category savedChildCategory = categoryRepository.save(childCategory);
         //when
         List<CategoryInfoDto> categoryInfoDtos = categoryRepository.findCategoryDto();
 
@@ -82,6 +58,15 @@ class CategoryRepositoryTest {
         assertEquals(savedChildCategory.getParentCategoryId(), categoryInfoDto2.getParentCategoryId());
         assertNull(categoryInfoDto2.getCategoryNum());
 
+    }
+
+    @Test
+    void 카테고리이름과_부모_아이디로_카테고리_존재여부_조회하기() {
+        //when
+        boolean findCategory = categoryRepository.existByNameAndParentId(savedParentCategory.getId(),
+                savedChildCategory.getCategoryName());
+        //then
+        assertThat(findCategory).isTrue();
     }
 
 }

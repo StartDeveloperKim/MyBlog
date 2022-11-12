@@ -57,14 +57,6 @@ public class BoardController {
         }
 
         List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, category, step);
-    
-        /*나중에 삭제할 코드*/
-        for (BoardResponse board : boards) {
-            System.out.println("board.toString() = " + board.toString());
-            for (TagResponse tag : board.getTags()) {
-                System.out.println("tag.toString() = " + tag.toString());
-            }
-        }
 
         model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);

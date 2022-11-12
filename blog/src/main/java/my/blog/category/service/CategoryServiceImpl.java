@@ -5,6 +5,7 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.category.dto.*;
+import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Long saveCategory(CategoryAddDto categoryAddDto) {
-        //카테고리는 중복되도 된다.
+        //카테고리는 중복되면 안된다.
+        boolean existCategory = checkDuplicateCategoryName(categoryAddDto);
+        if (existCategory) {
+            throw new DuplicateCategoryException("사용중인 카테고리 이름입니다.");
+        }
         Category category = Category.from(categoryAddDto.getCategoryName(), categoryAddDto.getParentCategoryId()); // 생성메서드
         Category saveCategory = categoryRepository.save(category);
 
@@ -56,6 +61,17 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryInfoDto> categoryDto = categoryRepository.findCategoryDto();
 
         return HierarchicalCategory.from(categoryDto);
+    }
+
+    private boolean checkDuplicateCategoryName(CategoryAddDto categoryAddDto) {
+        boolean existCategory;
+        if (categoryAddDto.getParentCategoryId() == null) {
+            existCategory = categoryRepository.existsByCategoryName(categoryAddDto.getCategoryName());
+        } else {
+            existCategory = categoryRepository.existByNameAndParentId(categoryAddDto.getParentCategoryId(),
+                    categoryAddDto.getCategoryName());
+        }
+        return existCategory;
     }
 
     /*더미 카테고리 생성 -> 글을 작성할 때 카테고리 설정을 하지 않으면 해당 카테고리에 들어간다.*/

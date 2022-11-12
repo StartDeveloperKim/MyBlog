@@ -31,7 +31,7 @@ public class HeartController {
             heartService.saveHeart(heartRequest.getUserId(), heartRequest.getBoardId());
             return ResponseEntity.ok().body("success");
         } catch (Exception e) {
-            log.info("addHeart Exception : {}", e.getMessage());
+            log.error("addHeart Exception : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
         }
     }
@@ -42,7 +42,7 @@ public class HeartController {
             heartService.deleteHeart(heartRequest.getUserId(), heartRequest.getBoardId());
             return ResponseEntity.ok().body("success");
         } catch (Exception e) {
-            log.info("removeHeart Exception : {}", e.getMessage());
+            log.error("removeHeart Exception : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
         }
     }

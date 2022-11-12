@@ -34,18 +34,9 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     @Transactional(readOnly = true)
     public Map<Long, CommentResponse> getComments(Long boardId) {
-        Map<Long, CommentResponse> result =new HashMap<>();
         List<Comments> comments = commentsRepository.findCommentsByBoardId(boardId);
 
-        for (Comments comment : comments) {
-            if (comment.getParentId() == null) {
-                result.put(comment.getId(), new CommentResponse(comment));
-            } else {
-                result.get(comment.getParentId()).getChildCommentDtos().add(new ChildCommentDto(comment));
-            }
-        }
-
-        return result;
+        return HierarchicalComment.createHierarchicalComment(comments);
     }
 
     @Override
@@ -56,8 +47,10 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     public void saveComment(CommentRequest commentRequest, Long boardId, Long userId) {
-        User findUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-        Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new EntityNotFoundException("게시판이 없습니다."));
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("게시판이 없습니다."));
 
         Comments comment = Comments.of(findBoard, findUser, commentRequest.getComment(), commentRequest.getParentId());
 

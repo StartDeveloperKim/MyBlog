@@ -45,7 +45,7 @@ public class Category {
     @Column(name = "category_id", nullable = false)
     private Long id;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 50)
     private String categoryName;
 
     @Column(name = "parent_category_id")

@@ -3,9 +3,11 @@ package my.blog.category.service;
 import my.blog.board.domain.BoardRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
+import my.blog.category.dto.CategoryAddDto;
 import my.blog.category.dto.CategoryInfoDto;
 import my.blog.category.dto.CategoryLayoutDto;
 import my.blog.category.dto.HierarchicalCategory;
+import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
 import my.blog.category.stub.CategoryRepositoryStub;
 import org.aspectj.lang.annotation.Before;
@@ -28,9 +30,11 @@ import static org.mockito.BDDMockito.*;
 class CategoryServiceImplTest {
 
 
-    CategoryRepositoryStub categoryRepositoryStub;
+    CategoryRepositoryStub categoryRepositoryStub;//Stub Repository
     @Mock
     BoardRepository boardRepository;
+    @Mock
+    CategoryRepository categoryRepository;
     @InjectMocks
     CategoryServiceImpl categoryService;
 
@@ -76,5 +80,25 @@ class CategoryServiceImplTest {
         CategoryLayoutDto categoryLayoutDto1 = childCategory1.get(0);
         assertEquals(childCategoryId, categoryLayoutDto1.getId());
         assertEquals(childCategory.getCategoryName(), categoryLayoutDto1.getName());
+    }
+
+    @Test
+    void 중복되는_부모카테고리이름을_등록하려한다면_예외발생() {
+        //given
+        given(categoryRepository.existsByCategoryName(anyString()))
+                .willReturn(true);
+        //when, then
+        assertThrows(DuplicateCategoryException.class, () ->
+                categoryService.saveCategory(new CategoryAddDto("테스트1", null)));
+    }
+
+    @Test
+    void 중복되는_자식카테고리이름을_등록하려한다면_예외발생() {
+        //given
+        given(categoryRepository.existByNameAndParentId(anyLong(), anyString()))
+                .willReturn(true);
+        //when, then
+        assertThrows(DuplicateCategoryException.class, () ->
+                categoryService.saveCategory(new CategoryAddDto("테스트2", 1L)));
     }
 }
