@@ -92,28 +92,21 @@
     <div class="justify-content-center">
         <nav aria-label="...">
             <ul class="pagination pagination-lg justify-content-center" th:with="start=${pagingInfo.startPage}, end=${pagingInfo.endPage}">
-                <!--                <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}"><a class="page-link" th:href="@{(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a></li>-->
                 <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}">
                     <a class="page-link" th:href="@{{page}(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a>
                 </li>
 
                 <span th:each="num : ${#numbers.sequence(start, end)}">
-                    <li class="page-item active rounded-3" th:if="${num == pagingInfo.currentPage && num!=0}">
-                        <a class="page-link" th:if="${param.category!=null}"
-                           th:href="@{${page}(page=${num}, step=${param.step})}" th:text="${num}"></a>
-                        <a class="page-link" th:if="${param.tagName!=null}"
-                           th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
-                    </li>
-                    <li class="page-item rounded-3" th:if="${num != pagingInfo.currentPage && num!=0}">
-                        <a class="page-link" th:if="${param.category!=null}"
-                           th:href="@{${page}(page=${num}, step=${param.step})}" th:text="${num}"></a>
+                    <li class="page-item rounded-3" th:classappend="${num==pagingInfo.currentPage} ? 'active':''">
+                        <a class="page-link" th:if="${param.tagName==null}"
+                           th:href="@{{page}(page=${num}, step=${param.step})}" th:text="${num}"></a>
                         <a class="page-link" th:if="${param.tagName!=null}"
                            th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
                     </li>
                 </span>
 
                 <li class="page-item rounded-3" th:if="${pagingInfo.nextPage}">
-                    <a class="page-link" th:href="@{${page}(page=${pagingInfo.currentPage}+1, step=${param.step})}">다음</a>
+                    <a class="page-link" th:href="@{{page}(page=${pagingInfo.currentPage}+1, step=${param.step})}">다음</a>
                 </li>
             </ul>
         </nav>

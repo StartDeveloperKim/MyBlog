@@ -56,19 +56,13 @@ public class BoardController {
         childCategoryName = childCategoryName == null ? "" : childCategoryName;
 
         Paging pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(parentCategoryName, childCategoryName));
-        log.info("페이징정보 {}", pagingInfo.toString());
-
         List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, parentCategoryName, childCategoryName, step);
 
         model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);
 
         layoutService.getLayoutInfo(model);
-
-        /*로그인유저 인증코드가 중복되고 있다. 어떻게 멤버가 로그인되었다는 것을 확인해서 랜더링을 해야하지??*/
-        if (user != null) {
-            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
-        }
+        userInfoSaveInModel(user, model);
 
         return "board/boardListForm";
     }
@@ -78,16 +72,12 @@ public class BoardController {
         Board board = boardService.getBoard(id);
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
-        if (user != null) {
-            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
-        } else {
-            model.addAttribute("userInfo", new UserInfo(null, null));
-        }
+        userInfoSaveInModel(user, model);
+
         List<TagResponse> tagList = boardTagService.getTagList(id);
         Map<Long, CommentResponse> comments = commentsService.getComments(id);
         boardService.addHit(id);
 
-        //log.info("tagList {}", tagList);
 
         model.addAttribute("board", boardResponse);
         model.addAttribute("commentList", comments);
@@ -96,6 +86,14 @@ public class BoardController {
         layoutService.getLayoutInfo(model);
 
         return "board/boardDetailForm";
+    }
+
+    private static void userInfoSaveInModel(SessionUser user, Model model) {
+        if (user != null) {
+            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
+        } else {
+            model.addAttribute("userInfo", new UserInfo(null, null));
+        }
     }
 
     @GetMapping("/edit")
@@ -109,11 +107,11 @@ public class BoardController {
     @ResponseBody
     public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
                                           @Valid @RequestBody BoardRegister boardRegister) {
-        // 비동기로 통신하기 때문에 이에대한 Validation을 만들고 공부하자.
+
         log.info("Get Data : {}", boardRegister.toString());
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // null은 나중에 생각해보고 수정하자
-        } // 근데 생각해보면 Spring Security 설정에서 이미 이 곳 접근을 막고있다. 따라서 user가 null일 경우 400을 return할 이유가 없다.
+        /*if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } */ // 삭제예정코드
         Long boardId;
 
         if (boardRegister.getTags().equals("")) {

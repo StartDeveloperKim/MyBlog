@@ -33,7 +33,7 @@ public class CommentsController {
     @GetMapping("/{boardId}")
     public ResponseEntity<Map<String, Object>> getComments(@LoginUser SessionUser user, @PathVariable("boardId") Long boardId) {
 
-        Map<String, Object> commentLayoutResult = this.commentLayout.getCommentLayout(boardId, user);
+        Map<String, Object> commentLayoutResult = commentLayout.getCommentLayout(boardId, user);
         return ResponseEntity.ok().body(commentLayoutResult);
     }
 

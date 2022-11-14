@@ -57,6 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Map<Long, CategoryLayoutDto> getCategoryList() {
         List<CategoryInfoDto> categoryDto = categoryRepository.findCategoryDto();
 

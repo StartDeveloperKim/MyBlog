@@ -17,8 +17,8 @@ public class Paging {
     private int currentPage;
     private int realEndPage;
 
-    private boolean isPreviousPage;
-    private boolean isNextPage;
+    private boolean previousPage;
+    private boolean nextPage;
 
     private final int displayPageNum = 6; // pagingSize
 
@@ -35,8 +35,8 @@ public class Paging {
             paging.endPage = paging.realEndPage;
         }
 
-        paging.isPreviousPage = paging.currentPage > 1;
-        paging.isNextPage = paging.currentPage < paging.realEndPage;
+        paging.previousPage = paging.currentPage > 1;
+        paging.nextPage = paging.currentPage < paging.realEndPage;
 
 
         return paging;
