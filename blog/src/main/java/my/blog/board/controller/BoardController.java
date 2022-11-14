@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -44,20 +45,20 @@ public class BoardController {
 
     private final int pagingSize = 6;
 
-    @GetMapping
-    public String boardListForm(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
-                                @RequestParam(value = "category", defaultValue = "total", required = false) String category,
+    @GetMapping(value={"/category/{parentCategoryName}/{page}",
+            "/category/{parentCategoryName}/{childCategoryName}/{page}"})
+    public String boardListForm(@PathVariable(value = "parentCategoryName") String  parentCategoryName,
+                                @PathVariable(value = "childCategoryName", required = false) String childCategoryName,
+                                @PathVariable(value = "page") int page,
                                 @RequestParam(value = "step", required = false, defaultValue = "0") String step,
                                 @LoginUser SessionUser user,
                                 Model model) {
-        Paging pagingInfo;
-        if (category.equals("total")) {
-            pagingInfo = Paging.of(page, boardService.getBoardCount());
-        } else {
-            pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(category));
-        }
+        childCategoryName = childCategoryName == null ? "" : childCategoryName;
 
-        List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, category, step);
+        Paging pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(parentCategoryName, childCategoryName));
+        log.info("페이징정보 {}", pagingInfo.toString());
+
+        List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, parentCategoryName, childCategoryName, step);
 
         model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);

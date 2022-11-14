@@ -18,7 +18,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select b from Board b where b.category.categoryName=:categoryName order by b.id desc")
     Slice<Board> findByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
 
-    @Query("select b from Board b where b.category.id=:id or b.category.parentCategoryId=:id")
+    @Query("select b from Board b " +
+            "where b.category.id=:id or b.category.parentCategoryId=:id order by b.id desc ")
     Slice<Board> findByCategoryId(@Param("id") Long categoryId, Pageable pageable);
 
     // 스프링데이터 JPA의 remove를 사용한다면 엔티티가 필요하다 따라서 쿼리를 직접 날렸다.

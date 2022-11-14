@@ -48,18 +48,21 @@
 
             <div class="border-top my-3" style="margin: auto 0;"></div>
             <div class="mb-1 mx-4">
-                <a th:href="@{/board(category='total', step=0, page=1)}" class="mb-0 superCategory btn fs-5" th:text="|전체글(${boardCount})|">전체글</a>
+                <a th:href="@{/board/category/total/{page}(step=0, page=1)}" class="mb-0 superCategory btn fs-5" th:text="|전체글(${boardCount})|">전체글</a>
             </div>
             <ul class="list-unstyled ps-0">
                 <!--어느정도 웹 페이지의 기능이 잡히면 계층형태의 카테고리를 만들어보자 부트스트랩의 collapse 기능사용-->
                 <li class="mb-1 mx-4" th:each="category : ${categoryList.values()}">
                     <a th:id="|collapseSpace${category.id}|" data-bs-toggle="collapse" th:attr="href='#childCategory'+${category.id}" role="button" aria-expanded="false" th:attrappend="aria-controls=|childCategory${category.id}|" onclick="iconRotate(this)"><i class="fa-solid fa-chevron-right collapse-btn"></i></a>
                     <!--<i class="fa-solid fa-chevron-down"></i>-->
-                    <span th:if="${category.name!='total'}"><a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
+                    <!--<span th:if="${category.name!='total'}"><a th:href="@{/board(category=${category.name}, step=1)}" class="mb-0 superCategory btn fs-5"
+                                                               th:text="|${category.name}(${category.categoryNum})|">스프링(0)</a></span>-->
+                    <span th:if="${category.name!='total'}"><a th:href="@{/board/category/{parentCategory}/{page}(parentCategory=${category.name}, page=1, step=1)}" class="mb-0 superCategory btn fs-5"
                                                                th:text="|${category.name}(${category.categoryNum})|">스프링(0)</a></span>
                     <div class="collapse" th:id="|childCategory${category.id}|">
                         <ul class="ms-4 list-unstyled fw-normal pb-1" th:each="childCategory : ${category.childCategory}">
-                            <li class="fs-6"><a class="link-dark rounded fw-bold" th:href="@{/board(category=${childCategory.name}, step=2)}" th:text="|${childCategory.name}(${childCategory.categoryNum})|"></a></li>
+                            <!--<li class="fs-6"><a class="link-dark rounded fw-bold" th:href="@{/board(category=${childCategory.name}, step=2)}" th:text="|${childCategory.name}(${childCategory.categoryNum})|"></a></li>-->
+                            <li class="fs-6"><a class="link-dark rounded fw-bold" th:href="@{/board/category/{parentCategory}/{childCategory}/{page}(parentCategory=${category.name},childCategory=${childCategory.name}, page=1, step=2)}" th:text="|${childCategory.name}(${childCategory.categoryNum})|"></a></li>
                         </ul>
                     </div>
                 </li>

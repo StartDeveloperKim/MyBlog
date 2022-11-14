@@ -104,14 +104,18 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponse> getBoardList(int page, int size, String category, String step) {
+    public List<BoardResponse> getBoardList(int page, int size, String parentCategory, String childCategory,String step) {
+        PageRequest pageInfo = PageRequest.of(page - 1, size);
+
         List<Board> findBoards = null;
         if (step.equals("0")) {
-            findBoards = boardRepository.findByOrderByIdDesc(PageRequest.of(page-1, size)).getContent();
+            findBoards = boardRepository.findByOrderByIdDesc(pageInfo).getContent();
         } else if (step.equals("1")) {
-            Category findCategory = categoryRepository.findByNameAndParentIdIsNull(category); // 부모카테고리 찾기
-            findBoards = boardRepository.findByCategoryId(findCategory.getId(), PageRequest.of(page - 1, size)).getContent();
-            //findBoards = boardRepository.findByCategoryName(category, PageRequest.of(page-1, size)).getContent();
+            Category findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategory); // 부모카테고리 찾기
+            findBoards = boardRepository.findByCategoryId(findCategory.getId(), pageInfo).getContent();
+        } else if (step.equals("2")) {
+            Category findCategory = categoryRepository.findByNameAndParentName(parentCategory, childCategory);
+            findBoards = boardRepository.findByCategoryId(findCategory.getId(), pageInfo).getContent();
         }
 
         if (findBoards == null) {
@@ -138,8 +142,20 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional(readOnly = true)
-    public Long getBoardCountByCategory(String category) {
-        Category findCategory = categoryRepository.findByNameAndParentIdIsNull(category);
-        return boardRepository.getBoardCountByCategoryId(findCategory.getId());
+    public Long getBoardCountByCategory(String parentCategoryName, String childCategoryName) {
+
+        if (parentCategoryName.equals("total")) {
+            return boardRepository.getAllBoardCount();
+        } else {
+            Category findCategory;
+            if (childCategoryName.equals("")) {
+                findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategoryName);
+            } else {
+                findCategory = categoryRepository.findByNameAndParentName(parentCategoryName, childCategoryName);
+            }
+            return boardRepository.getBoardCountByCategoryId(findCategory.getId());
+        }
+
+
     }
 }

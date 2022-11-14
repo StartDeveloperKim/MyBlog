@@ -69,4 +69,12 @@ class CategoryRepositoryTest {
         assertThat(findCategory).isTrue();
     }
 
+    @Test
+    void 부모카테고리와_자식카테고리이름으로_카테고리찾기() {
+        //when
+        Category findCategory = categoryRepository.findByNameAndParentName("테스트1", "테스트2");
+        //then
+        assertThat(findCategory.getId()).isEqualTo(savedChildCategory.getId());
+    }
+
 }

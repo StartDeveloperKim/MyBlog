@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
     <title>꾸준함이 목표인 블로그</title>
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
     <!-- Font Awesome icons (free version)-->
     <!-- <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script> -->
     <script src="https://kit.fontawesome.com/2048666a6e.js" crossorigin="anonymous"></script>
     <!-- Google fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+          rel="stylesheet" type="text/css"/>
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet"/>
     <link href="/css/customStyles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
 
     <!-- Core theme JS-->
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -31,21 +35,25 @@
 <header>
     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div th:each="board, num : ${boardList}" class="carousel-item" th:classappend="${num.index}==0 ? 'active':''" data-bs-interval="3000">
+            <div th:each="board, num : ${boardList}" class="carousel-item"
+                 th:classappend="${num.index}==0 ? 'active':''" data-bs-interval="3000">
                 <a th:href="@{/board/{id}(id=${board.id})}">
                     <img th:src="${board.thumbnail}" class="w-100 vh-100 main-image cover">
                     <div class="carousel-caption d-none d-md-block justify-content-center">
                         <h1 th:text="${board.title}" class="site-heading">First slide label</h1>
-                        <p th:text="|작성일:${board.createDate}, 조회수:${board.hit}|" class="meta">Some representative placeholder content for the first slide.</p>
+                        <p th:text="|작성일:${board.createDate}, 조회수:${board.hit}|" class="meta">Some representative
+                            placeholder content for the first slide.</p>
                     </div>
                 </a>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
@@ -67,14 +75,15 @@
                     </a>
                     <h5 class="post-subtitle">
                             <span th:each="tag : ${board.tags}">
-                                <a type="button" class="rounded-2" style="background-color: lightgray" th:href="@{/board/tag(tagName=${tag.tagName})}">
+                                <a type="button" class="rounded-2" style="background-color: lightgray"
+                                   th:href="@{/board/tag(tagName=${tag.tagName})}">
                                     <i class="fa-solid fa-tag fs-6"></i>
                                     <span th:text="|${tag.tagName}  |"></span>
                                 </a>
                             </span>
                     </h5>
                     <p class="post-meta" th:text="|작성일.${board.createDate}  조회수.${board.hit}|"></p>
-                    <hr class="my-4" />
+                    <hr class="my-4"/>
                 </div>
             </div>
         </div>
@@ -83,20 +92,29 @@
     <div class="justify-content-center">
         <nav aria-label="...">
             <ul class="pagination pagination-lg justify-content-center" th:with="start=${pagingInfo.startPage}, end=${pagingInfo.endPage}">
-                <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}"><a class="page-link" th:href="@{/board(page=${pagingInfo.currentPage}-1, category=${param.category}, step=${param.step})}">이전</a></li>
+                <!--                <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}"><a class="page-link" th:href="@{(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a></li>-->
+                <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}">
+                    <a class="page-link" th:href="@{{page}(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a>
+                </li>
 
                 <span th:each="num : ${#numbers.sequence(start, end)}">
                     <li class="page-item active rounded-3" th:if="${num == pagingInfo.currentPage && num!=0}">
-                        <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
-                        <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.category!=null}"
+                           th:href="@{${page}(page=${num}, step=${param.step})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.tagName!=null}"
+                           th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
                     </li>
                     <li class="page-item rounded-3" th:if="${num != pagingInfo.currentPage && num!=0}">
-                        <a class="page-link" th:if="${param.category!=null}" th:href="@{/board(page=${num}, category=${param.category}, step=${param.step})}" th:text="${num}"></a>
-                        <a class="page-link" th:if="${param.tagName!=null}" th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.category!=null}"
+                           th:href="@{${page}(page=${num}, step=${param.step})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.tagName!=null}"
+                           th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
                     </li>
                 </span>
 
-                <li class="page-item rounded-3" th:if="${pagingInfo.nextPage}"><a class="page-link" th:href="@{/board(page=${pagingInfo.currentPage}+1, category=${param.category}, step=${param.step})}">다음</a></li>
+                <li class="page-item rounded-3" th:if="${pagingInfo.nextPage}">
+                    <a class="page-link" th:href="@{${page}(page=${pagingInfo.currentPage}+1, step=${param.step})}">다음</a>
+                </li>
             </ul>
         </nav>
     </div>
