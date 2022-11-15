@@ -35,6 +35,17 @@
                 <div class="post-heading text-center">
                     <h1 th:text="${board.title}"></h1>
                     <span class="meta" th:text="|작성일 : ${board.createDate}|"></span>
+                    <br><br>
+                    <div class="container-sm" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="row justify-content-center">
+                            <div class="col-4">
+                                <a class="meta fw-bold" id="edit-btn">수정하기</a>
+                            </div>
+                            <div class="col-4">
+                                <a class="meta fw-bold" type="button" id="delete-btn">삭제하기</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,18 +67,18 @@
         </div>
     </div>
 
-    <div class="container justify-content-center mx-auto my-auto mb-3 d-flex border-top" sec:authorize="hasRole('ROLE_ADMIN')">
+    <!--<div class="container justify-content-center mx-auto my-auto mb-3 d-flex border-top" sec:authorize="hasRole('ROLE_ADMIN')">
         <div class="row">
             <div class="col justify-content-center align-self-auto">
-                <!--<button class="btn-lg btn-outline-secondary rounded-4" id="edit-btn">수정</button>-->
+                &lt;!&ndash;<button class="btn-lg btn-outline-secondary rounded-4" id="edit-btn">수정</button>&ndash;&gt;
                 <button class="section2_btn btn22" type="button" id="edit-btn">수정</button>
             </div>
             <div class="col justify-content-center align-self-auto">
-                <!--<button class="btn-lg btn-outline-danger rounded-4" id="delete-btn">삭제</button>-->
+                &lt;!&ndash;<button class="btn-lg btn-outline-danger rounded-4" id="delete-btn">삭제</button>&ndash;&gt;
                 <button class="section2_btn btn11" type="button" id="delete-btn">삭제</button>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="container-md border-top my-auto"></div>
     <!--태그-->

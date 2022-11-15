@@ -25,12 +25,14 @@ public class GitHubImgUploadService {
 
 //    https://raw.githubusercontent.com/StartDeveloperKim/blogImg/main/Img/%EC%9D%BC%EC%83%81.png
 
-    public String uploadFile(MultipartFile multipartFile, String storeFileName) throws IOException {
+    public String uploadFile(MultipartFile multipartFile, String storeFileName, ImageType imageType) throws IOException {
         GitHub gitHub = new GitHubBuilder().withOAuthToken(gitToken).build();
         GHRepository repository = gitHub.getRepository(repositoryURL);
+        String imgFolder = imageType.name().equals("THUMBNAIL") ? "Img/" : "Img/BoardImageRepository/";
+        String commitMessage = imageType.name().equals("THUMBNAIL") ? "thumbnail" : "boardEditorImage";
 
-        repository.createContent().path("Img/" + storeFileName)
-                .content(multipartFile.getBytes()).message("thumbnail").branch("main").commit();
-        return rootURL + repositoryURL + "/main/Img/" + storeFileName + "?raw=true";
+        repository.createContent().path(imgFolder + storeFileName)
+                .content(multipartFile.getBytes()).message(commitMessage).branch("main").commit();
+        return rootURL + repositoryURL + "/main/" + imgFolder + storeFileName + "?raw=true";
     }
 }

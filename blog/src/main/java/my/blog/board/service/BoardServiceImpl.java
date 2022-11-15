@@ -48,7 +48,9 @@ public class BoardServiceImpl implements BoardService{
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-        Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
+        /*Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());*/
+        Category category = categoryRepository.findById(boardRegister.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("카테고리가 없습니다."));
 
         Board board = Board.of(user, category, boardRegister);
         Board saveBoard = boardRepository.save(board); // 게시글 저장
@@ -66,7 +68,9 @@ public class BoardServiceImpl implements BoardService{
     public Long writeBoard(BoardRegister boardRegister, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-        Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());
+        /*Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());*/
+        Category category = categoryRepository.findById(boardRegister.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("카테고리가 없습니다."));
 
         Board board = Board.of(user, category, boardRegister);
         Board saveBoard = boardRepository.save(board); // 게시글 저장

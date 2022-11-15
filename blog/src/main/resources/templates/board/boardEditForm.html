@@ -59,8 +59,8 @@
                 <select class="form-control rounded-3 border-3 my-auto mb-2" name="category" id="category">
                     <option value="" disabled selected>---카테고리 지정안함---</option>
                     <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}">
-                      <option th:text="${category.name}"></option>
-                      <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}"></option>
+                      <option th:text="${category.name}" th:value="${category.id}"></option>
+                      <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}"></option>
                     </optgroup>
                 </select>
             </div>
@@ -82,5 +82,6 @@
 </body>
 <!-- TOAST UI Editor CDN URL(JS) -->
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="/js/boardEdit.js"></script>
 </html>

@@ -14,7 +14,7 @@ public class FileStore {
     /*2022-10-27 깃허브를 원격저장소로 사용한다.*/
     private final GitHubImgUploadService gitHubImgUploadService;
 
-    public String storeFile(MultipartFile multipartFile) throws IOException {
+    public String storeFile(MultipartFile multipartFile, ImageType imageType) throws IOException {
         if (multipartFile.isEmpty()) {
             return null;
         }
@@ -22,6 +22,6 @@ public class FileStore {
         String originalFilename = multipartFile.getOriginalFilename();
         ImageUploadFile imageUploadFile = ImageUploadFile.of(originalFilename);
 
-        return gitHubImgUploadService.uploadFile(multipartFile, imageUploadFile.getStoreFileName()); // 저장경로 반환
+        return gitHubImgUploadService.uploadFile(multipartFile, imageUploadFile.getStoreFileName(), imageType); // 저장경로 반환
     }
 }

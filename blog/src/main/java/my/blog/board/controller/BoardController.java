@@ -109,9 +109,6 @@ public class BoardController {
                                           @Valid @RequestBody BoardRegister boardRegister) {
 
         log.info("Get Data : {}", boardRegister.toString());
-        /*if (user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } */ // 삭제예정코드
         Long boardId;
 
         if (boardRegister.getTags().equals("")) {

@@ -18,9 +18,8 @@ public class BoardRegister {
 
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
-
-    @NotBlank(message = "카테고리를 입력해주세요")
-    private String category;
+    
+    private Long categoryId;
 
     private String thumbnail;
 

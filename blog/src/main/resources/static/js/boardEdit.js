@@ -2,6 +2,29 @@ const editor = new toastui.Editor({
     el: document.querySelector('#editor'),
     previewStyle: 'vertical',
     height: '450px',
+    hooks: {
+        addImageBlobHook: function (blob, callback) {
+            const formData = new FormData();
+            formData.append("image", blob);
+            let imageURL;
+            $.ajax({
+                type: "POST",
+                url: "/board/toast",
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (data) {
+                    imageURL = data;
+                    console.log("AJAX", imageURL);
+                    callback(imageURL, "image");
+                },
+                error: function (request, status, error) {
+                    alert(request + ", " + status + ", " + error);
+                },
+            });
+        },
+    },
+    language: "ko-KR"
 });
 
 const input = document.getElementById('tags');
@@ -37,7 +60,6 @@ window.onload = function () {
             httpRequest.setRequestHeader("contentType", "multipart/form-data");
 
             httpRequest.onload = function () {
-                alert("통신완료");
                 console.log(httpRequest.response);
                 if (httpRequest.status === 200) {
                     thumbnailURL.value = httpRequest.response;
@@ -62,7 +84,7 @@ window.onload = function () {
         let responseData = {};
         responseData.title = title;
         responseData.content = content;
-        responseData.category = category === "" ? 'total' : category;
+        responseData.categoryId = category === "" ? '1' : category;
         responseData.thumbnail = thumbnailURL.value;
         responseData.tags = tags;
         httpRequest = new XMLHttpRequest();
