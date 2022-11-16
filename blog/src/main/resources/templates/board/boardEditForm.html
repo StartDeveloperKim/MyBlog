@@ -37,7 +37,7 @@
         <div class="row mt-3">
             <div class="col-lg-6">
                 <input type="text" id="title" class="form-control form-control-lg rounded-3 border-3 mt-1 mb-2"
-                       placeholder="제목을 입력하세요">
+                       placeholder="제목을 입력하세요" th:value="${updateFlag}?${board.title}:''">
             </div>
             <div class="col-lg-6 align-self-center mx-auto">
                 <input class="form-control rounded-3 border-secondary" type="file" accept="image/*" id="formFile"

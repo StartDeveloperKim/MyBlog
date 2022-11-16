@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CommentsRepository extends JpaRepository<Comments, Long> {
 
-    @Query("select c from Comments c left join fetch c.user where c.board.id = :boardId order by c.id asc")
+    @Query("select c from Comments c join fetch c.user where c.board.id = :boardId order by c.id asc")
     List<Comments> findCommentsByBoardId(@Param("boardId") Long boardId);
 
     @Query("select count(c) from Comments c where c.board.id = :boardId")

@@ -44,26 +44,6 @@ class BoardRepositoryTest {
 
     @Test
     void 부모카테고리를_조회하면_자식_카테고리까지_포함되서_보여진다() {
-        //given
-        BoardRegister boardRegister1 = new BoardRegister("테스트1", "테스트1입니다.", savedParentCategory.getCategoryName(), null, null);
-        Board board1 = Board.of(savedUser, savedParentCategory, boardRegister1);
-        Board savedBoard1 = boardRepository.save(board1);
 
-        BoardRegister boardRegister2 = new BoardRegister("테스트2", "테스트2입니다.", savedChildCategory.getCategoryName(), null, null);
-        Board board2 = Board.of(savedUser, savedChildCategory, boardRegister2);
-        Board savedBoard2 = boardRepository.save(board2);
-
-        PageRequest pageRequest = PageRequest.of(0, 6);
-        //when
-        List<Board> findBoards = boardRepository.findByCategoryId(savedParentCategory.getId(), pageRequest)
-                .getContent();
-
-        //then
-        assertThat(findBoards.size()).isEqualTo(2);
-
-        assertThat(findBoards.get(0).getId())
-                .isEqualTo(savedBoard2.getId());
-        assertThat(findBoards.get(1).getId())
-                .isEqualTo(savedBoard1.getId());
     }
 }

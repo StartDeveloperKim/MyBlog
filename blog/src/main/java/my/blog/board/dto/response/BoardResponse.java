@@ -1,11 +1,11 @@
 package my.blog.board.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import my.blog.board.domain.Board;
 import my.blog.tag.dto.TagResponse;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;

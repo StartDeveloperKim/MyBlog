@@ -7,6 +7,7 @@ import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardDetailResponse;
 import my.blog.board.dto.response.BoardResponse;
+import my.blog.board.dto.response.BoardUpdateResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardService;
 import my.blog.boardTag.service.BoardTagService;
@@ -123,19 +124,23 @@ public class BoardController {
 
     @GetMapping("/edit/{id}")
     public String boardDetailEditForm(@PathVariable("id") Long id, Model model) {
-        Board board = boardService.getBoard(id);
-        BoardResponse boardResponse = new BoardResponse(board);
+        BoardUpdateResponse boardUpdateRes = boardService.getBoardUpdateDto(id);
+        log.info("BoardUpdateDto {}", boardUpdateRes.toString());
 
-        model.addAttribute("board", boardResponse);
-
+        model.addAttribute("board", boardUpdateRes);
+        model.addAttribute("updateFlag", true);
+        layoutService.getCategoryList(model);
+        // getCategoryList는 카테고리당 글 개수까지 집계해서 보여준다.
+        // 하지만 EditForm에서는 단순히 ID와 이름 정도만 필요하다 이 점 수정하자.
         return "board/boardEditForm";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/edit/{id}")
     @ResponseBody
-    public ResponseEntity<String> boardUpdate(@RequestBody BoardUpdate boardUpdate) {
+    public ResponseEntity<String> boardUpdate(@PathVariable("id") Long boardId,
+                                              @RequestBody BoardUpdate boardUpdate) {
         try {
-            boardService.editBoard(boardUpdate);
+            boardService.editBoard(boardUpdate, boardId);
             return ResponseEntity.ok().body("success");
         } catch (EntityNotFoundException e) {
             log.info("/board/edit error : {}", e.getMessage());

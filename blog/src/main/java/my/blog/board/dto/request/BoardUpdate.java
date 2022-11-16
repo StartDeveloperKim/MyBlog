@@ -9,7 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BoardUpdate {
 
-    private Long id;
     private String title;
     private String content;
     private String thumbnail;

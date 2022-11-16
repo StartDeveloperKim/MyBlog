@@ -7,6 +7,7 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.dto.response.BoardResponse;
+import my.blog.board.dto.response.BoardUpdateResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
@@ -68,7 +69,6 @@ public class BoardServiceImpl implements BoardService{
     public Long writeBoard(BoardRegister boardRegister, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-        /*Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());*/
         Category category = categoryRepository.findById(boardRegister.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("카테고리가 없습니다."));
 
@@ -79,10 +79,12 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void editBoard(BoardUpdate boardUpdate) {
-        Board board = boardRepository.findById(boardUpdate.getId())
+    public void editBoard(BoardUpdate boardUpdate, Long boardId) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
         Category category = categoryRepository.findByCategoryName(boardUpdate.getCategory());
+        // 이 코드도 나중에 수정 기능을 제대로 만들 때 오류가 날 예정인 코드이다. 잘 확인해서 수정하자 ID로 찾기
+        // 그리고 태그도 파싱해서 다시 수정하는 기능, 썸네일도
 
         board.edit(boardUpdate.getTitle(), boardUpdate.getContent(), boardUpdate.getThumbnail(), category);
     }
@@ -142,6 +144,15 @@ public class BoardServiceImpl implements BoardService{
     @Transactional(readOnly = true)
     public Long getBoardCount() {
         return boardRepository.getAllBoardCount();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BoardUpdateResponse getBoardUpdateDto(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("게시물이 없습니다."));
+        List<BoardTag> boardTags = boardTagRepository.findBoardTagsByBoardId(boardId);
+        return new BoardUpdateResponse(board, boardTags);
     }
 
     @Override
