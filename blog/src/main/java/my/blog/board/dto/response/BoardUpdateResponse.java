@@ -21,6 +21,7 @@ public class BoardUpdateResponse {
     private Long boardId;
     private String title;
     private String content;
+    private Long categoryId;
     private List<String> tags;
     private String thumbnail;
 
@@ -29,15 +30,19 @@ public class BoardUpdateResponse {
         this.boardId = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
+        this.categoryId = board.getCategory().getId(); // 지연로딩 발생
         this.tags = parsingTagName(boardTags);
         this.thumbnail = board.getThumbnail();
     }
 
     private List<String> parsingTagName(List<BoardTag> boardTags) {
-        List<String> result = new ArrayList<>();
+        /*List<String> result = new ArrayList<>();
         for (BoardTag boardTag : boardTags) {
             result.add(boardTag.getTag().getTagName());
         }
-        return result;
+        return result;*/
+        return boardTags.stream()
+                .map(boardTag -> boardTag.getTag().getTagName())
+                .collect(Collectors.toList());
     }
 }

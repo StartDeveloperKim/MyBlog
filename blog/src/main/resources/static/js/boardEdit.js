@@ -27,19 +27,13 @@ const editor = new toastui.Editor({
     language: "ko-KR"
 });
 
-const input = document.getElementById('tags');
-let tagify = new Tagify(input); // initialize Tagify
-
-// 태그가 추가되면 이벤트 발생
-tagify.on('add', function() {
-    console.log(tagify.value); // 입력된 태그 정보 객체
-    console.log(tagify.value.length);
-});
 
 window.onload = function () {
+
     let httpRequest;
     let registerBtn = document.getElementById("register-btn");
     let cancelBtn = document.getElementById("cancel-btn");
+    let editBtn = document.getElementById("edit-btn");
     const formFile = document.getElementById('formFile');
     const thumbnailURL = document.getElementById("thumbnailURL");
 
@@ -72,32 +66,38 @@ window.onload = function () {
             httpRequest.send(formData);
         }
     }
-    
-    registerBtn.addEventListener("click", function () {
-        
+
+    function getRequestData() {
         const category = document.getElementById("category").value;
         const title = document.getElementById('title').value;
         const content = editor.getHTML();
         const tags = document.getElementById("tags").value;
-        
 
-        let responseData = {};
-        responseData.title = title;
-        responseData.content = content;
-        responseData.categoryId = category === "" ? '1' : category;
-        responseData.thumbnail = thumbnailURL.value;
-        responseData.tags = tags;
+
+        let requestData = {};
+        requestData.title = title;
+        requestData.content = content;
+        requestData.categoryId = category === "" ? '1' : category;
+        requestData.thumbnail = thumbnailURL.value;
+        requestData.tags = tags;
+
+        return requestData;
+    }
+    
+    registerBtn.addEventListener("click", function () {
+
+        const requestData = getRequestData();
         httpRequest = new XMLHttpRequest();
 
-        console.log(responseData);
+        console.log(requestData);
         
         httpRequest.open('POST', '/board', true);
         httpRequest.responseType = 'json';
         httpRequest.setRequestHeader('Content-Type', 'application/json');
 
-        console.log(JSON.stringify(responseData));
+        console.log(JSON.stringify(requestData));
 
-        httpRequest.send(JSON.stringify(responseData));
+        httpRequest.send(JSON.stringify(requestData));
 
         httpRequest.onload = function () {
             if (httpRequest.status === 200) {
@@ -120,7 +120,29 @@ window.onload = function () {
     cancelBtn.addEventListener("click", function () {
         let check = confirm("정말로 취소하시겠습니까?");
         if (check) {
-            window.location.href = "/board"
+            history.back();
+        }
+    });
+
+    editBtn.addEventListener("click", function () {
+        let check = confirm("정말로 수정하시겠습니까?");
+        if (check) {
+            const requestData = getRequestData();
+
+            $.ajax({
+                type: "POST",
+                url: "/board/edit/"+boardId,
+                contentType: 'application/json',
+                async: false,
+                data: JSON.stringify(requestData),
+                success: function (data) {
+                    alert('게시글이 수정되었습니다.');
+                    window.location.href = "/board/" + boardId;
+                },
+                error: function (request, status, error) {
+                    alert(request + ", " + status + ", " + error);
+                },
+            });
         }
     });
 

@@ -40,9 +40,15 @@
                        placeholder="제목을 입력하세요" th:value="${updateFlag}?${board.title}:''">
             </div>
             <div class="col-lg-6 align-self-center mx-auto">
-                <input class="form-control rounded-3 border-secondary" type="file" accept="image/*" id="formFile"
-                       placeholder="썸네일을 업로드해주세요">
-                <input type="hidden" id="thumbnailURL">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <input class="form-control rounded-3 border-secondary" type="file" accept="image/*" id="formFile"
+                               th:placeholder="${updateFlag}?${board.thumbnail}:'썸네일을 업로드해주세요'">
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control rounded-3" id="thumbnailURL" th:value="${updateFlag}?${board.thumbnail}:''" readonly>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- <div class="border-top mt-2 mb-2"></div> -->
@@ -58,9 +64,13 @@
                 <label for="category">카테고리</label>
                 <select class="form-control rounded-3 border-3 my-auto mb-2" name="category" id="category">
                     <option value="" disabled selected>---카테고리 지정안함---</option>
-                    <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}">
-                      <option th:text="${category.name}" th:value="${category.id}"></option>
-                      <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}"></option>
+                    <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}" th:if="${updateFlag}">
+                      <option th:text="${category.name}" th:value="${category.id}" th:selected="${category.id}==${board.categoryId}"></option>
+                      <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}" th:selected="${childCategory.id}==${board.categoryId}"></option>
+                    </optgroup>
+                    <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}" th:if="${updateFlag==null}">
+                        <option th:text="${category.name}" th:value="${category.id}"></option>
+                        <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}"></option>
                     </optgroup>
                 </select>
             </div>
@@ -73,12 +83,31 @@
 
     </form>
     <div class="row justify-content-evenly mt-4 g-0">
-        <button class="btn btn-outline-primary col-4 rounded-3" id="register-btn" th:if="${editFlag==null}">등 록</button>
-        <button class="btn btn-outline-primary col-4 rounded-3" id="edit-btn" th:if="${editFlag}">수 정</button>
+        <button class="btn btn-outline-primary col-4 rounded-3" id="register-btn" th:if="${updateFlag==null}">등 록</button>
+        <button class="btn btn-outline-primary col-4 rounded-3" id="edit-btn" th:if="${updateFlag}">수 정</button>
         <button class="btn btn btn-outline-secondary col-4 rounded-3" id="cancel-btn">취 소</button>
     </div>
 </div>
+<script th:inline="javascript">
+    const input = document.getElementById('tags');
+    const toastEditor = document.getElementById("editor");
+    let tagify = new Tagify(input); // initialize Tagify
+    // 태그가 추가되면 이벤트 발생
+    tagify.on('add', function() {
+        console.log(tagify.value); // 입력된 태그 정보 객체
+        console.log(tagify.value.length);
+    });
 
+    /*<![CDATA[*/
+    const updateFlag = /*[[${updateFlag}]]*/ false;
+    if ([updateFlag]) {
+        const tags = /*[[${board?.tags}]]*/ '[]';
+        const content = /*[[${board?.content}]]*/ '';
+        tagify.addTags(tags);
+        toastEditor.setHTML(content);
+    }
+    /*]]>*/
+</script>
 </body>
 <!-- TOAST UI Editor CDN URL(JS) -->
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
