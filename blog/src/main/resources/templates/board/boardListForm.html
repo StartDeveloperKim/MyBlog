@@ -93,7 +93,8 @@
         <nav aria-label="...">
             <ul class="pagination pagination-lg justify-content-center" th:with="start=${pagingInfo.startPage}, end=${pagingInfo.endPage}">
                 <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}">
-                    <a class="page-link" th:href="@{{page}(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a>
+                    <a class="page-link" th:if="${param?.step!=null}" th:href="@{{page}(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a>
+                    <a class="page-link" th:if="${param?.tagName!=null}" th:href="@{/board/tag(page=${pagingInfo.currentPage}-1, tagName=${param.tagName})}">이전</a>
                 </li>
 
                 <span th:each="num : ${#numbers.sequence(start, end)}">
@@ -106,7 +107,8 @@
                 </span>
 
                 <li class="page-item rounded-3" th:if="${pagingInfo.nextPage}">
-                    <a class="page-link" th:href="@{{page}(page=${pagingInfo.currentPage}+1, step=${param.step})}">다음</a>
+                    <a class="page-link" th:if="${param?.step!=null}" th:href="@{{page}(page=${pagingInfo.currentPage}+1, step=${param.step})}">다음</a>
+                    <a class="page-link" th:if="${param?.tagName!=null}" th:href="@{/board/tag(page=${pagingInfo.currentPage}+1, tagName=${param.tagName})}">다음</a>
                 </li>
             </ul>
         </nav>

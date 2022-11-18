@@ -10,6 +10,7 @@ import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
+import my.blog.web.layout.LayoutService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class TagController {
 
     private final BoardTagService boardTagService;
-    private final CategoryService categoryService;
+    private final LayoutService layoutService;
 
     @GetMapping
     public String getBoardTagList(@LoginUser SessionUser user,
@@ -38,11 +39,10 @@ public class TagController {
         List<BoardResponse> tagBoardList = boardTagService.getTagBoardList(page, pageSize, tagName);
         Paging pagingInfo = Paging.of(page, boardTagService.getCountBoardByTagName(tagName));
 
-        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
+        layoutService.getLayoutInfo(model);
 
         model.addAttribute("boardList", tagBoardList);
         model.addAttribute("pagingInfo", pagingInfo);
-        model.addAttribute("categoryList", categoryList);
 
         if (user != null) {
             model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
