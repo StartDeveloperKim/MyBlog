@@ -3,15 +3,13 @@ package my.blog.boardTag.domain;
 import my.blog.tag.domain.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface BoardTagRepository extends JpaRepository<BoardTag, Long> {
-
-    /*@Query("select bt.tag from BoardTag bt join fetch bt.tag where bt.board.id=:id")
-    List<Tag> findTagByBoardId(@Param("id") Long boardId);*/
 
     @Query("select b from BoardTag b " +
             "join b.tag " +
@@ -24,6 +22,12 @@ public interface BoardTagRepository extends JpaRepository<BoardTag, Long> {
             "where b.tag.tagName=:tagName")
     Long countBoardTagByTagName(@Param("tagName") String tagName);
 
-    @Query("select b from BoardTag b join fetch b.tag where b.board.id=:id")
+    @Query("select b from BoardTag b " +
+            "join fetch b.tag " +
+            "where b.board.id=:id")
     List<BoardTag> findBoardTagsByBoardId(@Param("id") Long id);
+
+    @Modifying(clearAutomatically = true)
+    @Query("delete from BoardTag b where b.board.id=:id")
+    void deleteByBoardId(@Param("id") Long id);
 }

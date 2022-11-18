@@ -38,6 +38,7 @@
             <div class="col-lg-6">
                 <input type="text" id="title" class="form-control form-control-lg rounded-3 border-3 mt-1 mb-2"
                        placeholder="제목을 입력하세요" th:value="${updateFlag}?${board.title}:''">
+                <input th:if="${updateFlag}" type="hidden" th:id="boardId" th:value="${board.boardId}" readonly>
             </div>
             <div class="col-lg-6 align-self-center mx-auto">
                 <div class="row">
@@ -83,8 +84,8 @@
 
     </form>
     <div class="row justify-content-evenly mt-4 g-0">
-        <button class="btn btn-outline-primary col-4 rounded-3" id="register-btn" th:if="${updateFlag==null}">등 록</button>
-        <button class="btn btn-outline-primary col-4 rounded-3" id="edit-btn" th:if="${updateFlag}">수 정</button>
+        <button class="btn btn-outline-primary col-4 rounded-3" id="register-btn" onclick="boardRegister()" th:if="${updateFlag==null}">등 록</button>
+        <button class="btn btn-outline-primary col-4 rounded-3" id="edit-btn" onclick="boardUpdate()" th:if="${updateFlag}">수 정</button>
         <button class="btn btn btn-outline-secondary col-4 rounded-3" id="cancel-btn">취 소</button>
     </div>
 </div>
@@ -112,5 +113,5 @@
 <!-- TOAST UI Editor CDN URL(JS) -->
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="/js/boardEdit.js"></script>
+<script src="/js/boardEditForm/boardEdit.js"></script>
 </html>

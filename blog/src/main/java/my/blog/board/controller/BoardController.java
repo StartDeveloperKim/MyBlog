@@ -9,6 +9,7 @@ import my.blog.board.dto.response.BoardDetailResponse;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.BoardUpdateResponse;
 import my.blog.board.dto.response.Paging;
+import my.blog.board.service.BoardLookupService;
 import my.blog.board.service.BoardService;
 import my.blog.boardTag.service.BoardTagService;
 import my.blog.category.service.CategoryService;
@@ -39,6 +40,8 @@ import java.util.Map;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardLookupService boardLookupService;
+
     private final TagService tagService;
     private final CommentsService commentsService;
     private final BoardTagService boardTagService;
@@ -56,8 +59,8 @@ public class BoardController {
                                 Model model) {
         childCategoryName = childCategoryName == null ? "" : childCategoryName;
 
-        Paging pagingInfo = Paging.of(page, boardService.getBoardCountByCategory(parentCategoryName, childCategoryName));
-        List<BoardResponse> boards = boardService.getBoardList(page, pagingSize, parentCategoryName, childCategoryName, step);
+        Paging pagingInfo = Paging.of(page, boardLookupService.getBoardCountByCategory(parentCategoryName, childCategoryName));
+        List<BoardResponse> boards = boardLookupService.getBoardList(page, pagingSize, parentCategoryName, childCategoryName, step);
 
         model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);
@@ -70,7 +73,7 @@ public class BoardController {
 
     @GetMapping("/{id}")
     public String boardDetailForm(@LoginUser SessionUser user, @PathVariable("id") Long id, Model model) {
-        Board board = boardService.getBoard(id);
+        Board board = boardLookupService.getBoard(id);
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
         userInfoSaveInModel(user, model);
@@ -124,7 +127,7 @@ public class BoardController {
 
     @GetMapping("/edit/{id}")
     public String boardDetailEditForm(@PathVariable("id") Long id, Model model) {
-        BoardUpdateResponse boardUpdateRes = boardService.getBoardUpdateDto(id);
+        BoardUpdateResponse boardUpdateRes = boardLookupService.getBoardUpdateDto(id);
         log.info("BoardUpdateDto {}", boardUpdateRes.toString());
 
         model.addAttribute("board", boardUpdateRes);
@@ -139,8 +142,10 @@ public class BoardController {
     @ResponseBody
     public ResponseEntity<String> boardUpdate(@PathVariable("id") Long boardId,
                                               @RequestBody BoardUpdate boardUpdate) {
+        log.info("edit Board {}, {}", boardId, boardUpdate.toString());
         try {
-            boardService.editBoard(boardUpdate, boardId);
+            List<String> tags = tagService.saveTags(boardUpdate.getTags());
+            boardService.editBoard(boardUpdate, boardId, tags);
             return ResponseEntity.ok().body("success");
         } catch (EntityNotFoundException e) {
             log.info("/board/edit error : {}", e.getMessage());

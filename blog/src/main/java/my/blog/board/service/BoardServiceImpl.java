@@ -6,30 +6,20 @@ import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
-import my.blog.board.dto.response.BoardResponse;
-import my.blog.board.dto.response.BoardUpdateResponse;
-import my.blog.board.dto.response.Paging;
 import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
-import my.blog.tag.dto.TagResponse;
-import my.blog.tag.tool.ParsingTool;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,46 +35,35 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags, Long userId) {
-        List<BoardTag> boardTags = new ArrayList<>();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-        /*Category category = categoryRepository.findByCategoryName(boardRegister.getCategory());*/
-        Category category = categoryRepository.findById(boardRegister.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("카테고리가 없습니다."));
+        User user = getUserEntity(userId);
+        Category category = getCategoryEntity(boardRegister.getCategoryId());
 
         Board board = Board.of(user, category, boardRegister);
         Board saveBoard = boardRepository.save(board); // 게시글 저장
 
-        for (String tag : tags) {
-            Tag findTag = tagRepository.findByTagName(tag);
-            boardTags.add(BoardTag.from(saveBoard, findTag));
-        }
-        boardTagRepository.saveAll(boardTags);
+        boardTagRepository.saveAll(getBoardTagEntities(tags, saveBoard));
 
         return saveBoard.getId();
     }
 
     @Override
     public Long writeBoard(BoardRegister boardRegister, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
-        Category category = categoryRepository.findById(boardRegister.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("카테고리가 없습니다."));
+        User user = getUserEntity(userId);
+        Category category = getCategoryEntity(boardRegister.getCategoryId());
 
         Board board = Board.of(user, category, boardRegister);
-        Board saveBoard = boardRepository.save(board); // 게시글 저장
-
-        return saveBoard.getId();
+        return boardRepository.save(board)
+                .getId();
     }
 
     @Override
-    public void editBoard(BoardUpdate boardUpdate, Long boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
-        Category category = categoryRepository.findByCategoryName(boardUpdate.getCategory());
-        // 이 코드도 나중에 수정 기능을 제대로 만들 때 오류가 날 예정인 코드이다. 잘 확인해서 수정하자 ID로 찾기
-        // 그리고 태그도 파싱해서 다시 수정하는 기능, 썸네일도
+    public void editBoard(BoardUpdate boardUpdate, Long boardId, List<String> tags) {
+        boardTagRepository.deleteByBoardId(boardId);
+
+        Board board = getBoardEntity(boardId);
+        Category category = getCategoryEntity(boardUpdate.getCategoryId());
+
+        boardTagRepository.saveAll(getBoardTagEntities(tags, board));
 
         board.edit(boardUpdate.getTitle(), boardUpdate.getContent(), boardUpdate.getThumbnail(), category);
     }
@@ -96,81 +75,30 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void addHit(Long boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 없습니다."));
-        board.addHit();
+        getBoardEntity(boardId).addHit();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Board getBoard(Long boardId) {
+    private User getUserEntity(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
+    }
+
+    private Category getCategoryEntity(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("카테고리가 없습니다."));
+    }
+
+    private Board getBoardEntity(Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("게시물이 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<BoardResponse> getBoardList(int page, int size, String parentCategory, String childCategory,String step) {
-        PageRequest pageInfo = PageRequest.of(page - 1, size);
-
-        List<Board> findBoards = null;
-        if (step.equals("0")) {
-            findBoards = boardRepository.findByOrderByIdDesc(pageInfo).getContent();
-        } else if (step.equals("1")) {
-            Category findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategory); // 부모카테고리 찾기
-            findBoards = boardRepository.findByCategoryId(findCategory.getId(), pageInfo).getContent();
-        } else if (step.equals("2")) {
-            Category findCategory = categoryRepository.findByNameAndParentName(parentCategory, childCategory);
-            findBoards = boardRepository.findByCategoryId(findCategory.getId(), pageInfo).getContent();
+    private List<BoardTag> getBoardTagEntities(List<String> tags, Board board) {
+        List<BoardTag> boardTags = new ArrayList<>();
+        for (String tag : tags) {
+            Tag findTag = tagRepository.findByTagName(tag);
+            boardTags.add(BoardTag.from(board, findTag));
         }
-
-        if (findBoards == null) {
-            throw new EntityNotFoundException("게시글이 없습니다.");
-        }
-
-        return findBoards.stream()
-                .map(BoardResponse::new).collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<BoardResponse> getBoardListRecent() {
-        return boardRepository.findTop6ByOrderByCreateDateDesc()
-                .stream().map(BoardResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Long getBoardCount() {
-        return boardRepository.getAllBoardCount();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public BoardUpdateResponse getBoardUpdateDto(Long boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("게시물이 없습니다."));
-        List<BoardTag> boardTags = boardTagRepository.findBoardTagsByBoardId(boardId);
-        return new BoardUpdateResponse(board, boardTags);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Long getBoardCountByCategory(String parentCategoryName, String childCategoryName) {
-
-        if (parentCategoryName.equals("total")) {
-            return boardRepository.getAllBoardCount();
-        } else {
-            Category findCategory;
-            if (childCategoryName.equals("")) {
-                findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategoryName);
-            } else {
-                findCategory = categoryRepository.findByNameAndParentName(parentCategoryName, childCategoryName);
-            }
-            return boardRepository.getBoardCountByCategoryId(findCategory.getId());
-        }
-
-
+        return boardTags;
     }
 }

@@ -1,17 +1,17 @@
 package my.blog.board.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@ToString
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class BoardUpdate {
 
     private String title;
     private String content;
     private String thumbnail;
-    private String category;
+    private Long categoryId;
     private String tags;
 }

@@ -36,11 +36,6 @@ public class BoardUpdateResponse {
     }
 
     private List<String> parsingTagName(List<BoardTag> boardTags) {
-        /*List<String> result = new ArrayList<>();
-        for (BoardTag boardTag : boardTags) {
-            result.add(boardTag.getTag().getTagName());
-        }
-        return result;*/
         return boardTags.stream()
                 .map(boardTag -> boardTag.getTag().getTagName())
                 .collect(Collectors.toList());

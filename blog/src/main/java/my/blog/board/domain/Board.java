@@ -105,7 +105,6 @@ public class Board extends BaseTimeEntity {
         this.category = category;
     }
 
-    // dirty checking을 통한 조회수 증가
     public void addHit() {
         this.hit++;
     }
