@@ -1,6 +1,7 @@
 package my.blog.user.domain;
 
 import lombok.Getter;
+import lombok.ToString;
 import my.blog.BaseTimeEntity;
 import my.blog.board.domain.Board;
 import my.blog.comments.domain.Comments;
@@ -19,6 +20,7 @@ import java.util.List;
         initialValue = 1,
         allocationSize = 1
 )
+//@Table(name = "Users")
 public class User extends BaseTimeEntity {
 
     @Id

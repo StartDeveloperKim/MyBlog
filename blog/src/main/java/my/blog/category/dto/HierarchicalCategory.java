@@ -4,11 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 카테고리정보를 계층형 카테고리로 변환한다.
- * @param categoryDto
- * @return
- */
 public class HierarchicalCategory {
 
 

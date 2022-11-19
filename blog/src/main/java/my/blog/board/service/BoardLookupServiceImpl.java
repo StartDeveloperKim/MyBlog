@@ -10,6 +10,7 @@ import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +38,6 @@ public class BoardLookupServiceImpl implements BoardLookupService{
     public List<BoardResponse> getBoardList(int page, int size, String parentCategory, String childCategory, String step) {
         PageRequest pageInfo = PageRequest.of(page - 1, size);
         List<Board> findBoards = getBoardsByStep(parentCategory, childCategory, step, pageInfo);
-
-        if (findBoards == null) {
-            throw new EntityNotFoundException("게시글이 없습니다.");
-        }
 
         return findBoards.stream()
                 .map(BoardResponse::new)
@@ -83,26 +80,30 @@ public class BoardLookupServiceImpl implements BoardLookupService{
     }
 
     private List<Board> getBoardsByStep(String parentCategory, String childCategory, String step, PageRequest pageInfo) {
-        List<Board> findBoards = null;
-        switch (step) {
-            case "0":
-                findBoards = boardRepository.findByOrderByIdDesc(pageInfo).getContent();
-                break;
-            case "1": {
-                Category findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategory); // 부모카테고리 찾기
-                findBoards = getBoardsByCategoryId(pageInfo, findCategory);
-                break;
+        try {
+            List<Board> findBoards = null;
+            switch (step) {
+                case "0":
+                    findBoards = boardRepository.findByOrderByIdDesc(pageInfo).getContent();
+                    break;
+                case "1": {
+                    Category findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategory); // 부모카테고리 찾기
+                    findBoards = getBoardsByCategoryId(pageInfo, findCategory).getContent();
+                    break;
+                }
+                case "2": {
+                    Category findCategory = categoryRepository.findByNameAndParentName(parentCategory, childCategory);
+                    findBoards = getBoardsByCategoryId(pageInfo, findCategory).getContent();
+                    break;
+                }
             }
-            case "2": {
-                Category findCategory = categoryRepository.findByNameAndParentName(parentCategory, childCategory);
-                findBoards = getBoardsByCategoryId(pageInfo, findCategory);
-                break;
-            }
+            return findBoards;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("게시글이 없습니다.");
         }
-        return findBoards;
     }
 
-    private List<Board> getBoardsByCategoryId(PageRequest pageInfo, Category findCategory) {
-        return boardRepository.findByCategoryId(findCategory.getId(), pageInfo).getContent();
+    private Slice<Board> getBoardsByCategoryId(PageRequest pageInfo, Category findCategory) {
+        return boardRepository.findByCategoryId(findCategory.getId(), pageInfo);
     }
 }
