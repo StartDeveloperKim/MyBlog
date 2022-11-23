@@ -12,7 +12,6 @@ import my.blog.board.dto.response.Paging;
 import my.blog.board.service.BoardLookupService;
 import my.blog.board.service.BoardService;
 import my.blog.boardTag.service.BoardTagService;
-import my.blog.category.service.CategoryService;
 import my.blog.comments.dto.CommentResponse;
 import my.blog.comments.service.CommentsService;
 import my.blog.tag.dto.TagResponse;
@@ -25,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;

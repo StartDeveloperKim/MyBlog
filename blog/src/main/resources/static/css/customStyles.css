@@ -320,6 +320,10 @@ textarea {
     object-fit: cover;
 }
 
+.emoticon {
+    font-size: 45px;
+}
+
 /*
 html,
 body {
