@@ -88,10 +88,41 @@
         <button class="btn btn-outline-primary col-4 rounded-3" id="edit-btn" onclick="boardUpdate()" th:if="${updateFlag}">수 정</button>
         <button class="btn btn btn-outline-secondary col-4 rounded-3" id="cancel-btn">취 소</button>
     </div>
+    <div id="toast"></div>
+    <input type="hidden" id="temporalBoardId" value="-1"/>
 </div>
 <script th:inline="javascript">
     const input = document.getElementById('tags');
     const toastEditor = document.getElementById("editor");
+
+    /*<![CDATA[*/
+    const temporalBoardFlag = /*[[${temporalBoardFlag}]]*/ false;
+    if (temporalBoardFlag) {
+        const createDate = /*[[${temporalBoard?.createDate}]]*/ '';
+        if (confirm(createDate + "에 저장된 글이 있습니다. 이어 작성하시겠습니까?")) {
+            const titleInput = document.getElementById("title");
+            const temporalBoardId = document.getElementById("temporalBoardId");
+
+            const id = /*[[${temporalBoard?.id}]]*/ '-1';
+            const title = /*[[${temporalBoard?.title}]]*/ '';
+            const tags = /*[[${temporalBoard?.tags}]]*/ '[]';
+            const content = /*[[${temporalBoard?.content}]]*/ '';
+
+            toastEditor.setHTML(content);
+            let tagValue = "";
+            for (let i = 0; i < tags.length; i++) {
+                tagValue += tags[i];
+                if (i !== tags.length - 1) {
+                    tagValue += ", ";
+                }
+            }
+            input.setAttribute("value", tagValue);
+            temporalBoardId.setAttribute("value", id);
+            titleInput.setAttribute("value", title);
+        }
+    }
+    /*]]>*/
+
     let tagify = new Tagify(input); // initialize Tagify
     // 태그가 추가되면 이벤트 발생
     tagify.on('add', function() {
@@ -101,9 +132,10 @@
 
     /*<![CDATA[*/
     const updateFlag = /*[[${updateFlag}]]*/ false;
-    if ([updateFlag]) {
+    if (updateFlag) {
         const tags = /*[[${board?.tags}]]*/ '[]';
         const content = /*[[${board?.content}]]*/ '';
+        console.log(tags);
         tagify.addTags(tags);
         toastEditor.setHTML(content);
     }

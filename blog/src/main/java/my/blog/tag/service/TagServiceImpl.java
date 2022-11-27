@@ -1,7 +1,6 @@
 package my.blog.tag.service;
 
 import lombok.RequiredArgsConstructor;
-import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
 import my.blog.tag.tool.ParsingTool;
@@ -21,14 +20,10 @@ public class TagServiceImpl implements TagService{
 
     @Override
     public List<String> saveTags(String tags) {
-        List<String> tagList = new ArrayList<>();
         List<Tag> saveTags = new ArrayList<>();
 
         /*태그 파싱*/
-        List<Map<String, String>> parsingFromTagList = ParsingTool.getGson().fromJson(tags, ArrayList.class);
-        for (Map<String, String> parsingTag : parsingFromTagList){
-            tagList.add(parsingTag.get("value"));
-        }
+        List<String> tagList = ParsingTool.parsingTags(tags);
 
         /*중복태그 확인*/
         for (String tag : tagList) {

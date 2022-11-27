@@ -9,6 +9,7 @@ import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,7 @@ public class BoardLookupServiceImpl implements BoardLookupService{
     }
 
     @Override
+    @Cacheable(value = "totalCount")
     public Long getBoardCount() {
         return boardRepository.getAllBoardCount();
     }
@@ -67,16 +69,21 @@ public class BoardLookupServiceImpl implements BoardLookupService{
     @Override
     public Long getBoardCountByCategory(String parentCategoryName, String childCategoryName) {
         if (parentCategoryName.equals("total")) {
-            return boardRepository.getAllBoardCount();
+            return this.getBoardCount();
         } else {
-            Category findCategory;
-            if (childCategoryName.equals("")) {
-                findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategoryName);
-            } else {
-                findCategory = categoryRepository.findByNameAndParentName(parentCategoryName, childCategoryName);
-            }
-            return boardRepository.getBoardCountByCategoryId(findCategory.getId());
+            Long categoryId = getCategoryId(parentCategoryName, childCategoryName);
+            return boardRepository.getBoardCountByCategoryId(categoryId);
         }
+    }
+
+    private Long getCategoryId(String parentCategoryName, String childCategoryName) {
+        Category findCategory;
+        if (childCategoryName.equals("")) {
+            findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategoryName);
+        } else {
+            findCategory = categoryRepository.findByNameAndParentName(parentCategoryName, childCategoryName);
+        }
+        return findCategory.getId();
     }
 
     private List<Board> getBoardsByStep(String parentCategory, String childCategory, String step, PageRequest pageInfo) {

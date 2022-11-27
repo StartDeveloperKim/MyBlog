@@ -13,11 +13,11 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class PerformanceAspect {
 
-    @Pointcut("execution(* my.blog.board.service.BoardLookupService.getBoardList(..))")
-    public void getBoardList() {
+    @Pointcut("execution(* my.blog.board.controller.BoardController.boardListForm(..))")
+    public void boardListForm() {
     }
 
-    @Around("getBoardList()")
+    @Around("boardListForm()")
     public Object calculatePerformanceTime(ProceedingJoinPoint proceedingJoinPoint) {
         Object result = null;
         StopWatch stopWatch = new StopWatch();

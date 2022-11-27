@@ -149,4 +149,47 @@ window.onload = function () {
 };
 
 /*나중에 임시저장 기능을 만들자*/
+setInterval(function () {
+    let requestData = getRequestData();
+    const temporalBoard = document.getElementById("temporalBoardId");
+    const temporalId = temporalBoard.getAttribute("value");
+    let url = temporalId === "-1" ? "/temporal-board" : "/temporal-board/" + temporalId;
+    console.log(requestData, url);
+    $.ajax({
+        type: "POST",
+        url: url,
+        processData: false,
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function (data) {
+            if (data !== "success") {
+                temporalBoard.setAttribute("value", data);
+                toast("임시저장 되었습니다.");
+            } else if (data === "success") {
+                toast("임시저장 되었습니다.");
+            } else {
+                alert("임시저장에 실패했습니다.");
+            }
 
+        },
+        error: function (request, status, error) {
+            alert(request + ", " + status + ", " + error);
+        },
+    });
+
+}, 60000);
+
+let removeToast;
+function toast(string) {
+    const toast = document.getElementById("toast");
+
+    toast.classList.contains("reveal") ?
+        (clearTimeout(removeToast), removeToast = setTimeout(function () {
+            document.getElementById("toast").classList.remove("reveal")
+        }, 1000)) :
+        removeToast = setTimeout(function () {
+            document.getElementById("toast").classList.remove("reveal")
+        }, 1000)
+    toast.classList.add("reveal"),
+        toast.innerText = string
+}

@@ -7,6 +7,8 @@ import my.blog.category.domain.CategoryRepository;
 import my.blog.category.dto.*;
 import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final BoardRepository boardRepository;
 
+    @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
     public Long saveCategory(CategoryAddDto categoryAddDto) {
         //카테고리는 중복되면 안된다.
@@ -34,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
         return saveCategory.getId();
     }
 
+    @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
     public void deleteCategory(Long id) {
         // 해당 카테고리 아래에 글이 하나라도 있다면 삭제x
@@ -57,6 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable("CategoryLayoutStore")
     @Override
     public Map<Long, CategoryLayoutDto> getCategoryList() {
         List<CategoryInfoDto> categoryDto = categoryRepository.findCategoryDto();

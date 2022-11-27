@@ -14,6 +14,7 @@ import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class BoardServiceImpl implements BoardService{
     private final TagRepository tagRepository;
     private final BoardTagRepository boardTagRepository;
 
+    @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
     @Override
     public Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags, Long userId) {
         User user = getUserEntity(userId);
@@ -46,6 +48,7 @@ public class BoardServiceImpl implements BoardService{
         return saveBoard.getId();
     }
 
+    @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
     @Override
     public Long writeBoard(BoardRegister boardRegister, Long userId) {
         User user = getUserEntity(userId);
@@ -56,6 +59,7 @@ public class BoardServiceImpl implements BoardService{
                 .getId();
     }
 
+    @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
     public void editBoard(BoardUpdate boardUpdate, Long boardId, List<String> tags) {
         boardTagRepository.deleteByBoardId(boardId);
@@ -68,6 +72,7 @@ public class BoardServiceImpl implements BoardService{
         board.edit(boardUpdate.getTitle(), boardUpdate.getContent(), boardUpdate.getThumbnail(), category);
     }
 
+    @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
     @Override
     public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);

@@ -53,7 +53,8 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comments> commentsList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    @org.hibernate.annotations.BatchSize(size = 100)
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<BoardTag> boardTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
