@@ -28,7 +28,25 @@ const editor = new toastui.Editor({
 });
 
 let httpRequest;
-const thumbnailURL = document.getElementById("thumbnailURL");
+const thumbnailURL = document.getElementById("thumbnailURL")
+
+function removeTemporalBoard() {
+    const temporalBoardId = document.getElementById("temporalBoardId").value;
+    console.log(temporalBoardId);
+    if (temporalBoardId !== 'NotTemporalBoard') {
+        $.ajax({
+            type: "DELETE",
+            url: "/temporal-board/"+temporalBoardId,
+            async: false,
+            success: function (data) {
+                console.log("임시저장 글이 삭제되었습니다.");
+            },
+            error: function (request, status, error) {
+                alert(request + ", " + status + ", " + error);
+            },
+        });
+    }
+}
 
 function getRequestData() {
     const category = document.getElementById("category").value;
@@ -63,6 +81,7 @@ function boardRegister() {
 
     httpRequest.onload = function () {
         if (httpRequest.status === 200) {
+            removeTemporalBoard()
             alert("글이 등록되었습니다.");
             const boardId = httpRequest.response;
             window.location.href = "/board/" + boardId;
@@ -150,35 +169,37 @@ window.onload = function () {
 
 /*나중에 임시저장 기능을 만들자*/
 setInterval(function () {
-    let requestData = getRequestData();
     const temporalBoard = document.getElementById("temporalBoardId");
     const temporalId = temporalBoard.getAttribute("value");
-    let url = temporalId === "-1" ? "/temporal-board" : "/temporal-board/" + temporalId;
-    console.log(requestData, url);
-    $.ajax({
-        type: "POST",
-        url: url,
-        processData: false,
-        contentType: "application/json",
-        data: JSON.stringify(requestData),
-        success: function (data) {
-            if (data !== "success") {
-                temporalBoard.setAttribute("value", data);
-                toast("임시저장 되었습니다.");
-            } else if (data === "success") {
-                toast("임시저장 되었습니다.");
-            } else {
-                alert("임시저장에 실패했습니다.");
-            }
+    if (temporalId !== "updateBoard") {
+        let requestData = getRequestData();
+        let url = temporalId === "NotTemporalBoard" ? "/temporal-board" : "/temporal-board/" + temporalId;
+        console.log(requestData, url);
+        $.ajax({
+            type: "POST",
+            url: url,
+            processData: false,
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function (data) {
+                if (data !== "success") {
+                    temporalBoard.setAttribute("value", data);
+                    toast("임시저장 되었습니다.");
+                } else if (data === "success") {
+                    toast("임시저장 되었습니다.");
+                } else {
+                    alert("임시저장에 실패했습니다.");
+                }
 
-        },
-        error: function (request, status, error) {
-            alert(request + ", " + status + ", " + error);
-        },
-    });
+            },
+            error: function (request, status, error) {
+                alert(request + ", " + status + ", " + error);
+            },
+        });
+    }
+}, 10000); // 1분마다 요청
 
-}, 60000);
-
+// 토스트 UI
 let removeToast;
 function toast(string) {
     const toast = document.getElementById("toast");

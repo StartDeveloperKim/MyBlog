@@ -73,6 +73,10 @@
                         <option th:text="${category.name}" th:value="${category.id}"></option>
                         <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}"></option>
                     </optgroup>
+                    <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}" th:if="${temporalBoardFlag}">
+                        <option th:text="${category.name}" th:value="${category.id}" th:selected="${category.id}==${temporalBoard.categoryId}"></option>
+                        <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}" th:selected="${childCategory.id}==${temporalBoard.categoryId}"></option>
+                    </optgroup>
                 </select>
             </div>
         </div>
@@ -89,7 +93,7 @@
         <button class="btn btn btn-outline-secondary col-4 rounded-3" id="cancel-btn">취 소</button>
     </div>
     <div id="toast"></div>
-    <input type="hidden" id="temporalBoardId" value="-1"/>
+    <input type="hidden" id="temporalBoardId" value="NotTemporalBoard" th:value="${updateFlag}?'updateBoard':'NotTemporalBoard'"/>
 </div>
 <script th:inline="javascript">
     const input = document.getElementById('tags');

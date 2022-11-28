@@ -92,7 +92,7 @@ public class BoardFormController {
     public String boardEditForm(Model model) {
         layoutService.getCategoryList(model);// EditForm에 카테고리의 개수가 필요할까? 리팩토링 필요코드
         TemporalBoardResp recentTemporalBoard = temporalBoardService.getRecentTemporalBoard();
-        log.info("temporalBoard {}", recentTemporalBoard.toString());
+
         if (recentTemporalBoard != null) {
             model.addAttribute("temporalBoardFlag", true);
             model.addAttribute("temporalBoard", recentTemporalBoard);
