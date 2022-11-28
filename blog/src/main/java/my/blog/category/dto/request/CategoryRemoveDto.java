@@ -1,4 +1,4 @@
-package my.blog.category.dto;
+package my.blog.category.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

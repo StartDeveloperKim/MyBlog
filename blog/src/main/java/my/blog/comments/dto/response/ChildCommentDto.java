@@ -1,4 +1,4 @@
-package my.blog.comments.dto;
+package my.blog.comments.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

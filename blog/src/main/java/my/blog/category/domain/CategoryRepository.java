@@ -1,6 +1,6 @@
 package my.blog.category.domain;
 
-import my.blog.category.dto.CategoryInfoDto;
+import my.blog.category.dto.response.CategoryInfoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

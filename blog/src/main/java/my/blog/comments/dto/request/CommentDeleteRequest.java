@@ -1,4 +1,4 @@
-package my.blog.category.dto;
+package my.blog.comments.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryAddDto {
+public class CommentDeleteRequest {
 
-    private String categoryName;
-    private Long parentCategoryId;
+    private Long boardId;
+    private Long commentId;
+    private boolean parentComment;
 }

@@ -1,11 +1,10 @@
 package my.blog.comments.service;
 
-import my.blog.comments.dto.CommentDeleteRequest;
-import my.blog.comments.dto.CommentEditRequest;
-import my.blog.comments.dto.CommentRequest;
-import my.blog.comments.dto.CommentResponse;
+import my.blog.comments.dto.request.CommentDeleteRequest;
+import my.blog.comments.dto.request.CommentEditRequest;
+import my.blog.comments.dto.request.CommentRequest;
+import my.blog.comments.dto.response.CommentResponse;
 
-import java.util.List;
 import java.util.Map;
 
 public interface CommentsService {

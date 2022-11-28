@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.boardTag.service.BoardTagService;
-import my.blog.category.dto.CategoryLayoutDto;
-import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j

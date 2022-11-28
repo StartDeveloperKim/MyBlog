@@ -4,22 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
-import my.blog.board.dto.response.BoardResponse;
 import my.blog.comments.domain.Comments;
 import my.blog.comments.domain.CommentsRepository;
 import my.blog.comments.dto.*;
+import my.blog.comments.dto.request.CommentDeleteRequest;
+import my.blog.comments.dto.request.CommentEditRequest;
+import my.blog.comments.dto.request.CommentRequest;
+import my.blog.comments.dto.response.CommentResponse;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor

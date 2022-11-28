@@ -2,10 +2,10 @@ package my.blog.category.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.blog.category.dto.CategoryAddDto;
-import my.blog.category.dto.CategoryLayoutDto;
-import my.blog.category.dto.CategoryRemoveDto;
-import my.blog.category.dto.CategoryResponseDto;
+import my.blog.category.dto.request.CategoryAddDto;
+import my.blog.category.dto.response.CategoryLayoutDto;
+import my.blog.category.dto.request.CategoryRemoveDto;
+import my.blog.category.dto.response.CategoryResponseDto;
 import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
 import my.blog.category.service.CategoryService;

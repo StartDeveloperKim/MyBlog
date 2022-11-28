@@ -2,7 +2,7 @@ package my.blog.comments.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.blog.comments.dto.CommentResponse;
+import my.blog.comments.dto.response.CommentResponse;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package my.blog.comments.dto;
+package my.blog.category.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentEditRequest {
+public class CategoryResponseDto {
 
-    private Long commentId;
-    private String comment;
+    private Long id;
+    private String status;
 }

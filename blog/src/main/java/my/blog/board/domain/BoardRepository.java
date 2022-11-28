@@ -18,8 +18,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "order by b.id desc")
     Slice<Board> findByOrderByIdDesc(Pageable pageable);
 
-    @Query("select b from Board b where b.category.categoryName=:categoryName order by b.id desc")
-    Slice<Board> findByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
+//    @Query("select b from Board b where b.category.categoryName=:categoryName order by b.id desc")
+//    Slice<Board> findByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
 
     @Query("select b from Board b " +
             "where b.category.id=:id or b.category.parentCategoryId=:id order by b.id desc ")
@@ -31,8 +31,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select count(b) from Board b")
     Long getAllBoardCount();
 
-    @Query("select count(b) from Board b where b.category.categoryName = :categoryName")
-    Long getBoardCountByCategoryName(@Param("categoryName") String categoryName);
+//    @Query("select count(b) from Board b where b.category.categoryName = :categoryName")
+//    Long getBoardCountByCategoryName(@Param("categoryName") String categoryName);
 
     @Query("select count(b) from Board b " +
             "where b.category.id=:id or b.category.parentCategoryId=:id")

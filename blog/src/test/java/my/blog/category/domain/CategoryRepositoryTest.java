@@ -1,7 +1,6 @@
 package my.blog.category.domain;
 
-import my.blog.category.dto.CategoryInfoDto;
-import org.assertj.core.api.Assertions;
+import my.blog.category.dto.response.CategoryInfoDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

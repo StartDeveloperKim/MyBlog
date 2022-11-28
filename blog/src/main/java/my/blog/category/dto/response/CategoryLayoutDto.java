@@ -1,4 +1,4 @@
-package my.blog.category.dto;
+package my.blog.category.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

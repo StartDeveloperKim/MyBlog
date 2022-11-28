@@ -20,18 +20,8 @@ public class TagServiceImpl implements TagService{
 
     @Override
     public List<String> saveTags(String tags) {
-        List<Tag> saveTags = new ArrayList<>();
-
-        /*태그 파싱*/
         List<String> tagList = ParsingTool.parsingTags(tags);
-
-        /*중복태그 확인*/
-        for (String tag : tagList) {
-            if (!tagRepository.existsByTagName(tag)) {
-                saveTags.add(Tag.of(tag));
-            }
-        }
-
+        List<Tag> saveTags = getTagsExceptDuplicateTag(tagList);
         tagRepository.saveAll(saveTags);
 
         return tagList;
@@ -40,6 +30,16 @@ public class TagServiceImpl implements TagService{
     @Override
     public Long findTagIdByTagName(String tagName) {
         return tagRepository.findTagIdByTagName(tagName);
+    }
+
+    private List<Tag> getTagsExceptDuplicateTag(List<String> tagList) {
+        List<Tag> saveTags = new ArrayList<>();
+        for (String tag : tagList) {
+            if (!tagRepository.existsByTagName(tag)) {
+                saveTags.add(Tag.of(tag));
+            }
+        }
+        return saveTags;
     }
 
 }

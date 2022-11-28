@@ -1,4 +1,4 @@
-package my.blog.category.dto;
+package my.blog.category.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponseDto {
+public class CategoryInfoDto {
 
     private Long id;
-    private String status;
+    private Long parentCategoryId;
+    private String name;
+    private Long categoryNum;
 }

@@ -1,12 +1,9 @@
 package my.blog.category.domain;
 
 import lombok.Getter;
-import my.blog.board.domain.Board;
-import my.blog.category.dto.CategoryInfoDto;
+import my.blog.category.dto.response.CategoryInfoDto;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @SqlResultSetMapping(

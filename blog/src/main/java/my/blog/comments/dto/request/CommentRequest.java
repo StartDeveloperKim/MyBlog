@@ -1,4 +1,4 @@
-package my.blog.comments.dto;
+package my.blog.comments.dto.request;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Length;

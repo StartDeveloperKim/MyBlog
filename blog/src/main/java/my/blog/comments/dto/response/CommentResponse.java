@@ -1,9 +1,9 @@
-package my.blog.comments.dto;
+package my.blog.comments.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import my.blog.comments.domain.Comments;
+import my.blog.comments.dto.response.ChildCommentDto;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
