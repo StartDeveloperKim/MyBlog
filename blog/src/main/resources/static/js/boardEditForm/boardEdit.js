@@ -197,7 +197,7 @@ setInterval(function () {
             },
         });
     }
-}, 10000); // 1분마다 요청
+}, 60000); // 1분마다 요청
 
 // 토스트 UI
 let removeToast;

@@ -69,7 +69,7 @@
                       <option th:text="${category.name}" th:value="${category.id}" th:selected="${category.id}==${board.categoryId}"></option>
                       <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}" th:selected="${childCategory.id}==${board.categoryId}"></option>
                     </optgroup>
-                    <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}" th:if="${updateFlag==null}">
+                    <optgroup th:each="category : ${categoryList.values()}" th:attr="label=${category.name}" th:if="${updateFlag==null and temporalBoardFlag==null}">
                         <option th:text="${category.name}" th:value="${category.id}"></option>
                         <option th:each="childCategory : ${category.childCategory}" th:text="${childCategory.name}" th:value="${childCategory.id}"></option>
                     </optgroup>
@@ -113,14 +113,16 @@
             const content = /*[[${temporalBoard?.content}]]*/ '';
 
             toastEditor.setHTML(content);
-            let tagValue = "";
-            for (let i = 0; i < tags.length; i++) {
-                tagValue += tags[i];
-                if (i !== tags.length - 1) {
-                    tagValue += ", ";
+            if (tags !== null) {
+                let tagValue = "";
+                for (let i = 0; i < tags.length; i++) {
+                    tagValue += tags[i];
+                    if (i !== tags.length - 1) {
+                        tagValue += ", ";
+                    }
                 }
+                input.setAttribute("value", tagValue);
             }
-            input.setAttribute("value", tagValue);
             temporalBoardId.setAttribute("value", id);
             titleInput.setAttribute("value", title);
         }
