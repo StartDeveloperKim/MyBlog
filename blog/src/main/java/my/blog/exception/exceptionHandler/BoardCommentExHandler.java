@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@RestControllerAdvice(value = {"my.blog.board.controller", "my.blog.comments.controller"})
+@RestControllerAdvice(value = {"my.blog.board.controller", "my.blog.comments.controller", "my.blog.temporalBoard.controller"})
 public class BoardCommentExHandler {
 
     @ExceptionHandler

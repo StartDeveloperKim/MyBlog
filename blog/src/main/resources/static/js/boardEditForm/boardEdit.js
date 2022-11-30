@@ -81,7 +81,7 @@ function boardRegister() {
 
     httpRequest.onload = function () {
         if (httpRequest.status === 200) {
-            removeTemporalBoard()
+            removeTemporalBoard() // 임시저장 글 삭제
             alert("글이 등록되었습니다.");
             const boardId = httpRequest.response;
             window.location.href = "/board/" + boardId;
@@ -192,8 +192,9 @@ setInterval(function () {
                 }
 
             },
-            error: function (request, status, error) {
-                alert(request + ", " + status + ", " + error);
+            error: function (request) {
+                const responseData = JSON.parse(request.responseText);
+                alert(responseData.title);
             },
         });
     }

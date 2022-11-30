@@ -9,7 +9,6 @@ import java.util.List;
 public interface BoardTagService {
 
     List<BoardResponse> getTagBoardList(int page, int size, String tagName);
-
     List<TagResponse> getTagList(Long boardId);
     Long getCountBoardByTagName(String tagName);
 }

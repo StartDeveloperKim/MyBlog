@@ -35,12 +35,12 @@ public class SecurityConfig {
 
                 // 페이지와 HttpMethod 별 권한 설정
                 .authorizeHttpRequests()
-//                .antMatchers(HttpMethod.GET, "/board/edit").hasRole(ADMIN.name())
-//                .antMatchers(HttpMethod.POST, "/board").hasRole(ADMIN.name())
-//                .antMatchers(HttpMethod.DELETE, "/board/**").hasRole(ADMIN.name())
-//                .antMatchers(HttpMethod.PATCH, "/board/**").hasRole(ADMIN.name())
-//                .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
-//                .antMatchers("/category/**").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/board/edit").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/board").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/board/**").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.PATCH, "/board/**").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
+                .antMatchers("/category/**").hasRole(ADMIN.name())
                 .anyRequest().permitAll()
                 .and()
 
@@ -50,7 +50,6 @@ public class SecurityConfig {
 
                 .oauth2Login()
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
                 .failureUrl("/login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
