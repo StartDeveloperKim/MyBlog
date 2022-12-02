@@ -19,6 +19,7 @@ import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
 import my.blog.web.layout.LayoutService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +65,20 @@ public class BoardFormController {
         layoutService.getLayoutInfo(model);
         userInfoSaveInModel(user, model);
 
+        return "board/boardListForm";
+    }
+
+    @GetMapping("/search")
+    public String boardSearch(@RequestParam("query") String query,
+                              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                              Model model) {
+        
+        // 페이징정보 클래스 생성필요 -> count 서비스계층 및 쿼리 수정 필요
+        List<BoardResponse> boardSearchResult = boardLookupService.getBoardSearchResult(query, PageRequest.of(page, pagingSize));
+        model.addAttribute("boardList", boardSearchResult);
+
+        layoutService.getLayoutInfo(model);
+        
         return "board/boardListForm";
     }
 

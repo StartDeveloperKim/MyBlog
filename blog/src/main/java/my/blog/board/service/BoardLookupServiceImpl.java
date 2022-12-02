@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -74,6 +75,17 @@ public class BoardLookupServiceImpl implements BoardLookupService{
             Long categoryId = getCategoryId(parentCategoryName, childCategoryName);
             return boardRepository.getBoardCountByCategoryId(categoryId);
         }
+    }
+
+    @Override
+    public List<BoardResponse> getBoardSearchResult(String word, PageRequest request) {
+        if (StringUtils.hasText(word)) {
+            throw new IllegalArgumentException("검색어가 비어있습니다.");
+        }
+        List<Board> boards = boardRepository.searchBoardByTitle(word, request);
+        return boards.stream()
+                .map(BoardResponse::new)
+                .collect(Collectors.toList());
     }
 
     private Long getCategoryId(String parentCategoryName, String childCategoryName) {
