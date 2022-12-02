@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, CustomBoardRepository {
 
     @Query("select b from Board b join fetch b.boardTags bt join fetch bt.tag where b.id=:id")
     Optional<Board> findByIdForBoardTag(@Param("id") Long boardId);
