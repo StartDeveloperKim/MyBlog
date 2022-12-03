@@ -20,6 +20,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.StringUtils.*;
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -79,7 +81,7 @@ public class BoardLookupServiceImpl implements BoardLookupService{
 
     @Override
     public List<BoardResponse> getBoardSearchResult(String word, PageRequest request) {
-        if (StringUtils.hasText(word)) {
+        if (!hasText(word)) {
             throw new IllegalArgumentException("검색어가 비어있습니다.");
         }
         List<Board> boards = boardRepository.searchBoardByTitle(word, request);
