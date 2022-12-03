@@ -70,15 +70,16 @@ public class BoardFormController {
 
     @GetMapping("/search")
     public String boardSearch(@RequestParam("query") String query,
-                              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                               Model model) {
 
         log.info("searchInfo {}", query);
         // 페이징정보 클래스 생성필요 -> count 서비스계층 및 쿼리 수정 필요
-        Paging pagingInfo = Paging.of(page, boardLookupService.getBoardCount());
-        List<BoardResponse> boardSearchResult = boardLookupService.getBoardSearchResult(query, PageRequest.of(page, pagingSize));
+        Paging pagingInfo = Paging.of(page, boardLookupService.getSearchBoardCount(query));
+        List<BoardResponse> boardSearchResult = boardLookupService.getBoardSearchResult(query, PageRequest.of(page-1, pagingSize));
         model.addAttribute("boardList", boardSearchResult);
         model.addAttribute("pagingInfo", pagingInfo);
+        log.info("pagingInfo {}", pagingInfo.toString());
 
         layoutService.getLayoutInfo(model);
         

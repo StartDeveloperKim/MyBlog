@@ -90,6 +90,12 @@ public class BoardLookupServiceImpl implements BoardLookupService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Long getSearchBoardCount(String searchWord) {
+        Long count = boardRepository.searchBoardCount(searchWord);
+        return count != null ? count : 0;
+    }
+
     private Long getCategoryId(String parentCategoryName, String childCategoryName) {
         Category findCategory;
         if (childCategoryName.equals("")) {

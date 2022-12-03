@@ -95,20 +95,24 @@
                 <li class="page-item rounded-3" th:if="${pagingInfo.previousPage}">
                     <a class="page-link" th:if="${param?.step!=null}" th:href="@{{page}(page=${pagingInfo.currentPage}-1, step=${param.step})}">이전</a>
                     <a class="page-link" th:if="${param?.tagName!=null}" th:href="@{/board/tag(page=${pagingInfo.currentPage}-1, tagName=${param.tagName})}">이전</a>
+                    <a class="page-link" th:if="${param?.query!=null}" th:href="@{/board/search(page=${pagingInfo.currentPage}-1, query=${param.query})}">이전</a>
                 </li>
 
                 <span th:each="num : ${#numbers.sequence(start, end)}">
                     <li class="page-item rounded-3" th:classappend="${num==pagingInfo.currentPage} ? 'active':''">
-                        <a class="page-link" th:if="${param.tagName==null}"
+                        <a class="page-link" th:if="${param.tagName==null and param.query==null}"
                            th:href="@{{page}(page=${num}, step=${param.step})}" th:text="${num}"></a>
                         <a class="page-link" th:if="${param.tagName!=null}"
                            th:href="@{/board/tag(page=${num}, tagName=${param.tagName})}" th:text="${num}"></a>
+                        <a class="page-link" th:if="${param.query!=null}"
+                           th:href="@{/board/search(page=${num}, query=${param.query})}" th:text="${num}"></a>
                     </li>
                 </span>
 
                 <li class="page-item rounded-3" th:if="${pagingInfo.nextPage}">
                     <a class="page-link" th:if="${param?.step!=null}" th:href="@{{page}(page=${pagingInfo.currentPage}+1, step=${param.step})}">다음</a>
                     <a class="page-link" th:if="${param?.tagName!=null}" th:href="@{/board/tag(page=${pagingInfo.currentPage}+1, tagName=${param.tagName})}">다음</a>
+                    <a class="page-link" th:if="${param?.query!=null}" th:href="@{/board/search(page=${pagingInfo.currentPage}+1, query=${param.query})}">다음</a>
                 </li>
             </ul>
         </nav>

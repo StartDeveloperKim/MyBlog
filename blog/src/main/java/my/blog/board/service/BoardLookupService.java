@@ -22,4 +22,6 @@ public interface BoardLookupService {
     Long getBoardCountByCategory(String parentCategoryName, String childCategoryName);
 
     List<BoardResponse> getBoardSearchResult(String word, PageRequest request);
+
+    Long getSearchBoardCount(String searchWord);
 }

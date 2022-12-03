@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CustomBoardRepository {
     List<Board> searchBoardByTitle(String word, Pageable pageable);
+
+    Long searchBoardCount(String word);
 }

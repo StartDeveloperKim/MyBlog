@@ -29,4 +29,14 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository{
                 .fetch();
     }
 
+    @Override
+    public Long searchBoardCount(String word) {
+        QBoard board = QBoard.board;
+        return query
+                .select(board.count())
+                .from(board)
+                .where(board.title.contains(word))
+                .fetchOne();
+    }
+
 }
