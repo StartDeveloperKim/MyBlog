@@ -16,9 +16,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "where (p.id=c.parentCategoryId) and (p.categoryName=:parentName and c.categoryName=:childName)")
     Category findByNameAndParentName(@Param("parentName") String parentName,
                                      @Param("childName") String childName);
-//    @Query("select c from Category c where c.categoryName=:categoryName and c.")
-//    Category findByNameAndParentId(@Param("categoryName") String name,
-//                                   @Param("parentId") Long parentId)
+
 
     Category findByCategoryName(String categoryName);
     boolean existsByCategoryName(String categoryName);

@@ -24,6 +24,7 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 
     @Id
+    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GENERATOR")
     @Column(name = "user_id", nullable = false)
     private Long id;

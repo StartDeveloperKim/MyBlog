@@ -19,6 +19,7 @@ public class BoardTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARDTAG_SEQ_GENERATOR")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_tag_id")
     private Long id;
 

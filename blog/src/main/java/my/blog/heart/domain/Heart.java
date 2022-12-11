@@ -17,6 +17,7 @@ import javax.persistence.*;
 public class Heart {
 
     @Id
+    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HEART_SEQ_GENERATOR")
     @Column(name = "heart_id", nullable = false)
     private Long id;

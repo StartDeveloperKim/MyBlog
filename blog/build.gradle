@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.6.0.0.1'
 	implementation group: 'com.google.code.gson', name: 'gson'
 	implementation group: 'org.kohsuke', name: 'github-api', version: '1.313'
 	implementation group: 'org.springframework.security', name: 'spring-security-taglibs'
@@ -45,6 +46,7 @@ dependencies {
 
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 	runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
+	runtimeOnly 'mysql:mysql-connector-java'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 

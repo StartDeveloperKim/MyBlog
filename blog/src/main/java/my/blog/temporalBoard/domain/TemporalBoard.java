@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class TemporalBoard extends BaseTimeEntity {
 
     @Id
+    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEMPORALBOARD_SEQ_GENERATOR")
     @Column(name = "temporal_board_id")
     private Long id;

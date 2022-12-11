@@ -67,19 +67,6 @@
         </div>
     </div>
 
-    <!--<div class="container justify-content-center mx-auto my-auto mb-3 d-flex border-top" sec:authorize="hasRole('ROLE_ADMIN')">
-        <div class="row">
-            <div class="col justify-content-center align-self-auto">
-                &lt;!&ndash;<button class="btn-lg btn-outline-secondary rounded-4" id="edit-btn">수정</button>&ndash;&gt;
-                <button class="section2_btn btn22" type="button" id="edit-btn">수정</button>
-            </div>
-            <div class="col justify-content-center align-self-auto">
-                &lt;!&ndash;<button class="btn-lg btn-outline-danger rounded-4" id="delete-btn">삭제</button>&ndash;&gt;
-                <button class="section2_btn btn11" type="button" id="delete-btn">삭제</button>
-            </div>
-        </div>
-    </div>-->
-
     <div class="container-md border-top my-auto"></div>
     <!--태그-->
     <div class="container justify-content-center mx-auto my-auto mb-3 d-flex w-75 rounded-3">
@@ -93,12 +80,17 @@
         </div>
     </div>
 
+    <!-- 좋아요 -->
+    <div class="container justify-content-center mx-auto my-auto mb-3 d-flex">
+        <button sec:authorize="isAuthenticated()" class="btn rounded-3" th:userId="${userInfo.userId}" onclick="clickLikeBtn()" id="like-btn" th:classappend="${boardLike} ? 'btn-primary':'btn-light'">
+            <i class="fa fa-thumbs-up"> 좋아요</i>
+        </button>
+    </div>
     <!-- Comment -->
     <div class="container justify-content-center mx-auto my-auto mb-3 d-flex">
         <div class="card w-75">
             <div class="card-header bg-light">
                 <i class="fa fa-comment fa"></i> 댓글
-
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">

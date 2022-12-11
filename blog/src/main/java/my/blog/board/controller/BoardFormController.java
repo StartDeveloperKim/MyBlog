@@ -12,6 +12,7 @@ import my.blog.board.service.BoardService;
 import my.blog.boardTag.service.BoardTagService;
 import my.blog.comments.dto.response.CommentResponse;
 import my.blog.comments.service.CommentsService;
+import my.blog.heart.service.HeartService;
 import my.blog.tag.dto.TagResponse;
 import my.blog.temporalBoard.dto.TemporalBoardResp;
 import my.blog.temporalBoard.service.TemporalBoardService;
@@ -42,6 +43,7 @@ public class BoardFormController {
 
     private final CommentsService commentsService;
     private final BoardTagService boardTagService;
+    private final HeartService heartService;
     private final LayoutService layoutService;
 
     private final int pagingSize = 6;
@@ -91,12 +93,17 @@ public class BoardFormController {
         Board board = boardLookupService.getBoard(id);
         BoardDetailResponse boardResponse = new BoardDetailResponse(board);
 
-        userInfoSaveInModel(user, model);
-
         List<TagResponse> tagList = boardTagService.getTagList(id);
         Map<Long, CommentResponse> comments = commentsService.getComments(id);
         boardService.addHit(id);
 
+        if (user != null) {
+            model.addAttribute("boardLike", heartService.isUserLikeBoard(id, user.getUserId()));
+        } else {
+            model.addAttribute("boardLike", false);
+        }
+
+        userInfoSaveInModel(user, model);
 
         model.addAttribute("board", boardResponse);
         model.addAttribute("commentList", comments);

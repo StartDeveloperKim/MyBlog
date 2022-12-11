@@ -18,6 +18,7 @@ import java.util.List;
 public class Tag {
 
     @Id
+    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TAG_SEQ_GENERATOR")
     @Column(name = "tag_id")
     private Long id;

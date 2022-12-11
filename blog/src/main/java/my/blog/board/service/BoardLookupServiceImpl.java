@@ -58,7 +58,7 @@ public class BoardLookupServiceImpl implements BoardLookupService{
     @Override
     @Cacheable(value = "totalCount")
     public Long getBoardCount() {
-        return boardRepository.getAllBoardCount();
+        return boardRepository.count();
     }
 
     @Override

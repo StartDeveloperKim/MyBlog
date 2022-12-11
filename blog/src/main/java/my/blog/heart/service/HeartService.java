@@ -7,4 +7,6 @@ public interface HeartService {
     void deleteHeart(Long userId, Long boardId);
 
     Long getHeartCount(Long boardId);
+
+    boolean isUserLikeBoard(Long boardId, Long userId);
 }

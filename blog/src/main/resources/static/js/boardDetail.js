@@ -3,6 +3,45 @@ let boardId = document.getElementById("boardId").value;
 
 //const commentArea = document.getElementById("comment-area-login").value;
 
+
+function sendLike(httpMethod, userId, btn) {
+    let requestData = {}
+    requestData.boardId = boardId;
+    requestData.userId = userId;
+    const option = {
+        method:httpMethod,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+    };
+    fetch("/heart", option)
+        .then((response) => {
+            console.log(response.body);
+            if (httpMethod === "POST") {
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-primary');
+            }else if (httpMethod === "DELETE") {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-light');
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+}
+
+function clickLikeBtn() {
+    let likeBtn = document.getElementById("like-btn");
+    const userId = likeBtn.getAttribute("userId");
+    const classes = likeBtn.classList;
+    if (classes.contains("btn-light")) {
+        sendLike("POST", userId, likeBtn);
+    }else if (classes.contains("btn-primary")) {
+        sendLike("DELETE", userId, likeBtn);
+    }
+}
+
 function addCommentHtml(data) {
     const cardList = document.getElementById("cardList")
     cardList.innerHTML = ""; // 자식 태그 초기화

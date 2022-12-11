@@ -18,6 +18,7 @@ import javax.persistence.*;
 public class Comments extends BaseTimeEntity {
 
     @Id
+    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMMENTS_SEQ_GENERATOR")
     @Column(name = "comments_id", nullable = false)
     private Long id;

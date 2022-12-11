@@ -28,6 +28,7 @@ public class HeartController {
     @PostMapping
     public ResponseEntity<String> addHeart(@RequestBody HeartRequest heartRequest) {
         try {
+            log.info("좋아요 요청 {}", heartRequest.toString());
             heartService.saveHeart(heartRequest.getUserId(), heartRequest.getBoardId());
             return ResponseEntity.ok().body("success");
         } catch (Exception e) {
@@ -39,6 +40,7 @@ public class HeartController {
     @DeleteMapping
     public ResponseEntity<String> removeHeart(@RequestBody HeartRequest heartRequest) {
         try {
+            log.info("좋아요 삭제 요청 {}", heartRequest.toString());
             heartService.deleteHeart(heartRequest.getUserId(), heartRequest.getBoardId());
             return ResponseEntity.ok().body("success");
         } catch (Exception e) {

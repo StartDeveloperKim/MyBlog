@@ -43,4 +43,9 @@ public class HeartServiceImpl implements HeartService {
     public Long getHeartCount(Long boardId) {
         return heartRepository.countByBoard_Id(boardId);
     }
+
+    @Override
+    public boolean isUserLikeBoard(Long boardId, Long userId) {
+        return heartRepository.existHeart(boardId, userId);
+    }
 }

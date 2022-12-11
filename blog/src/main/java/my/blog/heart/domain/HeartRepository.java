@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface HeartRepository extends JpaRepository<Heart, Long> {
+public interface HeartRepository extends JpaRepository<Heart, Long> , CustomHeartRepository{
 
     @Modifying(clearAutomatically = true)
     @Query("delete from Heart h where h.board.id = :boardId and h.user.id = :userId")
@@ -14,3 +14,4 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
 
     Long countByBoard_Id(Long boardId);
 }
+
