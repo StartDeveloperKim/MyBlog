@@ -24,11 +24,13 @@ public class CustomCategoryRepositoryImpl implements CustomCategoryRepository{
         QBoard board = QBoard.board;
         return query
                 .select(Projections.constructor(CategoryInfoDto.class,
-                        category.id, category.parentCategoryId, category.categoryName, category.count()))
+                        category.id, category.parentCategoryId, category.categoryName, board.count()))
                 .from(category)
-                .join(board)
+                .leftJoin(board)
                 .on(category.id.eq(board.category.id))
                 .groupBy(category.id)
+                .where(category.categoryName.ne("total"))
+                .orderBy(category.id.asc())
                 .fetch();
     }
 }

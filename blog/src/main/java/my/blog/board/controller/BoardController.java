@@ -59,7 +59,6 @@ public class BoardController {
     @PostMapping("/delete/{id}")
     public ResponseEntity<String> boardDelete(@PathVariable("id") Long id) {
         boardService.deleteBoard(id);
-
         return ResponseEntity.ok().body("success");
     }
 }

@@ -10,6 +10,7 @@ import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
+import my.blog.tag.domain.InMemoryTagRepository;
 import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
 import my.blog.user.domain.User;
@@ -21,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -76,6 +79,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);
+        setInMemoryTagRepository();
     }
 
     @Override
@@ -105,5 +109,13 @@ public class BoardServiceImpl implements BoardService{
             boardTags.add(BoardTag.from(board, findTag));
         }
         return boardTags;
+    }
+
+    private void setInMemoryTagRepository() {
+        Set<String> tags = tagRepository.findAll().stream()
+                .map(Tag::getTagName)
+                .collect(Collectors.toSet());
+        InMemoryTagRepository.clear();
+        InMemoryTagRepository.addTags(tags);
     }
 }
