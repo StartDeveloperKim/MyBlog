@@ -10,15 +10,10 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Entity
-@SequenceGenerator(
-        name = "BOARDTAG_SEQ_GENERATOR",
-        sequenceName = "BOARDTAG_SEQ",
-        initialValue = 1,
-        allocationSize = 1)
 public class BoardTag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARDTAG_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.AUTO)
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_tag_id")
     private Long id;

@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Cacheable("CategoryLayoutStore")
     @Override
     public Map<Long, CategoryLayoutDto> getCategoryList() {
-        List<CategoryInfoDto> categoryDto = categoryRepository.findCategoryDto();
+        List<CategoryInfoDto> categoryDto = categoryRepository.getCategoryInfoDto();
 
         return HierarchicalCategory.from(categoryDto);
     }
@@ -87,14 +88,11 @@ public class CategoryServiceImpl implements CategoryService {
     /*ddl-auto 옵션을 create 할 때만 사용하자*/
 //    @PostConstruct
 //    private void insertDummyCategory() {
-//        Category category = categoryRepository.findByCategoryName("TOTAL");
-//        String dummyCategoryName = "TOTAL";
+//        Category category = categoryRepository.findByCategoryName("total");
+//        String dummyCategoryName = "total";
 //        if (category == null) {
-//            saveCategory(dummyCategoryName);
+//            saveCategory(new CategoryAddDto(dummyCategoryName, null));
 //            //아래 세줄은 실험 코드
-//            saveCategory("스프링");
-//            saveCategory("JPA");
-//            saveCategory("HTML/CSS");
 //        }
 //
 //    }

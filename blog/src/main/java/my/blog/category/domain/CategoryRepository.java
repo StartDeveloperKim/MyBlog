@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long>, CustomCategoryRepository {
 
     @Query("select c from Category c where c.categoryName=:categoryName and c.parentCategoryId is null")
     Category findByNameAndParentIdIsNull(@Param("categoryName") String name);
@@ -26,6 +26,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existByNameAndParentId(@Param("parentId")Long parentCategoryId,
                                    @Param("name") String categoryName);
 
-    @Query(name = "findCategoryDto", nativeQuery = true)
-    List<CategoryInfoDto> findCategoryDto();
 }

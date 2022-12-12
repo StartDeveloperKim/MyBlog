@@ -7,17 +7,12 @@ import my.blog.temporalBoard.dto.TemporalBoardReq;
 import javax.persistence.*;
 
 @Getter
-@SequenceGenerator(
-        name = "TEMPORALBOARD_SEQ_GENERATOR",
-        sequenceName = "TEMPORALBOARD_SEQ",
-        initialValue = 1,
-        allocationSize = 1)
 @Entity
 public class TemporalBoard extends BaseTimeEntity {
 
     @Id
-    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEMPORALBOARD_SEQ_GENERATOR")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "temporal_board_id")
     private Long id;
 

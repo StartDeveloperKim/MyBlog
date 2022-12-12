@@ -17,16 +17,10 @@ import java.util.Optional;
 
 @Getter
 @Entity
-@SequenceGenerator(
-        name = "BOARD_SEQ_GENERATOR",
-        sequenceName = "BOARD_SEQ",
-        initialValue = 1,
-        allocationSize = 1
-)
 public class Board extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARD_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.AUTO)
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id", nullable = false)
     private Long id;

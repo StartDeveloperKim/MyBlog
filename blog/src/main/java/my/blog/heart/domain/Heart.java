@@ -8,17 +8,11 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@SequenceGenerator(
-        name = "HEART_SEQ_GENERATOR",
-        sequenceName = "HEART_SEQ",
-        initialValue = 1,
-        allocationSize = 1
-)
 public class Heart {
 
     @Id
-    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HEART_SEQ_GENERATOR")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "heart_id", nullable = false)
     private Long id;
 

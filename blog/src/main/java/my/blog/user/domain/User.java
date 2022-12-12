@@ -14,18 +14,12 @@ import java.util.List;
 
 @Getter
 @Entity
-@SequenceGenerator(
-        name = "USER_SEQ_GENERATOR",
-        sequenceName = "USER_SEQ",
-        initialValue = 1,
-        allocationSize = 1
-)
 //@Table(name = "Users")
 public class User extends BaseTimeEntity {
 
     @Id
-    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GENERATOR")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", nullable = false)
     private Long id;
 
