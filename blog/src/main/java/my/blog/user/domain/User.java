@@ -1,10 +1,8 @@
 package my.blog.user.domain;
 
 import lombok.Getter;
-import lombok.ToString;
 import my.blog.BaseTimeEntity;
 import my.blog.board.domain.Board;
-import my.blog.comments.domain.Comments;
 import my.blog.heart.domain.Heart;
 import my.blog.user.dto.OAuthRequest;
 
@@ -18,8 +16,8 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", nullable = false)
     private Long id;
 
@@ -44,15 +42,14 @@ public class User extends BaseTimeEntity {
 
     protected User() {
     }
-    private User(OAuthRequest oAuthRequest) {
-        this.email = oAuthRequest.getEmail();
-        this.name = oAuthRequest.getName();
-        this.picture = oAuthRequest.getPicture();
-        this.role = Role.GUEST; // 기본은 GUEST, 블로그 주인은 ADMIN
-    }
 
-    public static User of(OAuthRequest oAuthRequest) {
-        return new User(oAuthRequest);
+    public static User newInstance(OAuthRequest oAuthRequest) {
+        User user = new User();
+        user.email = oAuthRequest.getEmail();
+        user.name = oAuthRequest.getName();
+        user.picture = oAuthRequest.getPicture();
+        user.role = Role.GUEST;
+        return user;
     }
 
     public String getRoleKey() {

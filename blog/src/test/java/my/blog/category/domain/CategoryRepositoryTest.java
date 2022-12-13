@@ -23,10 +23,10 @@ class CategoryRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Category parentCategory = Category.from("테스트1", null);
+        Category parentCategory = Category.newInstance("테스트1", null);
         savedParentCategory = categoryRepository.save(parentCategory);
 
-        Category childCategory = Category.from("테스트2", savedParentCategory.getId());
+        Category childCategory = Category.newInstance("테스트2", savedParentCategory.getId());
         savedChildCategory = categoryRepository.save(childCategory);
     }
 

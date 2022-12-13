@@ -3,7 +3,6 @@ package my.blog.heart.service;
 import lombok.RequiredArgsConstructor;
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
-import my.blog.board.dto.request.BoardRegister;
 import my.blog.heart.domain.Heart;
 import my.blog.heart.domain.HeartRepository;
 import my.blog.user.domain.User;
@@ -30,7 +29,7 @@ public class HeartServiceImpl implements HeartService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
 
-        Heart heart = Heart.of(user, board);
+        Heart heart = Heart.newInstance(user, board);
         heartRepository.save(heart);
     }
 

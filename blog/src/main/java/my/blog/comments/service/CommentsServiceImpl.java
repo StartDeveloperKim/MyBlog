@@ -51,7 +51,7 @@ public class CommentsServiceImpl implements CommentsService {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시판이 없습니다."));
 
-        Comments comment = Comments.of(findBoard, findUser, commentRequest.getComment(), commentRequest.getParentId());
+        Comments comment = Comments.newInstance(findBoard, findUser, commentRequest.getComment(), commentRequest.getParentId());
 
         commentsRepository.save(comment);
     }

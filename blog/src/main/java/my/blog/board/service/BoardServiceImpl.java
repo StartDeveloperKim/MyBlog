@@ -43,7 +43,7 @@ public class BoardServiceImpl implements BoardService{
         User user = getUserEntity(userId);
         Category category = getCategoryEntity(boardRegister.getCategoryId());
 
-        Board board = Board.of(user, category, boardRegister);
+        Board board = Board.newInstance(user, category, boardRegister);
         Board saveBoard = boardRepository.save(board); // 게시글 저장
 
         boardTagRepository.saveAll(getBoardTagEntities(tags, saveBoard));
@@ -57,7 +57,7 @@ public class BoardServiceImpl implements BoardService{
         User user = getUserEntity(userId);
         Category category = getCategoryEntity(boardRegister.getCategoryId());
 
-        Board board = Board.of(user, category, boardRegister);
+        Board board = Board.newInstance(user, category, boardRegister);
         return boardRepository.save(board).getId();
     }
 
@@ -106,7 +106,7 @@ public class BoardServiceImpl implements BoardService{
         List<BoardTag> boardTags = new ArrayList<>();
         for (String tag : tags) {
             Tag findTag = tagRepository.findByTagName(tag);
-            boardTags.add(BoardTag.from(board, findTag));
+            boardTags.add(BoardTag.newInstance(board, findTag));
         }
         return boardTags;
     }

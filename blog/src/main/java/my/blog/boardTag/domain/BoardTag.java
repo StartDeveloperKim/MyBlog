@@ -13,8 +13,8 @@ import javax.persistence.*;
 public class BoardTag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_tag_id")
     private Long id;
 
@@ -38,7 +38,7 @@ public class BoardTag {
     }
 
     //==생성 메서드==//
-    public static BoardTag from(Board board, Tag tag) {
+    public static BoardTag newInstance(Board board, Tag tag) {
         BoardTag boardTag = new BoardTag();
         boardTag.setBoardAndTag(board, tag);
 

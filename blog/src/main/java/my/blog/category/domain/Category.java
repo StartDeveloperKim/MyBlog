@@ -1,7 +1,6 @@
 package my.blog.category.domain;
 
 import lombok.Getter;
-import my.blog.category.dto.response.CategoryInfoDto;
 
 import javax.persistence.*;
 
@@ -10,8 +9,8 @@ import javax.persistence.*;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id", nullable = false)
     private Long id;
 
@@ -21,17 +20,15 @@ public class Category {
     @Column(name = "parent_category_id")
     private Long parentCategoryId;
 
-    private Category(String categoryName, Long parentCategoryId) {
-        this.categoryName = categoryName;
-        this.parentCategoryId = parentCategoryId;
-    }
-
     protected Category() {
     }
 
     //==생성메서드==//
-    public static Category from(String categoryName, Long parentCategoryId) {
-        return new Category(categoryName, parentCategoryId);
+    public static Category newInstance(String categoryName, Long parentCategoryId) {
+        Category category = new Category();
+        category.categoryName = categoryName;
+        category.parentCategoryId = parentCategoryId;
+        return category;
     }
 
     //==업데이트 메서드==//

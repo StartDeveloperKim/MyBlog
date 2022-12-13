@@ -12,8 +12,8 @@ import javax.persistence.*;
 public class Comments extends BaseTimeEntity {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "comments_id", nullable = false)
     private Long id;
 
@@ -30,20 +30,13 @@ public class Comments extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Comments(String content, Board board, User user, Long parentId) {
-        this.content = content;
-        this.board = board;
-        this.user = user;
-        this.parentId = parentId;
-    }
-
-    protected Comments() {
-
-    }
+    protected Comments() {}
 
     //==생성 메서드==//
-    public static Comments of(Board board, User user, String content, Long parentId) {
-        Comments comments = new Comments(content, board, user, parentId);
+    public static Comments newInstance(Board board, User user, String content, Long parentId) {
+        Comments comments = new Comments();
+        comments.content = content;
+        comments.parentId = parentId;
         comments.setUserAndBoard(user, board);
 
         return comments;

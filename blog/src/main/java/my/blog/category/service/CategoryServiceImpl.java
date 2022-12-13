@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (existCategory) {
             throw new DuplicateCategoryException("사용중인 카테고리 이름입니다.");
         }
-        Category category = Category.from(categoryAddDto.getCategoryName(), categoryAddDto.getParentCategoryId()); // 생성메서드
+        Category category = Category.newInstance(categoryAddDto.getCategoryName(), categoryAddDto.getParentCategoryId()); // 생성메서드
         Category saveCategory = categoryRepository.save(category);
 
         return saveCategory.getId();

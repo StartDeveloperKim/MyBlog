@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
 class TemporalBoardRepositoryTest {
 
@@ -18,7 +16,7 @@ class TemporalBoardRepositoryTest {
     void 최근_임시저장_글_가져오기_테스트() {
         //given
         TemporalBoardReq temporalBoardReq = new TemporalBoardReq("테스트1", "테스트글입니다.", null, null, 2L);
-        TemporalBoard savedEntity = temporalBoardRepository.save(TemporalBoard.of(temporalBoardReq));
+        TemporalBoard savedEntity = temporalBoardRepository.save(TemporalBoard.newInstance(temporalBoardReq));
 
         //when
         TemporalBoard findEntity = temporalBoardRepository.findTop1ByOrderByIdDesc();

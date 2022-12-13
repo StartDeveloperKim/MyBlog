@@ -3,35 +3,24 @@ package my.blog.board.service;
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
-import my.blog.board.dto.response.BoardResponse;
 import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.user.FakeCustomOAuth2UserService;
 import my.blog.user.domain.User;
-import my.blog.user.dto.OAuthRequest;
-import org.hibernate.mapping.Any;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,12 +50,12 @@ public class BoardLookupServiceImplTest {
     void setUp() {
         customOAuth2UserService = new FakeCustomOAuth2UserService();
         user = customOAuth2UserService.loadUser();
-        parentCategory = Category.from("스프링", null);
-        childCategory = Category.from("MVC", 1L);
+        parentCategory = Category.newInstance("스프링", null);
+        childCategory = Category.newInstance("MVC", 1L);
 
         boards = new ArrayList<>();
-        parentBoard = Board.of(user, parentCategory, new BoardRegister("테스트1", "테스트입니다1", 1L, null, null));
-        childBoard = Board.of(user, parentCategory, new BoardRegister("테스트2", "테스트입니다2", 2L, null, null));
+        parentBoard = Board.newInstance(user, parentCategory, new BoardRegister("테스트1", "테스트입니다1", 1L, null, null));
+        childBoard = Board.newInstance(user, parentCategory, new BoardRegister("테스트2", "테스트입니다2", 2L, null, null));
         boards.add(childBoard);
         boards.add(parentBoard);
     }

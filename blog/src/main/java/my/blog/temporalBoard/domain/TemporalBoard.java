@@ -11,8 +11,8 @@ import javax.persistence.*;
 public class TemporalBoard extends BaseTimeEntity {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "temporal_board_id")
     private Long id;
 
@@ -28,21 +28,17 @@ public class TemporalBoard extends BaseTimeEntity {
 
     private Long categoryId;
 
-    protected TemporalBoard(String title, String content, String thumbnail, String tags, Long categoryId) {
-        this.title = title;
-        this.content = content;
-        this.thumbnail = thumbnail;
-        this.tags = tags;
-        this.categoryId = categoryId;
-    }
-
     protected TemporalBoard() {
     }
 
-    public static TemporalBoard of(TemporalBoardReq temporalBoardReq) {
-        return new TemporalBoard(temporalBoardReq.getTitle(), temporalBoardReq.getContent(),
-                temporalBoardReq.getThumbnail(), temporalBoardReq.getTags(),
-                temporalBoardReq.getCategoryId());
+    public static TemporalBoard newInstance(TemporalBoardReq temporalBoardReq) {
+        TemporalBoard temporalBoard = new TemporalBoard();
+        temporalBoard.title = temporalBoardReq.getTitle();
+        temporalBoard.content = temporalBoardReq.getContent();
+        temporalBoard.thumbnail = temporalBoardReq.getThumbnail();
+        temporalBoard.tags = temporalBoardReq.getTags();
+        temporalBoard.categoryId = temporalBoardReq.getCategoryId();
+        return temporalBoard;
     }
 
     public void update(TemporalBoardReq temporalBoardReq) {

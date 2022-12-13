@@ -4,7 +4,7 @@ import my.blog.category.domain.Category;
 
 public class CategoryRepositoryStub {
 
-    private final Category category = Category.from("스프링", null);
+    private final Category category = Category.newInstance("스프링", null);
 
     public Long saveParentCategory(Category category) {
         return 1L;

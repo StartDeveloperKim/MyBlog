@@ -41,7 +41,7 @@ public class TagServiceImpl implements TagService{
         List<Tag> saveTags = new ArrayList<>();
         for (String tag : tagList) {
             if (!tagRepository.existsByTagName(tag)) {
-                saveTags.add(Tag.of(tag));
+                saveTags.add(Tag.newInstance(tag));
             }
         }
         return saveTags;
@@ -50,7 +50,7 @@ public class TagServiceImpl implements TagService{
     private Set<Tag> getTagsExceptDuplicateTagAtMemory(List<String> tags) {
         return tags.stream()
                 .filter(InMemoryTagRepository::isDuplicateTag)
-                .map(Tag::of)
+                .map(Tag::newInstance)
                 .collect(Collectors.toSet());
     }
 

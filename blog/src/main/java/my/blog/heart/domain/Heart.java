@@ -11,8 +11,8 @@ import javax.persistence.*;
 public class Heart {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "heart_id", nullable = false)
     private Long id;
 
@@ -27,7 +27,7 @@ public class Heart {
     }
 
     //==생성메서드==//
-    public static Heart of(User user, Board board) {
+    public static Heart newInstance(User user, Board board) {
         Heart heart = new Heart();
         heart.setUserAndBoard(user, board);
         return heart;

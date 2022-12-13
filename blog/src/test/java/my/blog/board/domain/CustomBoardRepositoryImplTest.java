@@ -5,7 +5,6 @@ import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -33,7 +31,7 @@ class CustomBoardRepositoryImplTest {
         //given
         User user = userRepository.findById(1L).orElseThrow();
         Category category = categoryRepository.findById(2L).orElseThrow();
-        Board board = Board.of(user, category, new BoardRegister("테스트김안녕하세요", "테스트입니다.", 2L, null, ""));
+        Board board = Board.newInstance(user, category, new BoardRegister("테스트김안녕하세요", "테스트입니다.", 2L, null, ""));
         Board savedBoard = boardRepository.save(board);
 
         //when

@@ -6,18 +6,13 @@ import my.blog.category.domain.CategoryRepository;
 import my.blog.user.FakeCustomOAuth2UserService;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
-import my.blog.user.dto.OAuthRequest;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.PageRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -41,15 +36,15 @@ class BoardRepositoryTest {
         user = fakeUserService.loadUser();
         savedUser = userRepository.save(user);
 
-        savedParentCategory = categoryRepository.save(Category.from("테스트", null));
-        savedChildCategory = categoryRepository.save(Category.from("자식카테고리", savedParentCategory.getId()));
+        savedParentCategory = categoryRepository.save(Category.newInstance("테스트", null));
+        savedChildCategory = categoryRepository.save(Category.newInstance("자식카테고리", savedParentCategory.getId()));
     }
 
     @Test
     void 최신6개의_글이_조회된다() {
         //given
         BoardRegister boardRegister = new BoardRegister("테스트", "테스트글입니다.", savedParentCategory.getId(), "thumbnail", "tags");
-        Board board = Board.of(savedUser, savedParentCategory, boardRegister);
+        Board board = Board.newInstance(savedUser, savedParentCategory, boardRegister);
 
         Board saveBoard1 = boardRepository.save(board);
         Board saveBoard2 = boardRepository.save(board);

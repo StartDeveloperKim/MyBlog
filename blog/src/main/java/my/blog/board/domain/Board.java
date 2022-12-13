@@ -1,6 +1,5 @@
 package my.blog.board.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import my.blog.BaseTimeEntity;
 import my.blog.board.dto.request.BoardRegister;
@@ -13,15 +12,14 @@ import my.blog.user.domain.User;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Entity
 public class Board extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id", nullable = false)
     private Long id;
 
@@ -55,17 +53,7 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Heart> hearts = new ArrayList<>();
 
-    protected Board() {
-    }
-
-    // 생성자를 private으로 지정하여 외부에서 생성자를 통한 인스턴스 생성을 막았다.
-    @Builder
-    private Board(BoardRegister boardRegister) {
-        this.title = boardRegister.getTitle();
-        this.content = boardRegister.getContent();
-        this.thumbnail = getThumbnailURL(boardRegister.getThumbnail());
-        this.hit = 0L;
-    }
+    protected Board() {}
 
     private String getThumbnailURL(String thumbnail) {
         // 사용자가 썸네일을 설정했다면 해당 썸네일 URL로 그렇지 않다면 기본 썸네일 링크를 설정하자.
@@ -78,8 +66,12 @@ public class Board extends BaseTimeEntity {
     }
 
     //==생성메서드==//
-    public static Board of(User user, Category category, BoardRegister boardRegister) {
-        Board board = new Board(boardRegister);
+    public static Board newInstance(User user, Category category, BoardRegister boardRegister) {
+        Board board = new Board();
+        board.title = boardRegister.getTitle();
+        board.content = boardRegister.getContent();
+        board.thumbnail = board.getThumbnailURL(boardRegister.getThumbnail());
+        board.hit = 0L;
         board.setUserAndCategory(user, category);
 
         return board;

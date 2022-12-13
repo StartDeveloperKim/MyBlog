@@ -54,6 +54,6 @@ public class OAuthRequest {
     }
 
     public User toEntity() {
-        return User.of(this);
+        return User.newInstance(this);
     }
 }

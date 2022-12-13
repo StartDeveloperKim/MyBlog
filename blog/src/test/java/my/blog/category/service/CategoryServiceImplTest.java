@@ -54,10 +54,10 @@ class CategoryServiceImplTest {
     @Test
     void 계층형_카테고리_테스트() {
         //given
-        Category parentCategory = Category.from("부모카테고리", null);
+        Category parentCategory = Category.newInstance("부모카테고리", null);
         Long parentCategoryId = categoryRepositoryStub.saveParentCategory(parentCategory);
 
-        Category childCategory = Category.from("자식카레고리", parentCategoryId);
+        Category childCategory = Category.newInstance("자식카레고리", parentCategoryId);
         Long childCategoryId = categoryRepositoryStub.saveChildCategory(childCategory);
 
         List<CategoryInfoDto> response = new ArrayList<>();
