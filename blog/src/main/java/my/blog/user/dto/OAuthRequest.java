@@ -26,9 +26,21 @@ public class OAuthRequest {
     }
 
     public static OAuthRequest of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        // 2022-10-18 현재는 구글로그인만 연동해놨기에 ofGoogle 하나만 구현했지만
-        // 네이버 로그인까지 연동한다면 registrationId를 사용해서 naver로그인인지, google로그인인지 구분해야한다.
+        if (registrationId.equals("naver")) {
+            return ofNaver("id", attributes);
+        }
         return ofGoogle(userNameAttributeName, attributes);
+    }
+
+    private static OAuthRequest ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        return OAuthRequest.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .picture((String) response.get("profile_image"))
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuthRequest ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {

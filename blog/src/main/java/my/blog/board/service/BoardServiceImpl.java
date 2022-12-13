@@ -47,7 +47,7 @@ public class BoardServiceImpl implements BoardService{
         Board saveBoard = boardRepository.save(board); // 게시글 저장
 
         boardTagRepository.saveAll(getBoardTagEntities(tags, saveBoard));
-
+        setInMemoryTagRepository();
         return saveBoard.getId();
     }
 
@@ -58,8 +58,7 @@ public class BoardServiceImpl implements BoardService{
         Category category = getCategoryEntity(boardRegister.getCategoryId());
 
         Board board = Board.of(user, category, boardRegister);
-        return boardRepository.save(board)
-                .getId();
+        return boardRepository.save(board).getId();
     }
 
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
@@ -73,6 +72,7 @@ public class BoardServiceImpl implements BoardService{
         boardTagRepository.saveAll(getBoardTagEntities(tags, board));
 
         board.edit(boardUpdate.getTitle(), boardUpdate.getContent(), boardUpdate.getThumbnail(), category);
+        setInMemoryTagRepository();
     }
 
     @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
