@@ -1,7 +1,7 @@
 
 function postCategory(data, categoryName) {
     $.ajax({
-        url: "/category/add",
+        url: "/category",
         type: 'POST',
         async: false,
         data: JSON.stringify(data),
@@ -66,11 +66,27 @@ function clickChildCategoryPost(e) {
             const categoryId = $(this).attr('value');
             const data = {};
             data.categoryId = categoryId;
+            const option = {
+                method:"DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+            fetch("/category", option)
+                .then((response) => {
+                    console.log(response.toString());
+                    alert("카테고리가 삭제되었습니다.");
+                    window.location.href = "/category";
+                })
+                .catch((error)=>{
+                    console.log(error);
+                });
 
-            console.log(categoryId);
+            /*console.log(categoryId);
             $.ajax({
                 url: "/category/remove",
-                type: 'POST',
+                type: 'DELETE',
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 async: false,
@@ -85,7 +101,7 @@ function clickChildCategoryPost(e) {
                 error: function () {
                     alert("통신실패");
                 }
-            });
+            });*/
         }
     });
 

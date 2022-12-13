@@ -202,7 +202,7 @@ function sendCommentDeleteRequest(data) {
     console.log(JSON.stringify(data));
     httpRequest = new XMLHttpRequest();
 
-    httpRequest.open('POST', '/comment/delete', true);
+    httpRequest.open('DELETE', '/comment', true);
     httpRequest.responseType = 'json';
     httpRequest.setRequestHeader('Content-Type', 'application/json');
 
@@ -255,19 +255,18 @@ editBtn.addEventListener("click", function () {
 
 deleteBtn.addEventListener("click", function () {
     if (confirm("정말로 삭제하시겠습니까??")) {
-        httpRequest = new XMLHttpRequest();
-        httpRequest.open('POST', '/board/delete/' + boardId, true);
-
-        httpRequest.send();
-
-        httpRequest.onload = function () {
-            if (httpRequest.status === 200) {
+        const option = {
+            method:'DELETE',
+        };
+        fetch("/board/"+boardId, option)
+            .then((response) => {
+                console.log(response.status);
                 alert("삭제되었습니다!!");
                 location.href = "/";
-            } else {
-                alert("오류가 발생하였습니다!!");
-            }
-        };
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
     }
 });
 

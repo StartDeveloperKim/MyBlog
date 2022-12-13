@@ -107,8 +107,8 @@ function boardUpdate() {
         console.log(requestData);
 
         $.ajax({
-            type: "POST",
-            url: "/board/edit/"+boardId,
+            type: "PATCH",
+            url: "/board/"+boardId,
             contentType: 'application/json',
             async: false,
             data: JSON.stringify(requestData),

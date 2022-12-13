@@ -42,7 +42,7 @@ public class BoardController {
         return ResponseEntity.ok().body(boardId);
     }
 
-    @PostMapping("/edit/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> boardUpdate(@PathVariable("id") Long boardId,
                                               @RequestBody BoardUpdate boardUpdate) {
         log.info("edit Board {}, {}", boardId, boardUpdate.toString());
@@ -56,7 +56,7 @@ public class BoardController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> boardDelete(@PathVariable("id") Long id) {
         boardService.deleteBoard(id);
         return ResponseEntity.ok().body("success");

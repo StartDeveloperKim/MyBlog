@@ -48,7 +48,7 @@ public class CommentsController {
         }
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<Map<String, Object>> deleteComment(@RequestBody CommentDeleteRequest commentDeleteRequest,
                                                              @LoginUser SessionUser user) {
         try {

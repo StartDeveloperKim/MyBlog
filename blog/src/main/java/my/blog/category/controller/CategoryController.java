@@ -38,7 +38,7 @@ public class CategoryController {
         return "category/categoryEditForm";
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseBody
     public CategoryResponseDto categoryAdd(@RequestBody CategoryAddDto categoryAddDto) {
         log.info("CategoryAddDto {}", categoryAddDto.toString());
@@ -53,7 +53,7 @@ public class CategoryController {
 
     }
 
-    @PostMapping("/remove")
+    @DeleteMapping
     @ResponseBody
     public String categoryRemove(@RequestBody CategoryRemoveDto removeDto) {
         try {
@@ -62,7 +62,7 @@ public class CategoryController {
             categoryService.deleteCategory(removeDto.getCategoryId());
             return "success";
         } catch (WritingExistException e) {
-            log.info("This Category has writing : {}", e.getMessage());
+            log.error("WritingExistException {}", e.getMessage());
             return "fail";
         }
 
