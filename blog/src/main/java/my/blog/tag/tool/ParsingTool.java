@@ -14,9 +14,6 @@ public class ParsingTool {
     }
 
     public static List<String> parsingTags(String tags) {
-        if (tags.equals("")) {
-            throw new IllegalArgumentException("태그가 비어있습니다.");
-        }
         List<Map<String, String>> parsingTags = gson.fromJson(tags, ArrayList.class);
         List<String> tagList = new ArrayList<>();
         for (Map<String, String> tag : parsingTags) {

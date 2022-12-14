@@ -34,22 +34,6 @@ public class BoardServiceImpl implements BoardService{
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final TagRepository tagRepository;
-    private final BoardTagRepository boardTagRepository;
-
-    @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
-    @Override
-    public Long writeBoardWithTag(BoardRegister boardRegister, List<String> tags, Long userId) {
-        User user = getUserEntity(userId);
-        Category category = getCategoryEntity(boardRegister.getCategoryId());
-
-        Board board = Board.newInstance(user, category, boardRegister);
-        Board saveBoard = boardRepository.save(board); // 게시글 저장
-
-        boardTagRepository.saveAll(getBoardTagEntities(tags, saveBoard));
-        setInMemoryTagRepository();
-        return saveBoard.getId();
-    }
 
     @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
     @Override
@@ -57,29 +41,25 @@ public class BoardServiceImpl implements BoardService{
         User user = getUserEntity(userId);
         Category category = getCategoryEntity(boardRegister.getCategoryId());
 
-        Board board = Board.newInstance(user, category, boardRegister);
-        return boardRepository.save(board).getId();
+        Board board = Board.newInstance(user, category, boardRegister.getTitle(), boardRegister.getContent(), boardRegister.getThumbnail());
+        Board saveBoard = boardRepository.save(board); // 게시글 저장
+
+        return saveBoard.getId();
     }
 
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
     public void editBoard(BoardUpdate boardUpdate, Long boardId, List<String> tags) {
-        boardTagRepository.deleteByBoardId(boardId);
-
         Board board = getBoardEntity(boardId);
         Category category = getCategoryEntity(boardUpdate.getCategoryId());
 
-        boardTagRepository.saveAll(getBoardTagEntities(tags, board));
-
         board.edit(boardUpdate.getTitle(), boardUpdate.getContent(), boardUpdate.getThumbnail(), category);
-        setInMemoryTagRepository();
     }
 
     @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
     @Override
     public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);
-        setInMemoryTagRepository();
     }
 
     @Override
@@ -100,22 +80,5 @@ public class BoardServiceImpl implements BoardService{
     private Board getBoardEntity(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
-    }
-
-    private List<BoardTag> getBoardTagEntities(List<String> tags, Board board) {
-        List<BoardTag> boardTags = new ArrayList<>();
-        for (String tag : tags) {
-            Tag findTag = tagRepository.findByTagName(tag);
-            boardTags.add(BoardTag.newInstance(board, findTag));
-        }
-        return boardTags;
-    }
-
-    private void setInMemoryTagRepository() {
-        Set<String> tags = tagRepository.findAll().stream()
-                .map(Tag::getTagName)
-                .collect(Collectors.toSet());
-        InMemoryTagRepository.clear();
-        InMemoryTagRepository.addTags(tags);
     }
 }

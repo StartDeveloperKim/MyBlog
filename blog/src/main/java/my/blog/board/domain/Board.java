@@ -1,5 +1,6 @@
 package my.blog.board.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import my.blog.BaseTimeEntity;
 import my.blog.board.dto.request.BoardRegister;
@@ -65,12 +66,11 @@ public class Board extends BaseTimeEntity {
         return thumbnail;
     }
 
-    //==생성메서드==//
-    public static Board newInstance(User user, Category category, BoardRegister boardRegister) {
+    public static Board newInstance(User user, Category category, String title, String content, String thumbnail) {
         Board board = new Board();
-        board.title = boardRegister.getTitle();
-        board.content = boardRegister.getContent();
-        board.thumbnail = board.getThumbnailURL(boardRegister.getThumbnail());
+        board.title = title;
+        board.content = content;
+        board.thumbnail = board.getThumbnailURL(thumbnail);
         board.hit = 0L;
         board.setUserAndCategory(user, category);
 
@@ -81,7 +81,7 @@ public class Board extends BaseTimeEntity {
     private void setUserAndCategory(User user, Category category) {
         this.user = user;
         this.category = category;
-        user.getBoards().add(this);
+        //user.getBoards().add(this);
     }
 
     public void edit(String title, String content, String thumbnail, Category category) {

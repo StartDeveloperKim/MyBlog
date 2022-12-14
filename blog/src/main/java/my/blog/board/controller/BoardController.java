@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.service.BoardService;
+import my.blog.boardTag.service.BoardTagService;
 import my.blog.tag.service.TagService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.service.LoginUser;
@@ -23,32 +24,31 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardTagService boardTagService;
     private final TagService tagService;
 
     @PostMapping
     public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
                                           @Valid @RequestBody BoardRegister boardRegister) {
 
-        log.info("Get Data : {}", boardRegister.toString());
-        Long boardId;
-
-        if (boardRegister.getTags().equals("")) {
-            boardId = boardService.writeBoard(boardRegister, user.getUserId());
-        } else {
-            List<String> tags = tagService.saveTags(boardRegister.getTags());
-            boardId = boardService.writeBoardWithTag(boardRegister, tags, user.getUserId());
+        List<String> tags = tagService.saveTags(boardRegister.getTags());
+        Long boardId = boardService.writeBoard(boardRegister, user.getUserId());
+        if (tags != null) {
+            boardTagService.saveBoardTags(tags, boardId);
         }
-
         return ResponseEntity.ok().body(boardId);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> boardUpdate(@PathVariable("id") Long boardId,
                                               @RequestBody BoardUpdate boardUpdate) {
-        log.info("edit Board {}, {}", boardId, boardUpdate.toString());
         try {
             List<String> tags = tagService.saveTags(boardUpdate.getTags());
             boardService.editBoard(boardUpdate, boardId, tags);
+            if (tags != null) {
+                boardTagService.editBoardTags(tags, boardId);
+            }
+
             return ResponseEntity.ok().body("success");
         } catch (EntityNotFoundException e) {
             log.info("/board/edit error : {}", e.getMessage());

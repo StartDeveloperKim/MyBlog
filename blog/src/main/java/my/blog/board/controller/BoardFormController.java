@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -46,20 +47,19 @@ public class BoardFormController {
     private final HeartService heartService;
     private final LayoutService layoutService;
 
-    private final int pagingSize = 6;
+    private final int PAGING_SIZE = 6;
 
-    @GetMapping(value={"/category/{parentCategoryName}/{page}",
-            "/category/{parentCategoryName}/{childCategoryName}/{page}"})
+    @GetMapping(value={"/category/{parentCategoryName}/{page}", "/category/{parentCategoryName}/{childCategoryName}/{page}"})
     public String boardListForm(@PathVariable(value = "parentCategoryName") String  parentCategoryName,
                                 @PathVariable(value = "childCategoryName", required = false) String childCategoryName,
                                 @PathVariable(value = "page") int page,
                                 @RequestParam(value = "step", required = false, defaultValue = "0") String step,
                                 @LoginUser SessionUser user,
                                 Model model) {
-        childCategoryName = childCategoryName == null ? "" : childCategoryName;
+        childCategoryName = (childCategoryName == null) ? "" : childCategoryName;
 
         Paging pagingInfo = Paging.of(page, boardLookupService.getBoardCountByCategory(parentCategoryName, childCategoryName));
-        List<BoardResponse> boards = boardLookupService.getBoardList(page, pagingSize, parentCategoryName, childCategoryName, step);
+        List<BoardResponse> boards = boardLookupService.getBoardList(page, PAGING_SIZE, parentCategoryName, childCategoryName, step);
 
         model.addAttribute("boardList", boards);
         model.addAttribute("pagingInfo", pagingInfo);
@@ -78,10 +78,9 @@ public class BoardFormController {
         log.info("searchInfo {}", query);
         // 페이징정보 클래스 생성필요 -> count 서비스계층 및 쿼리 수정 필요
         Paging pagingInfo = Paging.of(page, boardLookupService.getSearchBoardCount(query));
-        List<BoardResponse> boardSearchResult = boardLookupService.getBoardSearchResult(query, PageRequest.of(page-1, pagingSize));
+        List<BoardResponse> boardSearchResult = boardLookupService.getBoardSearchResult(query, PageRequest.of(page-1, PAGING_SIZE));
         model.addAttribute("boardList", boardSearchResult);
         model.addAttribute("pagingInfo", pagingInfo);
-        log.info("pagingInfo {}", pagingInfo.toString());
 
         layoutService.getLayoutInfo(model);
         
@@ -91,7 +90,13 @@ public class BoardFormController {
     @GetMapping("/{id}")
     public String boardDetailForm(@LoginUser SessionUser user, @PathVariable("id") Long id, Model model) {
         Board board = boardLookupService.getBoard(id);
-        BoardDetailResponse boardResponse = new BoardDetailResponse(board);
+        BoardDetailResponse boardResponse = BoardDetailResponse.builder()
+                .boardId(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .thumbnail(board.getThumbnail())
+                .createDate(board.getCreateDate().format(DateTimeFormatter.ISO_DATE))
+                .build();
 
         List<TagResponse> tagList = boardTagService.getTagList(id);
         Map<Long, CommentResponse> comments = commentsService.getComments(id);

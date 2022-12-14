@@ -24,4 +24,5 @@ public class BoardRegister {
 
     @NotBlank(message = "태그를 하나이상 입력해주세요")
     private String tags;
+
 }

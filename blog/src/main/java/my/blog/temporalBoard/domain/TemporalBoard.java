@@ -31,13 +31,13 @@ public class TemporalBoard extends BaseTimeEntity {
     protected TemporalBoard() {
     }
 
-    public static TemporalBoard newInstance(TemporalBoardReq temporalBoardReq) {
+    public static TemporalBoard newInstance(String title, String content, String thumbnail, String tags, Long categoryId) {
         TemporalBoard temporalBoard = new TemporalBoard();
-        temporalBoard.title = temporalBoardReq.getTitle();
-        temporalBoard.content = temporalBoardReq.getContent();
-        temporalBoard.thumbnail = temporalBoardReq.getThumbnail();
-        temporalBoard.tags = temporalBoardReq.getTags();
-        temporalBoard.categoryId = temporalBoardReq.getCategoryId();
+        temporalBoard.title = title;
+        temporalBoard.content = content;
+        temporalBoard.thumbnail = thumbnail;
+        temporalBoard.tags = tags;
+        temporalBoard.categoryId = categoryId;
         return temporalBoard;
     }
 

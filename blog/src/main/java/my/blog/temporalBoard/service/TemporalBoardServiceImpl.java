@@ -41,7 +41,9 @@ public class TemporalBoardServiceImpl implements TemporalBoardService{
 
     @Override
     public Long saveTemporalBoard(TemporalBoardReq temporalBoardReq) {
-        TemporalBoard temporalBoard = TemporalBoard.newInstance(temporalBoardReq);
+        TemporalBoard temporalBoard = TemporalBoard
+                .newInstance(temporalBoardReq.getTitle(), temporalBoardReq.getContent(),
+                        temporalBoardReq.getThumbnail(), temporalBoardReq.getTags(), temporalBoardReq.getCategoryId());
         return temporalBoardRepository.save(temporalBoard).getId();
     }
 

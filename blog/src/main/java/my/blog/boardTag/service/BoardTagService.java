@@ -10,5 +10,8 @@ public interface BoardTagService {
 
     List<BoardResponse> getTagBoardList(int page, int size, String tagName);
     List<TagResponse> getTagList(Long boardId);
+    void saveBoardTags(List<String> tags, Long boardId);
+
+    void editBoardTags(List<String> tags, Long boardId);
     Long getCountBoardByTagName(String tagName);
 }

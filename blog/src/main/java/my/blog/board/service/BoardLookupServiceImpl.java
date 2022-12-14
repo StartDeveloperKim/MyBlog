@@ -3,6 +3,7 @@ package my.blog.board.service;
 import lombok.RequiredArgsConstructor;
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
+import my.blog.board.dto.response.BoardDetailResponse;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.BoardUpdateResponse;
 import my.blog.boardTag.domain.BoardTag;

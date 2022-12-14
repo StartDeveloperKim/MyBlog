@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,9 +24,10 @@ public class TagServiceImpl implements TagService{
 
     @Override
     public List<String> saveTags(String tags) {
+        if (tags.equals("")) {
+            return null;
+        }
         List<String> tagList = ParsingTool.parsingTags(tags);
-        /*List<Tag> saveTags = getTagsExceptDuplicateTagAtDB(tagList);
-        tagRepository.saveAll(saveTags);*/
         Set<Tag> tagSet = getTagsExceptDuplicateTagAtMemory(tagList);
         tagRepository.saveAll(tagSet);
 
@@ -37,21 +39,16 @@ public class TagServiceImpl implements TagService{
         return tagRepository.findTagIdByTagName(tagName);
     }
 
-    private List<Tag> getTagsExceptDuplicateTagAtDB(List<String> tagList) {
-        List<Tag> saveTags = new ArrayList<>();
-        for (String tag : tagList) {
-            if (!tagRepository.existsByTagName(tag)) {
-                saveTags.add(Tag.newInstance(tag));
-            }
-        }
-        return saveTags;
-    }
 
     private Set<Tag> getTagsExceptDuplicateTagAtMemory(List<String> tags) {
-        return tags.stream()
-                .filter(InMemoryTagRepository::isDuplicateTag)
-                .map(Tag::newInstance)
-                .collect(Collectors.toSet());
+        Set<Tag> result = new HashSet<>();
+        for (String tag : tags) {
+            if (InMemoryTagRepository.isDuplicateTag(tag)) {
+                InMemoryTagRepository.addTag(tag);
+                result.add(Tag.newInstance(tag));
+            }
+        }
+        return result;
     }
 
     @PostConstruct
@@ -62,5 +59,6 @@ public class TagServiceImpl implements TagService{
                 .collect(Collectors.toSet());
         InMemoryTagRepository.addTags(collect);
     }
+
 
 }
