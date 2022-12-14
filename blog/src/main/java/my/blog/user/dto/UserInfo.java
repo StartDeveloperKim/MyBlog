@@ -5,9 +5,13 @@ import lombok.Getter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
-@AllArgsConstructor
 public class UserInfo {
 
-    private Long userId;
-    private String name;
+    private final Long userId;
+    private final String name;
+
+    public UserInfo(Long userId, String name) {
+        this.userId = userId;
+        this.name = name;
+    }
 }

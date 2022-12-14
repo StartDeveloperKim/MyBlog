@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ToString
 @Getter
 @NoArgsConstructor
-@ToString
 public class BoardResponse {
 
     private Long id;

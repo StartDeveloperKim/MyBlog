@@ -1,5 +1,7 @@
 package my.blog.category.dto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import my.blog.category.dto.response.CategoryInfoDto;
 import my.blog.category.dto.response.CategoryLayoutDto;
 
@@ -7,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HierarchicalCategory {
-
 
     public static Map<Long, CategoryLayoutDto> from(List<CategoryInfoDto> categoryDto) {
         Map<Long, CategoryLayoutDto> categoryResult = new HashMap<>();

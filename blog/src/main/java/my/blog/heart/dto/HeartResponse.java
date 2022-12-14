@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class HeartResponse {
 
     private Long heartCount;
+
+    public HeartResponse(Long heartCount) {
+        this.heartCount = heartCount;
+    }
 }

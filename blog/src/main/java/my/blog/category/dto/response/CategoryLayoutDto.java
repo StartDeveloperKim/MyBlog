@@ -10,7 +10,6 @@ import java.util.List;
 
 @ToString
 @Getter
-@Setter
 @NoArgsConstructor
 public class CategoryLayoutDto {
 

@@ -8,7 +8,6 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class HeartRequest {
 
     private Long userId;

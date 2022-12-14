@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChildCommentDto {
 
     private Long userId;

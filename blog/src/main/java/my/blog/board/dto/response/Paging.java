@@ -1,15 +1,13 @@
 package my.blog.board.dto.response;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.cache.annotation.Cacheable;
 
 @ToString
 @Getter
 @Setter
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Paging {
 
     private int startPage;

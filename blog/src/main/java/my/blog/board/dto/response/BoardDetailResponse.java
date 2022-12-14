@@ -20,7 +20,6 @@ public class BoardDetailResponse {
     private String content;
     private String createDate;
     private String thumbnail;
-    //댓글 및 태그 리스트도 필요한데 이는 프론트엔드를 완성하면 해보자
 
 
     public BoardDetailResponse(Board board) {
