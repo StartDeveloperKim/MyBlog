@@ -20,7 +20,7 @@ public class CommentResponse {
     private String userThumbnail;
     private String content;
     private String createDate;
-    private List<ChildCommentDto> childCommentDtos = new ArrayList<>();
+    private final List<ChildCommentDto> childCommentDtos = new ArrayList<>();
 
     public CommentResponse(Comments comments) {
         this.userId = comments.getUser().getId();

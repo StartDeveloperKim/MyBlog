@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,23 +110,19 @@ public class BoardLookupServiceImpl implements BoardLookupService{
 
     private List<Board> getBoardsByStep(String parentCategory, String childCategory, String step, PageRequest pageInfo) {
         try {
-            List<Board> findBoards = null;
             switch (step) {
                 case "0":
-                    findBoards = boardRepository.findByOrderByIdDesc(pageInfo).getContent();
-                    break;
+                    return boardRepository.findByOrderByIdDesc(pageInfo).getContent();
                 case "1": {
                     Category findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategory); // 부모카테고리 찾기
-                    findBoards = getBoardsByCategoryId(pageInfo, findCategory).getContent();
-                    break;
+                    return getBoardsByCategoryId(pageInfo, findCategory).getContent();
                 }
                 case "2": {
                     Category findCategory = categoryRepository.findByNameAndParentName(parentCategory, childCategory);
-                    findBoards = getBoardsByCategoryId(pageInfo, findCategory).getContent();
-                    break;
+                    return getBoardsByCategoryId(pageInfo, findCategory).getContent();
                 }
             }
-            return findBoards;
+            return new ArrayList<Board>();
         } catch (Exception e) {
             throw new EntityNotFoundException("게시글이 없습니다.");
         }

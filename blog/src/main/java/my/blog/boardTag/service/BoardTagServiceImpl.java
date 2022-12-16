@@ -9,6 +9,7 @@ import my.blog.boardTag.domain.BoardTag;
 import my.blog.boardTag.domain.BoardTagRepository;
 import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
+import my.blog.tag.dto.TagCountResponse;
 import my.blog.tag.dto.TagResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -32,10 +33,9 @@ public class BoardTagServiceImpl implements BoardTagService {
     @Override
     public List<BoardResponse> getTagBoardList(int page, int size, String tagName) {
         List<BoardTag> findBoardTags = boardTagRepository.findBoardTagByTagTagName(PageRequest.of(page-1, size), tagName);
-        List<Board> boards = findBoardEntitiesById(findBoardTags);
 
-        return boards.stream()
-                .map(BoardResponse::new)
+        return findBoardTags.stream()
+                .map(boardTag -> new BoardResponse(boardTag.getBoard()))
                 .collect(Collectors.toList());
     }
 
@@ -44,6 +44,12 @@ public class BoardTagServiceImpl implements BoardTagService {
         return boardTagRepository.findBoardTagsByBoardId(boardId)
                 .stream().map(boardTag -> new TagResponse(boardTag.getTag().getTagName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TagCountResponse> getPopularityTag() {
+        Long LIMIT = 20L;
+        return boardTagRepository.findTagCountDtoOrderByCount(LIMIT);
     }
 
     @Override
@@ -74,8 +80,9 @@ public class BoardTagServiceImpl implements BoardTagService {
     private List<Board> findBoardEntitiesById(List<BoardTag> findBoardTags) {
         List<Board> boards = new ArrayList<>();
         for (BoardTag findBoardTag : findBoardTags) {
-            boards.add(boardRepository.findByIdForBoardTag(findBoardTag.getBoard().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("엔티티가 없습니다.")));
+            /*boards.add(boardRepository.findByIdForBoardTag(findBoardTag.getBoard().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("엔티티가 없습니다.")));*/
+            boards.add(findBoardTag.getBoard());
         }
         return boards;
     }

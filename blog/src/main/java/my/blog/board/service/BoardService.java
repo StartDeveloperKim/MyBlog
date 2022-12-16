@@ -9,7 +9,7 @@ public interface BoardService {
 
     Long writeBoard(BoardRegister boardRegister, Long userId);
 
-    void editBoard(BoardUpdate boardUpdate, Long boardId, List<String> tags);
+    void editBoard(BoardUpdate boardUpdate, Long boardId);
 
     void deleteBoard(Long boardId);
 

@@ -27,13 +27,18 @@ public class BoardController {
     private final BoardTagService boardTagService;
     private final TagService tagService;
 
+    // 어쨌든 게시글을 저장하기 위한 엔티티 들이다(Tag, BoardTag)
+    // 그런데 BoardService 메서드로 묶어버리기에는 복잡성이 올라간다.
+    // 하지만 따로 처리하자니 트랜잭션이 각각 처리된다.(하나 작업 실패했을 때 그 위에서 했던 작업이 rollback 되지 않음)
+    // 음... 하나의 클래스로 묶자니 그냥 계층+1 느낌이다.
+    // 해답이 뭘까???
     @PostMapping
     public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
                                           @Valid @RequestBody BoardRegister boardRegister) {
 
-        List<String> tags = tagService.saveTags(boardRegister.getTags());
         Long boardId = boardService.writeBoard(boardRegister, user.getUserId());
-        if (tags != null) {
+        List<String> tags = tagService.saveTags(boardRegister.getTags());
+        if (tags.size() != 0) {
             boardTagService.saveBoardTags(tags, boardId);
         }
         return ResponseEntity.ok().body(boardId);
@@ -43,12 +48,11 @@ public class BoardController {
     public ResponseEntity<String> boardUpdate(@PathVariable("id") Long boardId,
                                               @RequestBody BoardUpdate boardUpdate) {
         try {
+            boardService.editBoard(boardUpdate, boardId);
             List<String> tags = tagService.saveTags(boardUpdate.getTags());
-            boardService.editBoard(boardUpdate, boardId, tags);
-            if (tags != null) {
+            if (tags.size() != 0) {
                 boardTagService.editBoardTags(tags, boardId);
             }
-
             return ResponseEntity.ok().body("success");
         } catch (EntityNotFoundException e) {
             log.info("/board/edit error : {}", e.getMessage());

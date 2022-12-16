@@ -1,4 +1,4 @@
-package my.blog;
+package my.blog.basic;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
+import my.blog.web.layout.LayoutService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,17 +23,12 @@ import java.util.Map;
 public class HomeController {
 
     private final BoardLookupService boardLookupService;
-    private final CategoryService categoryService;
+    private final LayoutService layoutService;
 
     @GetMapping("/")
     public String homeForm(@LoginUser SessionUser user, Model model) {
-        List<BoardResponse> boardList = boardLookupService.getBoardListRecent();
-        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
-        Long boardCount = boardLookupService.getBoardCount();
-
-        model.addAttribute("boardList", boardList);
-        model.addAttribute("categoryList", categoryList);
-        model.addAttribute("boardCount", boardCount);
+        layoutService.getLayoutInfo(model);
+        model.addAttribute("boardList", boardLookupService.getBoardListRecent());
 
         if (user != null) {
             model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));

@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService{
 
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
-    public void editBoard(BoardUpdate boardUpdate, Long boardId, List<String> tags) {
+    public void editBoard(BoardUpdate boardUpdate, Long boardId) {
         Board board = getBoardEntity(boardId);
         Category category = getCategoryEntity(boardUpdate.getCategoryId());
 

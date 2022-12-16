@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BoardTagRepository extends JpaRepository<BoardTag, Long> {
+public interface BoardTagRepository extends JpaRepository<BoardTag, Long>, CustomBoardTagRepository {
 
     @Query("select b from BoardTag b " +
             "join b.tag " +

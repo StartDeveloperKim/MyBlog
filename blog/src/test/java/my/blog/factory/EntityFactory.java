@@ -1,4 +1,4 @@
-package my.blog.testFactory;
+package my.blog.factory;
 
 import my.blog.board.domain.Board;
 import my.blog.boardTag.domain.BoardTag;
@@ -19,9 +19,8 @@ public class EntityFactory {
     }
 
     public static Board newBoardInstance(User user, Category category) {
-        return Board.newInstance(user, category, getRandomUUIDString(), getRandomUUIDString(), getRandomUUIDString());
+        return Board.newInstance(user, category, getRandomUUIDString(), getRandomUUIDString(), null);
     }
-
     public static Category newCategoryInstance(Long parentCategoryId) {
         return Category.newInstance("category", parentCategoryId);
     }

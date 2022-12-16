@@ -25,7 +25,7 @@ public class TagServiceImpl implements TagService{
     @Override
     public List<String> saveTags(String tags) {
         if (tags.equals("")) {
-            return null;
+            return new ArrayList<>();
         }
         List<String> tagList = ParsingTool.parsingTags(tags);
         Set<Tag> tagSet = getTagsExceptDuplicateTagAtMemory(tagList);
