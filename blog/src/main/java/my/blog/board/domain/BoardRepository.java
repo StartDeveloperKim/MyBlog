@@ -11,15 +11,12 @@ import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long>, CustomBoardRepository {
 
-    @Query("select b from Board b join fetch b.boardTags bt join fetch bt.tag where b.id=:id")
-    Optional<Board> findByIdForBoardTag(@Param("id") Long boardId);
-
     @Query("select b from Board b order by b.id desc")
-    Slice<Board> findByOrderByIdDesc(Pageable pageable);
+    List<Board> findBoardsOrderByIdDesc(Pageable pageable);
 
     @Query("select b from Board b " +
             "where b.category.id=:id or b.category.parentCategoryId=:id order by b.id desc ")
-    Slice<Board> findByCategoryId(@Param("id") Long categoryId, Pageable pageable);
+    List<Board> findByCategoryId(@Param("id") Long categoryId, Pageable pageable);
 
     @Query("select count(b) from Board b where b.category.id = :categoryId")
     Long getBoardCountByCategory(@Param("categoryId") Long categoryId);

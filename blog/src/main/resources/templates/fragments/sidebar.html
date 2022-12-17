@@ -71,7 +71,7 @@
             <div class="mb-1 mx-4">
                 <h6>태그</h6>
                 <div class="container">
-                    <a class="fs-6 fw-bold" th:each="tag : ${sideBarTagList}" th:text="|${tag.name}(${tag.count}), |" th:href="@{/board/tag(tagName=${tag.name})}">
+                    <a class="fs-6 fw-bold" th:each="tag : ${sideBarTagList}" th:text="'#'+${tag.name}+|(${tag.count}), |" th:href="@{/board/tag(tagName=${tag.name})}">
                     </a>
                 </div>
             </div>

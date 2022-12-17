@@ -6,9 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
-
-    Tag findByTagName(String tagName);
+public interface TagRepository extends JpaRepository<Tag, Long>, CustomTagRepository {
 
     @Query("select t.id from Tag t where t.tagName=:tagName")
     Long findTagIdByTagName(@Param("tagName") String tagName);

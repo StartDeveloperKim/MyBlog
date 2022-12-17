@@ -10,8 +10,6 @@ import java.io.IOException;
 @Service
 public class FileStore {
 
-    /*2022-10-27 현재 로컬 저장결로로 설정했다. 나중에 다른 방법이 없는가 찾아보자*/
-    /*2022-10-27 깃허브를 원격저장소로 사용한다.*/
     private final GitHubImgUploadService gitHubImgUploadService;
 
     public String storeFile(MultipartFile multipartFile, ImageType imageType) throws IOException {

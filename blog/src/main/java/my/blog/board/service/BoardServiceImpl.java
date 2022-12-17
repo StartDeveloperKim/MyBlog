@@ -13,6 +13,7 @@ import my.blog.category.domain.CategoryRepository;
 import my.blog.tag.domain.InMemoryTagRepository;
 import my.blog.tag.domain.Tag;
 import my.blog.tag.domain.TagRepository;
+import my.blog.user.domain.Role;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
 import org.springframework.cache.annotation.CacheEvict;
@@ -42,7 +43,7 @@ public class BoardServiceImpl implements BoardService{
         Category category = getCategoryEntity(boardRegister.getCategoryId());
 
         Board board = Board.newInstance(user, category, boardRegister.getTitle(), boardRegister.getContent(), boardRegister.getThumbnail());
-        Board saveBoard = boardRepository.save(board); // 게시글 저장
+        Board saveBoard = boardRepository.save(board);
 
         return saveBoard.getId();
     }
@@ -68,8 +69,12 @@ public class BoardServiceImpl implements BoardService{
     }
 
     private User getUserEntity(Long userId) {
-        return userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
+        if (user.getRole() == Role.GUEST) {
+            throw new RuntimeException("GUEST는 글을 작성할 수 없습니다.");
+        }
+        return user;
     }
 
     private Category getCategoryEntity(Long categoryId) {

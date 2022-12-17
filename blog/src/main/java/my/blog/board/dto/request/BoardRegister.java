@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class BoardRegister {

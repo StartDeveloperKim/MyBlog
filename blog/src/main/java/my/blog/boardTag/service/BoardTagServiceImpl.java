@@ -57,11 +57,12 @@ public class BoardTagServiceImpl implements BoardTagService {
     public void saveBoardTags(List<String> tags, Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
-        List<BoardTag> boardTags = new ArrayList<>();
-        for (String tag : tags) {
-            Tag findTag = tagRepository.findByTagName(tag); // SQL의 IN 연산자로 어떻게 할 수 있지 않을까?
-            boardTags.add(BoardTag.newInstance(board, findTag));
-        }
+        List<Tag> findTags = tagRepository.findTags(tags);
+
+        List<BoardTag> boardTags = findTags.stream()
+                .map(tag -> BoardTag.newInstance(board, tag))
+                .collect(Collectors.toList());
+
         boardTagRepository.saveAll(boardTags);
     }
 
@@ -77,13 +78,4 @@ public class BoardTagServiceImpl implements BoardTagService {
         return boardTagRepository.countBoardTagByTagName(tagName);
     }
 
-    private List<Board> findBoardEntitiesById(List<BoardTag> findBoardTags) {
-        List<Board> boards = new ArrayList<>();
-        for (BoardTag findBoardTag : findBoardTags) {
-            /*boards.add(boardRepository.findByIdForBoardTag(findBoardTag.getBoard().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("엔티티가 없습니다.")));*/
-            boards.add(findBoardTag.getBoard());
-        }
-        return boards;
-    }
 }

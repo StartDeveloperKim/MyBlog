@@ -56,8 +56,6 @@ public class BoardFormController {
                                 @RequestParam(value = "step", required = false, defaultValue = "0") String step,
                                 @LoginUser SessionUser user,
                                 Model model) {
-        childCategoryName = (childCategoryName == null) ? "" : childCategoryName;
-
         Paging pagingInfo = Paging.of(page, boardLookupService.getBoardCountByCategory(parentCategoryName, childCategoryName));
         List<BoardResponse> boards = boardLookupService.getBoardList(page, PAGING_SIZE, parentCategoryName, childCategoryName, step);
 

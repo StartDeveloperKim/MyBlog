@@ -3,7 +3,6 @@ package my.blog.board.service;
 import lombok.RequiredArgsConstructor;
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
-import my.blog.board.dto.response.BoardDetailResponse;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.BoardUpdateResponse;
 import my.blog.boardTag.domain.BoardTag;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -99,27 +97,25 @@ public class BoardLookupServiceImpl implements BoardLookupService{
     }
 
     private Long getCategoryId(String parentCategoryName, String childCategoryName) {
-        Category findCategory;
-        if (childCategoryName.equals("")) {
-            findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategoryName);
+        if (hasText(childCategoryName)) {
+            return categoryRepository.findByNameAndParentName(parentCategoryName, childCategoryName).getId();
         } else {
-            findCategory = categoryRepository.findByNameAndParentName(parentCategoryName, childCategoryName);
+            return categoryRepository.findByNameAndParentIdIsNull(parentCategoryName).getId();
         }
-        return findCategory.getId();
     }
 
     private List<Board> getBoardsByStep(String parentCategory, String childCategory, String step, PageRequest pageInfo) {
         try {
             switch (step) {
                 case "0":
-                    return boardRepository.findByOrderByIdDesc(pageInfo).getContent();
+                    return boardRepository.findBoardsOrderByIdDesc(pageInfo);
                 case "1": {
                     Category findCategory = categoryRepository.findByNameAndParentIdIsNull(parentCategory); // 부모카테고리 찾기
-                    return getBoardsByCategoryId(pageInfo, findCategory).getContent();
+                    return getBoardsByCategoryId(pageInfo, findCategory);
                 }
                 case "2": {
                     Category findCategory = categoryRepository.findByNameAndParentName(parentCategory, childCategory);
-                    return getBoardsByCategoryId(pageInfo, findCategory).getContent();
+                    return getBoardsByCategoryId(pageInfo, findCategory);
                 }
             }
             return new ArrayList<Board>();
@@ -128,7 +124,7 @@ public class BoardLookupServiceImpl implements BoardLookupService{
         }
     }
 
-    private Slice<Board> getBoardsByCategoryId(PageRequest pageInfo, Category findCategory) {
+    private List<Board> getBoardsByCategoryId(PageRequest pageInfo, Category findCategory) {
         return boardRepository.findByCategoryId(findCategory.getId(), pageInfo);
     }
 }
