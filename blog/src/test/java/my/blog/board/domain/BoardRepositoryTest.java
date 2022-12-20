@@ -2,6 +2,7 @@ package my.blog.board.domain;
 
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
+import my.blog.factory.EntityFactory;
 import my.blog.user.domain.Role;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
@@ -14,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
-import static my.blog.factory.MockEntityFactory.*;
+import static my.blog.factory.EntityFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -33,25 +34,19 @@ public class BoardRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(User.newInstance(
-                OAuthRequest.builder()
-                        .name("김게스트")
-                        .nameAttributeKey("google")
-                        .attributes(null)
-                        .email("email")
-                        .picture("picture").build()));
-        category = categoryRepository.save(Category.newInstance("부모카테고리", null));
+        user = userRepository.save(newUserInstance(1L, Role.ADMIN));
+        category = categoryRepository.save(newCategoryInstance("카테고리", 1L, null));
     }
 
     @Test
     void 최신_6개의_글을_불러온다() {
         //given
-        Board savedBoard1 = boardRepository.save(Board.newInstance(user, category, "테스트1", "태스트글1", null));
-        Board savedBoard2 = boardRepository.save(Board.newInstance(user, category, "테스트2", "태스트글2", null));
-        Board savedBoard3 = boardRepository.save(Board.newInstance(user, category, "테스트3", "태스트글3", null));
-        Board savedBoard4 = boardRepository.save(Board.newInstance(user, category, "테스트4", "태스트글4", null));
-        Board savedBoard5 = boardRepository.save(Board.newInstance(user, category, "테스트5", "태스트글5", null));
-        Board savedBoard6 = boardRepository.save(Board.newInstance(user, category, "테스트6", "태스트글6", null));
+        Board savedBoard1 = boardRepository.save(newBoardInstance(user, category, null));
+        Board savedBoard2 = boardRepository.save(newBoardInstance(user, category, null));
+        Board savedBoard3 = boardRepository.save(newBoardInstance(user, category, null));
+        Board savedBoard4 = boardRepository.save(newBoardInstance(user, category, null));
+        Board savedBoard5 = boardRepository.save(newBoardInstance(user, category, null));
+        Board savedBoard6 = boardRepository.save(newBoardInstance(user, category, null));
 
         //when
         List<Board> boards = boardRepository.findTop6ByOrderByCreateDateDesc();
@@ -67,7 +62,7 @@ public class BoardRepositoryTest {
     @Test
     void 카테고리ID로_게시글_개수_조회하기() {
         //given
-        boardRepository.save(Board.newInstance(user, category, "테스트1", "태스트글1", null));
+        boardRepository.save(newBoardInstance(user, category, null));
         //when
         Long count = boardRepository.getBoardCountByCategoryId(category.getId());
         //then

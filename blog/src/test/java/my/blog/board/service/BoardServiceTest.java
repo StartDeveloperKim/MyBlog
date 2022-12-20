@@ -5,24 +5,24 @@ import my.blog.board.domain.BoardRepository;
 import my.blog.board.dto.request.BoardRegister;
 import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
-import my.blog.factory.mockEntity.MockBoard;
-import my.blog.factory.mockEntity.MockCategory;
-import my.blog.factory.mockEntity.MockUser;
+import my.blog.factory.EntityFactory;
 import my.blog.user.domain.Role;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static my.blog.factory.EntityFactory.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,12 +46,9 @@ public class BoardServiceTest {
     @Test
     void write_Board_RoleADMIN() {
         //given
-        User user = new MockUser(ADMIN_ID, "김어드민", Role.ADMIN);
-        Category category = new MockCategory(CATEGORY_ID, "부모카테고리", null);
-        Board board = MockBoard.builder()
-                .id(BOARD_ID)
-                .title("테스트")
-                .content("테스트클").build();
+        User user = newUserInstance(ADMIN_ID, Role.ADMIN);
+        Category category = newCategoryInstance("카테고리", CATEGORY_ID, null);
+        Board board = newBoardInstance(user, category, BOARD_ID);
 
         when(userRepository.findById(ADMIN_ID)).thenReturn(Optional.of(user));
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(Optional.of(category));
@@ -69,7 +66,7 @@ public class BoardServiceTest {
     @Test
     void write_BoardByGuest_throw_RuntimeException() {
         //given
-        User user = new MockUser(GUEST_ID, "김게스트", Role.GUEST);
+        User user = newUserInstance(GUEST_ID, Role.GUEST);
         when(userRepository.findById(GUEST_ID)).thenReturn(Optional.of(user));
 
         //when, then
