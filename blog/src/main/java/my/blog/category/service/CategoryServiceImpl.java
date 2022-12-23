@@ -30,8 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Long saveCategory(CategoryAddDto categoryAddDto) {
         //카테고리는 중복되면 안된다.
-        boolean existCategory = checkDuplicateCategoryName(categoryAddDto);
-        if (existCategory) {
+        if (checkDuplicateCategoryName(categoryAddDto)) {
             throw new DuplicateCategoryException("사용중인 카테고리 이름입니다.");
         }
         Category category = Category.newInstance(categoryAddDto.getCategoryName(), categoryAddDto.getParentCategoryId()); // 생성메서드
@@ -73,14 +72,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private boolean checkDuplicateCategoryName(CategoryAddDto categoryAddDto) {
-        boolean existCategory;
         if (categoryAddDto.getParentCategoryId() == null) {
-            existCategory = categoryRepository.existsByCategoryName(categoryAddDto.getCategoryName());
+            return categoryRepository.existsByCategoryName(categoryAddDto.getCategoryName());
         } else {
-            existCategory = categoryRepository.existByNameAndParentId(categoryAddDto.getParentCategoryId(),
+            return categoryRepository.existByNameAndParentId(categoryAddDto.getParentCategoryId(),
                     categoryAddDto.getCategoryName());
         }
-        return existCategory;
     }
 
     /*더미 카테고리 생성 -> 글을 작성할 때 카테고리 설정을 하지 않으면 해당 카테고리에 들어간다.*/

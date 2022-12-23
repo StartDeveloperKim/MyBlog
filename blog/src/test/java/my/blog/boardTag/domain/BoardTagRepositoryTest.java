@@ -1,4 +1,4 @@
-package my.blog.boardTag;
+package my.blog.boardTag.domain;
 
 import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;

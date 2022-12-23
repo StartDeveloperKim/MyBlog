@@ -8,8 +8,14 @@ plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
+	//id 'jacoco'
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
+
+/*jacoco {
+	toolVersion = '0.8.5'
+	reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}*/
 
 group = 'my'
 version = '0.0.1-SNAPSHOT'
@@ -52,6 +58,40 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok' // 테스트 의존성 추가
 	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트 의존성 추가
 }
+
+/*jacocoTestReport {
+	reports {
+		xml.enabled = false
+		csv.enabled = false
+		html.enabled = true
+	}
+}
+test {
+	// finalizedBy : 이(test) 작업에 대해 주어진 종료자 작업을 추가
+	finalizedBy jacocoTestReport // test 작업이 끝나고 jacocoTestReport를 실행
+	useJUnitPlatform()
+}
+jacocoTestReport {
+	// dependsOn : 이 작업에 지정된 종속성을 추가
+	dependsOn test // jacocoTestReport 에 test라는 종속성을 추가
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true;
+			element = 'CLASS'
+
+			limit {
+				counter = 'METHOD'
+				value = 'COVEREDRATIO'
+				minimum = 0.1
+			}
+		}
+
+	}
+}*/
 
 tasks.named('test') {
 	useJUnitPlatform()
