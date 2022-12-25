@@ -44,7 +44,7 @@ public class CategoryController {
         log.info("CategoryAddDto {}", categoryAddDto.toString());
 
         try {
-            Long categoryId = categoryService.saveCategory(categoryAddDto);
+            Long categoryId = categoryService.saveCategory(categoryAddDto.toEntity());
             return new CategoryResponseDto(categoryId, "success");
         } catch (DuplicateCategoryException e) {
             log.info("Category Duplicate Exception : {}", e.getMessage());

@@ -28,15 +28,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
-    public Long saveCategory(CategoryAddDto categoryAddDto) {
+    public Long saveCategory(final Category category) {
         //카테고리는 중복되면 안된다.
-        if (checkDuplicateCategoryName(categoryAddDto)) {
+        if (checkDuplicateCategoryName(category)) {
             throw new DuplicateCategoryException("사용중인 카테고리 이름입니다.");
         }
-        Category category = Category.newInstance(categoryAddDto.getCategoryName(), categoryAddDto.getParentCategoryId()); // 생성메서드
-        Category saveCategory = categoryRepository.save(category);
 
-        return saveCategory.getId();
+        return categoryRepository.save(category).getId();
     }
 
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
@@ -71,12 +69,12 @@ public class CategoryServiceImpl implements CategoryService {
         return HierarchicalCategory.from(categoryDto);
     }
 
-    private boolean checkDuplicateCategoryName(CategoryAddDto categoryAddDto) {
-        if (categoryAddDto.getParentCategoryId() == null) {
-            return categoryRepository.existsByCategoryName(categoryAddDto.getCategoryName());
+    private boolean checkDuplicateCategoryName(Category category) {
+        if (category.getParentCategoryId() == null) {
+            return categoryRepository.existsByCategoryName(category.getCategoryName());
         } else {
-            return categoryRepository.existByNameAndParentId(categoryAddDto.getParentCategoryId(),
-                    categoryAddDto.getCategoryName());
+            return categoryRepository.existByNameAndParentId(category.getParentCategoryId(),
+                    category.getCategoryName());
         }
     }
 
