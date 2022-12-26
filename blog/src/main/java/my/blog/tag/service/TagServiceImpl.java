@@ -34,11 +34,6 @@ public class TagServiceImpl implements TagService{
         return tagList;
     }
 
-    @Override
-    public Long findTagIdByTagName(String tagName) {
-        return tagRepository.findTagIdByTagName(tagName);
-    }
-
 
     private Set<Tag> getTagsExceptDuplicateTagAtMemory(List<String> tags) {
         Set<Tag> result = new HashSet<>();

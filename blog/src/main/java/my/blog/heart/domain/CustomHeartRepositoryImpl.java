@@ -24,6 +24,6 @@ public class CustomHeartRepositoryImpl implements CustomHeartRepository{
                 .where(heart.board.id.eq(boardId).and(heart.user.id.eq(userId)))
                 .fetchOne();
 
-        return fetchOne != null; // 해당되는 좋아요가 있다면 true 반환ㄴ
+        return fetchOne != null; // 해당되는 좋아요가 있다면 true 반환
     }
 }

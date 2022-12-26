@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ParsingTool {
     private static final Gson gson;
@@ -15,10 +16,9 @@ public class ParsingTool {
 
     public static List<String> parsingTags(String tags) {
         List<Map<String, String>> parsingTags = gson.fromJson(tags, ArrayList.class);
-        List<String> tagList = new ArrayList<>();
-        for (Map<String, String> tag : parsingTags) {
-            tagList.add(tag.get("value"));
-        }
-        return tagList;
+
+        return parsingTags.stream()
+                .map(tag -> tag.get("value"))
+                .collect(Collectors.toList());
     }
 }

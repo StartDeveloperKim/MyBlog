@@ -79,7 +79,9 @@ public class EntityFactory {
     }
 
     private static void setId(Long id, Object object) {
-        ReflectionTestUtils.setField(object, "id", id);
+        if (id != null) {
+            ReflectionTestUtils.setField(object, "id", id);
+        }
     }
 
 
