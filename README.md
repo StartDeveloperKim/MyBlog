@@ -89,5 +89,6 @@ tags=[{"value":"테스트"},{"value":"프로젝트"}]
 
 ### 소셜 로그인(OAuth2)
 > 로그인은 OAuth2를 활용했고 스프링 시큐리티를 통해 권한별 접근 페이지를 달리했습니다.
+> 네이버, 구글 로그인을 지원합니다.
 
 <img src="https://user-images.githubusercontent.com/97887047/203299827-c3ed3d65-2924-4f79-a135-018e81ab3e77.png" width="400" height="350">
