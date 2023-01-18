@@ -6,6 +6,7 @@ import my.blog.category.domain.Category;
 import my.blog.category.domain.CategoryRepository;
 import my.blog.category.dto.*;
 import my.blog.category.dto.request.CategoryAddDto;
+import my.blog.category.dto.response.CategoryEditDto;
 import my.blog.category.dto.response.CategoryInfoDto;
 import my.blog.category.dto.response.CategoryLayoutDto;
 import my.blog.category.exception.DuplicateCategoryException;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -35,6 +37,14 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         return categoryRepository.save(category).getId();
+    }
+
+    @Override
+    public List<CategoryEditDto> getAllCategory() {
+        List<Category> all = categoryRepository.findAll();
+        return all.stream()
+                .map(category -> new CategoryEditDto(category.getId(), category.getCategoryName()))
+                .collect(Collectors.toList());
     }
 
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)

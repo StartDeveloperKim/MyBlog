@@ -18,20 +18,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class TagServiceImpl implements TagService{
+public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
 
     @Override
-    public List<String> saveTags(String tags) {
-        if (tags.equals("")) {
+    public List<String> saveTags(List<String> tags) {
+        if (tags.size() == 0) {
             return new ArrayList<>();
         }
-        List<String> tagList = ParsingTool.parsingTags(tags);
-        Set<Tag> tagSet = getTagsExceptDuplicateTagAtMemory(tagList);
+        //List<String> tagList = ParsingTool.parsingTags(tags);
+        Set<Tag> tagSet = getTagsExceptDuplicateTagAtMemory(tags);
         tagRepository.saveAll(tagSet);
 
-        return tagList;
+        return tags;
     }
 
 

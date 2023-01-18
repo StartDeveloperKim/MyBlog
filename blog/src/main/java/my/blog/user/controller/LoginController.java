@@ -11,17 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
-@RequiredArgsConstructor
 @Controller
 public class LoginController {
 
-    private final CategoryService categoryService;
-    private final LayoutService layoutService;
-
     @GetMapping("/login")
     public String loginForm(@LoginUser SessionUser user, Model model) {
-        layoutService.getLayoutInfo(model);
-
         if (user != null) {
             model.addAttribute("userInfo", user.getName());
         }

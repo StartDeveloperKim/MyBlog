@@ -39,3 +39,4 @@ out/
 application.properties
 application-oauth.properties
 application-github.properties
+application-jwt.properties

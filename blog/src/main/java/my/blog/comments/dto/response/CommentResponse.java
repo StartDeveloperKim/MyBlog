@@ -29,6 +29,6 @@ public class CommentResponse {
         this.userThumbnail = comments.getUser().getPicture();
         this.parentId = comments.getId();
         this.content = comments.getContent();
-        this.createDate = comments.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.createDate = comments.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

@@ -2,6 +2,8 @@ package my.blog.board.dto.request;
 
 import lombok.*;
 
+import java.util.List;
+
 @ToString
 @Getter
 @Setter
@@ -12,5 +14,5 @@ public class BoardUpdate {
     private String content;
     private String thumbnail;
     private Long categoryId;
-    private String tags;
+    private List<String> tags;
 }

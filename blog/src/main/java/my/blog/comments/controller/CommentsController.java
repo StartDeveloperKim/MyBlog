@@ -25,10 +25,8 @@ public class CommentsController {
 
     private final CommentsService commentsService;
 
-    /*댓글 레이아웃에 필요한 정보들이 반복되고 있다 이를 리팩토링하자.*/
     @GetMapping("/{boardId}")
     public ResponseEntity<Map<String, Object>> getComments(@LoginUser SessionUser user, @PathVariable("boardId") Long boardId) {
-
         Map<String, Object> commentLayoutResult = getCommentLayout(boardId, user);
         return ResponseEntity.ok().body(commentLayoutResult);
     }
@@ -64,13 +62,8 @@ public class CommentsController {
 
     private Map<String, Object> getCommentLayout(Long boardId, SessionUser user) {
         Map<String, Object> layoutResponse = new HashMap<>();
-
-        Map<Long, CommentResponse> comments = commentsService.getComments(boardId);
-        int totalComment = commentsService.getTotalComment(boardId);
-
-        layoutResponse.put("comments", comments);
-        layoutResponse.put("total", totalComment);
-        layoutResponse.put("userInfo", new UserInfo(user.getUserId(), user.getName()));
+        layoutResponse.put("comments", commentsService.getComments(boardId));
+        layoutResponse.put("total", commentsService.getTotalComment(boardId));
 
         return layoutResponse;
     }

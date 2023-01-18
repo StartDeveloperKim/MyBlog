@@ -23,7 +23,6 @@ public class BoardRegister {
 
     private String thumbnail;
 
-    @NotBlank(message = "태그를 하나이상 입력해주세요")
-    private String tags;
+    private List<String> tags;
 
 }

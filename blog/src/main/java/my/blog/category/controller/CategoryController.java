@@ -12,6 +12,7 @@ import my.blog.category.service.CategoryService;
 import my.blog.user.dto.SessionUser;
 import my.blog.user.dto.UserInfo;
 import my.blog.user.service.LoginUser;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,26 +21,18 @@ import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     @GetMapping
-    public String categoryEditForm(@LoginUser SessionUser user, Model model) {
-        Map<Long, CategoryLayoutDto> categoryList = categoryService.getCategoryList();
-        model.addAttribute("categoryList", categoryList);
-
-        if (user != null) {
-            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
-        }
-
-        return "category/categoryEditForm";
+    public ResponseEntity<Map<Long, CategoryLayoutDto>> getCategories(@LoginUser SessionUser user) {
+        return ResponseEntity.ok(categoryService.getCategoryList());
     }
 
     @PostMapping
-    @ResponseBody
     public CategoryResponseDto categoryAdd(@RequestBody CategoryAddDto categoryAddDto) {
         log.info("CategoryAddDto {}", categoryAddDto.toString());
 
@@ -54,7 +47,6 @@ public class CategoryController {
     }
 
     @DeleteMapping
-    @ResponseBody
     public String categoryRemove(@RequestBody CategoryRemoveDto removeDto) {
         try {
             log.info("삭제요청 {}", removeDto.getCategoryId());

@@ -35,7 +35,6 @@ public class BoardController {
     @PostMapping
     public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
                                           @Valid @RequestBody BoardRegister boardRegister) {
-
         Long boardId = boardService.writeBoard(boardRegister, user.getUserId());
         List<String> tags = tagService.saveTags(boardRegister.getTags());
         if (tags.size() != 0) {

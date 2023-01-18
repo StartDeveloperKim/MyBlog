@@ -20,7 +20,7 @@ public class BoardResponse {
     private String thumbnail;
     private String createDate;
     private Long hit;
-    private List<TagResponse> tags;
+//    private List<TagResponse> tags;
 
     public BoardResponse(Board board) {
         this.id = board.getId();
@@ -28,9 +28,9 @@ public class BoardResponse {
         this.thumbnail = board.getThumbnail();
         this.createDate = board.getCreateDate().format(DateTimeFormatter.ISO_DATE);
         this.hit = board.getHit();
-        this.tags = board.getBoardTags().stream()
-                .map(b->new TagResponse(b.getTag().getTagName()))
-                .collect(Collectors.toList());
+//        this.tags = board.getBoardTags().stream()
+//                .map(b->new TagResponse(b.getTag().getTagName()))
+//                .collect(Collectors.toList());
     }
 
 }

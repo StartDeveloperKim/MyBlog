@@ -30,7 +30,7 @@ public class User extends BaseTimeEntity {
     @Column
     private String picture;
 
-    @Enumerated(EnumType.STRING) // String으로 저장
+    @Enumerated(EnumType.STRING) // String 으로 저장
     @Column(nullable = false)
     private Role role;
 
