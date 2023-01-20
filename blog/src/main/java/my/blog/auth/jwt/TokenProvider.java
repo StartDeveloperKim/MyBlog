@@ -6,7 +6,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.auth.oauth.ApplicationOAuth2User;
+import my.blog.user.domain.Role;
 import my.blog.user.domain.User;
+import my.blog.user.dto.RecognizeUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.Authentication;
@@ -51,14 +53,19 @@ public class TokenProvider {
                 .setSubject(userPrincipal.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
+                .claim("Role", userPrincipal.getRole())
                 .compact();
     }
 
-    public String validateAndGetUserId(String token) {
+    public RecognizeUser validateAndGetUserId(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getSubject();
+
+        return RecognizeUser.builder()
+                .email(claims.getSubject())
+                .role((String) claims.get("Role"))
+                .build();
     }
 }

@@ -23,19 +23,18 @@ public class HeartServiceImpl implements HeartService {
     private final BoardRepository boardRepository;
 
     @Override
-    public void saveHeart(Long userId, Long boardId) {
-        User user = userRepository.findById(userId)
+    public void saveHeart(String email, Long boardId) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("회원이 없습니다."));
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
 
-        Heart heart = Heart.newInstance(user, board);
-        heartRepository.save(heart);
+        heartRepository.save(Heart.newInstance(user, board));
     }
 
     @Override
-    public void deleteHeart(Long userId, Long boardId) {
-        heartRepository.removeHeart(userId, boardId);
+    public void deleteHeart(String email, Long boardId) {
+        heartRepository.removeHeart(boardId, email);
     }
 
     @Override

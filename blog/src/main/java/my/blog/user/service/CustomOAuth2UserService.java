@@ -1,11 +1,10 @@
 package my.blog.user.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.blog.auth.oauth.ApplicationOAuth2User;
 import my.blog.user.domain.User;
 import my.blog.user.domain.UserRepository;
 import my.blog.user.dto.OAuthRequest;
-import my.blog.user.dto.SessionUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,10 +15,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.util.Collections;
-
-import static my.blog.user.service.SessionConst.*;
 
 @Slf4j
 @Service
@@ -48,9 +44,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         User user = saveOrUpdate(oAuthRequest);
 
-        return new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority(user.getRoleKey())),
-                oAuthRequest.getAttributes(),
-                oAuthRequest.getNameAttributeKey());
+        return new ApplicationOAuth2User(user.getEmail(), user.getRole(),oAuth2User.getAttributes());
+
     }
 
     private User saveOrUpdate(OAuthRequest oAuthRequest) {

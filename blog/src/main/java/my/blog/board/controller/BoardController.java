@@ -7,7 +7,7 @@ import my.blog.board.dto.request.BoardUpdate;
 import my.blog.board.service.BoardService;
 import my.blog.boardTag.service.BoardTagService;
 import my.blog.tag.service.TagService;
-import my.blog.user.dto.SessionUser;
+import my.blog.user.dto.RecognizeUser;
 import my.blog.user.service.LoginUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +33,10 @@ public class BoardController {
     // 음... 하나의 클래스로 묶자니 그냥 계층+1 느낌이다.
     // 해답이 뭘까???
     @PostMapping
-    public ResponseEntity<Long> boardSave(@LoginUser SessionUser user,
+    public ResponseEntity<Long> boardSave(@LoginUser RecognizeUser user,
                                           @Valid @RequestBody BoardRegister boardRegister) {
-        Long boardId = boardService.writeBoard(boardRegister, user.getUserId());
+        log.info("Register board : {}", boardRegister.toString());
+        Long boardId = boardService.writeBoard(boardRegister, user.getEmail());
         List<String> tags = tagService.saveTags(boardRegister.getTags());
         if (tags.size() != 0) {
             boardTagService.saveBoardTags(tags, boardId);

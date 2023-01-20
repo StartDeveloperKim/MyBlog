@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CommentResponse {
 
+    // 삭제 가능 여부를 DTO에 넣어보내는 건 어떨까? 고려해보자
     private Long commentId;
     private Long parentId;
     private Long userId;

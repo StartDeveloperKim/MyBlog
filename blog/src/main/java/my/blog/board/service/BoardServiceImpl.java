@@ -38,8 +38,8 @@ public class BoardServiceImpl implements BoardService{
 
     @CacheEvict(value = {"CategoryLayoutStore", "totalCount"}, allEntries = true)
     @Override
-    public Long writeBoard(BoardRegister boardRegister, Long userId) {
-        User user = getUserEntity(userId);
+    public Long writeBoard(BoardRegister boardRegister, String eamil) {
+        User user = getUserEntity(eamil);
         Category category = getCategoryEntity(boardRegister.getCategoryId());
 
         Board board = Board.newInstance(user, category, boardRegister.getTitle(), boardRegister.getContent(), boardRegister.getThumbnail());
@@ -68,8 +68,8 @@ public class BoardServiceImpl implements BoardService{
         getBoardEntity(boardId).addHit();
     }
 
-    private User getUserEntity(Long userId) {
-        User user = userRepository.findById(userId)
+    private User getUserEntity(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
         if (user.getRole() == Role.GUEST) {
             throw new RuntimeException("GUEST는 글을 작성할 수 없습니다.");

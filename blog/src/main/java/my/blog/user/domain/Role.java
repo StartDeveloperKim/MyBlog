@@ -12,4 +12,14 @@ public enum Role {
 
     private final String key;
     private final String title;
+
+    public static Role toRole(String role) {
+        switch (role) {
+            case "ROLE_GUEST":
+                return GUEST;
+            case "ROLE_ADMIN":
+                return ADMIN;
+        }
+        return null;
+    }
 }

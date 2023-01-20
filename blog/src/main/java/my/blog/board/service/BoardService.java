@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BoardService {
 
-    Long writeBoard(BoardRegister boardRegister, Long userId);
+    Long writeBoard(BoardRegister boardRegister, String eamil);
 
     void editBoard(BoardUpdate boardUpdate, Long boardId);
 

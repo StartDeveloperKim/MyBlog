@@ -45,8 +45,8 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public void saveComment(CommentRequest commentRequest, Long boardId, Long userId) {
-        User findUser = userRepository.findById(userId)
+    public void saveComment(CommentRequest commentRequest, Long boardId, String email) {
+        User findUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시판이 없습니다."));

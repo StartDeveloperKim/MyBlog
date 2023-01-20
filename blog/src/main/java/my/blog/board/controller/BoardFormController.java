@@ -10,11 +10,12 @@ import my.blog.category.dto.response.CategoryEditDto;
 import my.blog.category.service.CategoryService;
 import my.blog.temporalBoard.dto.TemporalBoardResp;
 import my.blog.temporalBoard.service.TemporalBoardService;
-import my.blog.user.dto.SessionUser;
-import my.blog.user.dto.UserInfo;
+import my.blog.user.domain.Role;
+import my.blog.user.dto.RecognizeUser;
 import my.blog.user.service.LoginUser;
 import my.blog.web.layout.LayoutService;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,8 @@ public class BoardFormController {
                                         @PathVariable(value = "childCategoryName", required = false) String childCategoryName,
                                         @PathVariable(value = "page") int page,
                                         @PathVariable(value = "step", required = false) String step,
-                                        @LoginUser SessionUser user){
+                                        @LoginUser RecognizeUser user){
+        log.info("userInfo : {}", user.toString());
         Paging pagingInfo = Paging.of(page, boardLookupService.getBoardCountByCategory(parentCategoryName, childCategoryName));
         List<BoardResponse> boards = boardLookupService.getBoardList(page, PAGING_SIZE, parentCategoryName, childCategoryName, step);
 
@@ -58,7 +60,7 @@ public class BoardFormController {
     }
 
     @GetMapping("/{id}")
-    public BoardDetailResponse boardDetailForm(@LoginUser SessionUser user, @PathVariable("id") Long id, Model model) {
+    public BoardDetailResponse boardDetailForm(@PathVariable("id") Long id) {
         Board board = boardLookupService.getBoard(id);
         BoardDetailResponse boardResponse = BoardDetailResponse.builder()
                 .boardId(board.getId())
@@ -73,11 +75,15 @@ public class BoardFormController {
     }
 
     @GetMapping("/edit")
-    public BoardEditResponse boardEditForm() {
-        List<CategoryEditDto> allCategory = categoryService.getAllCategory();
-        TemporalBoardResp recentTemporalBoard = temporalBoardService.getRecentTemporalBoard();
-
-        return new BoardEditResponse(allCategory, recentTemporalBoard);
+    public ResponseEntity<?> boardEditForm(@LoginUser RecognizeUser user) {
+        if (user.getRole() == Role.ADMIN) {
+            List<CategoryEditDto> allCategory = categoryService.getAllCategory();
+            TemporalBoardResp recentTemporalBoard = temporalBoardService.getRecentTemporalBoard();
+            return ResponseEntity.ok(new BoardEditResponse(allCategory, recentTemporalBoard));
+        } else {
+            log.error("권한이 {}인 user {}가 editForm에 접근하려 합니다.", user.getRole(), user.getEmail());
+            return ResponseEntity.badRequest().body("접근 권한이 없습니다.");
+        }
     }
 
     @GetMapping("/edit/{id}")
@@ -92,11 +98,11 @@ public class BoardFormController {
         return "board/boardEditForm";
     }
 
-    private static void userInfoSaveInModel(SessionUser user, Model model) {
-        if (user != null) {
-            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
-        } else {
-            model.addAttribute("userInfo", new UserInfo(null, null));
-        }
-    }
+//    private static void userInfoSaveInModel(SessionUser user, Model model) {
+//        if (user != null) {
+//            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
+//        } else {
+//            model.addAttribute("userInfo", new UserInfo(null, null));
+//        }
+//    }
 }

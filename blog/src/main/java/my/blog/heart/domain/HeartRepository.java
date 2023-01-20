@@ -8,9 +8,8 @@ import org.springframework.data.repository.query.Param;
 public interface HeartRepository extends JpaRepository<Heart, Long> , CustomHeartRepository{
 
     @Modifying(clearAutomatically = true)
-    @Query("delete from Heart h where h.board.id = :boardId and h.user.id = :userId")
-    void removeHeart(@Param("boardId") Long boarId,
-                     @Param("userId") Long userId);
+    @Query("delete from Heart h where h.board.id = :boardId and h.user.email = :email")
+    void removeHeart(@Param("boardId") Long boarId, @Param("email") String email);
 
     Long countByBoard_Id(Long boardId);
 }

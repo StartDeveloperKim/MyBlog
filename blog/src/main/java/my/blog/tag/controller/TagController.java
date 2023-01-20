@@ -5,9 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import my.blog.board.dto.response.BoardResponse;
 import my.blog.board.dto.response.Paging;
 import my.blog.boardTag.service.BoardTagService;
-import my.blog.user.dto.SessionUser;
-import my.blog.user.dto.UserInfo;
-import my.blog.user.service.LoginUser;
 import my.blog.web.layout.LayoutService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,11 +24,9 @@ public class TagController {
     private final LayoutService layoutService;
 
     @GetMapping
-    public String getBoardTagList(@LoginUser SessionUser user,
-                                  @RequestParam("tagName") String tagName,
+    public String getBoardTagList(@RequestParam("tagName") String tagName,
                                   @RequestParam(value = "page", defaultValue = "1", required = false) int page,
                                   Model model) {
-
         int pageSize = 6;
         List<BoardResponse> tagBoardList = boardTagService.getTagBoardList(page, pageSize, tagName);
         Paging pagingInfo = Paging.of(page, boardTagService.getCountBoardByTagName(tagName));
@@ -40,10 +35,6 @@ public class TagController {
 
         model.addAttribute("boardList", tagBoardList);
         model.addAttribute("pagingInfo", pagingInfo);
-
-        if (user != null) {
-            model.addAttribute("userInfo", new UserInfo(user.getUserId(), user.getName()));
-        }
 
         return "board/boardListForm";
     }

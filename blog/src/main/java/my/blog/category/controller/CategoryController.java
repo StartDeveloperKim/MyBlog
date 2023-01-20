@@ -3,18 +3,15 @@ package my.blog.category.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.blog.category.dto.request.CategoryAddDto;
-import my.blog.category.dto.response.CategoryLayoutDto;
 import my.blog.category.dto.request.CategoryRemoveDto;
+import my.blog.category.dto.response.CategoryLayoutDto;
 import my.blog.category.dto.response.CategoryResponseDto;
 import my.blog.category.exception.DuplicateCategoryException;
 import my.blog.category.exception.WritingExistException;
 import my.blog.category.service.CategoryService;
-import my.blog.user.dto.SessionUser;
-import my.blog.user.dto.UserInfo;
+import my.blog.user.dto.RecognizeUser;
 import my.blog.user.service.LoginUser;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -28,12 +25,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<Map<Long, CategoryLayoutDto>> getCategories(@LoginUser SessionUser user) {
+    public ResponseEntity<Map<Long, CategoryLayoutDto>> getCategories() {
         return ResponseEntity.ok(categoryService.getCategoryList());
     }
 
     @PostMapping
-    public CategoryResponseDto categoryAdd(@RequestBody CategoryAddDto categoryAddDto) {
+    public CategoryResponseDto categoryAdd(@LoginUser RecognizeUser user,
+                                           @RequestBody CategoryAddDto categoryAddDto) {
         log.info("CategoryAddDto {}", categoryAddDto.toString());
 
         try {
@@ -47,7 +45,8 @@ public class CategoryController {
     }
 
     @DeleteMapping
-    public String categoryRemove(@RequestBody CategoryRemoveDto removeDto) {
+    public String categoryRemove(@LoginUser RecognizeUser user,
+                                 @RequestBody CategoryRemoveDto removeDto) {
         try {
             log.info("삭제요청 {}", removeDto.getCategoryId());
 

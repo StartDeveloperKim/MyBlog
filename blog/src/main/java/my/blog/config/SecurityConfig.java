@@ -1,7 +1,6 @@
 package my.blog.config;
 
 import lombok.RequiredArgsConstructor;
-import my.blog.auth.RedirectUrlCookieFilter;
 import my.blog.auth.jwt.JwtAuthenticationFilter;
 import my.blog.auth.oauth.OAuthSuccessHandler;
 import my.blog.user.service.CustomOAuth2UserService;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
 
@@ -21,7 +19,6 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
-//    private final RedirectUrlCookieFilter redirectUrlCookieFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -68,7 +65,6 @@ public class SecurityConfig {
 
                 .and()
                 .addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
-//                .addFilterBefore(redirectUrlCookieFilter, OAuth2AuthorizationRequestRedirectFilter.class);
 
         return http.build();
     }

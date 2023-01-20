@@ -1,7 +1,10 @@
 package my.blog.auth.jwt;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.blog.user.dto.RecognizeUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,20 +31,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = parseBearerToken(request);
-            log.info("Filter is running");
+            log.info("Filter is running token: {}", token);
 
             if (token != null && !token.equalsIgnoreCase("null")) {
-                String userId = tokenProvider.validateAndGetUserId(token);
-                log.info("Authenticated user Id : {}", userId);
+                RecognizeUser userInfo = tokenProvider.validateAndGetUserId(token);
+                log.info("Authenticated user Id : {}", userInfo);
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, AuthorityUtils.NO_AUTHORITIES);
-                authentication.setDetails(new WebAuthenticationDetailsSource());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo, null, AuthorityUtils.NO_AUTHORITIES);
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContext securityContext = SecurityContextHolder.getContext();
+                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 securityContext.setAuthentication(authentication);
                 SecurityContextHolder.setContext(securityContext);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("인증에 실패하였습니다!!!");
         }
 
