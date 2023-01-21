@@ -13,14 +13,14 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HierarchicalComment {
 
-    public static Map<Long, CommentResponse> createHierarchicalComment(List<Comments> commentsList) {
+    public static Map<Long, CommentResponse> createHierarchicalComment(List<Comments> commentsList, String email) {
         Map<Long, CommentResponse> result =new HashMap<>();
 
         for (Comments comment : commentsList) {
             if (comment.getParentId() == null) {
-                result.put(comment.getId(), new CommentResponse(comment));
+                result.put(comment.getId(), new CommentResponse(comment, email));
             } else {
-                result.get(comment.getParentId()).getChildCommentDtos().add(new ChildCommentDto(comment));
+                result.get(comment.getParentId()).getChildCommentDtos().add(new ChildCommentDto(comment, email));
             }
         }
 

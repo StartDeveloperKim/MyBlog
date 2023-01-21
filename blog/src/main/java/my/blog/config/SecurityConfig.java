@@ -3,9 +3,11 @@ package my.blog.config;
 import lombok.RequiredArgsConstructor;
 import my.blog.auth.jwt.JwtAuthenticationFilter;
 import my.blog.auth.oauth.OAuthSuccessHandler;
+import my.blog.user.domain.Role;
 import my.blog.user.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,12 +37,12 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                //                .antMatchers(HttpMethod.GET, "/board/edit").hasRole(ADMIN.name())
-                //                .antMatchers(HttpMethod.POST, "/board").hasRole(ADMIN.name())
-                //                .antMatchers(HttpMethod.DELETE, "/board/**").hasRole(ADMIN.name())
-                //                .antMatchers(HttpMethod.PATCH, "/board/**").hasRole(ADMIN.name())
-                //                .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
-                //                .antMatchers("/category/**").hasRole(ADMIN.name())
+                                .antMatchers(HttpMethod.GET, "/board/edit").hasRole(Role.ADMIN.getKey())
+                                .antMatchers(HttpMethod.POST, "/board").hasRole(Role.ADMIN.getKey())
+                                .antMatchers(HttpMethod.DELETE, "/board/**").hasRole(Role.ADMIN.getKey())
+                                .antMatchers(HttpMethod.PATCH, "/board/**").hasRole(Role.ADMIN.getKey())
+                                .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
+                                .antMatchers(HttpMethod.POST, "/category/**").hasRole(Role.ADMIN.getKey())
                 .anyRequest().permitAll()
 
                 .and()

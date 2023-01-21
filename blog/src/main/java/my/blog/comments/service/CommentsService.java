@@ -1,6 +1,5 @@
 package my.blog.comments.service;
 
-import my.blog.comments.dto.request.CommentDeleteRequest;
 import my.blog.comments.dto.request.CommentEditRequest;
 import my.blog.comments.dto.request.CommentRequest;
 import my.blog.comments.dto.response.CommentResponse;
@@ -16,7 +15,7 @@ public interface CommentsService {
      * 3. 댓글 수정
      * 4. 댓글 가져오기
      * */
-    Map<Long, CommentResponse> getComments(Long boardId);
+    Map<Long, CommentResponse> getComments(Long boardId, String email);
 
     int getTotalComment(Long boardId);
 
@@ -24,5 +23,5 @@ public interface CommentsService {
 
     void updateComment(CommentEditRequest editRequest);
 
-    void removeComment(CommentDeleteRequest commentDeleteRequest);
+    void removeComment(Long commentId, Long boardId);
 }

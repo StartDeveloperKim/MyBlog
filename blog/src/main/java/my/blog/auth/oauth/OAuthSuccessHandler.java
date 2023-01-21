@@ -27,6 +27,8 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String token = tokenProvider.create(authentication);
+        ApplicationOAuth2User userPrincipal = (ApplicationOAuth2User) authentication.getPrincipal();
+        String role = userPrincipal.getRole();
 
         Optional<Cookie> oCookie = Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals("redirect_url"))
@@ -34,7 +36,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Optional<String> redirectUri = oCookie.map(Cookie::getValue);
 
         log.info("token: {}, redirectURL: {}", token, redirectUri);
-        response.sendRedirect(redirectUri.orElseGet(() -> LOCAL_REDIRECT_URL) + "/login?token=" + token);
+        response.sendRedirect(redirectUri.orElseGet(() -> LOCAL_REDIRECT_URL) + "/login?token=" + token + "&role=" + role);
 
     }
 }

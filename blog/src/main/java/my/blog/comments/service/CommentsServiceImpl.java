@@ -6,8 +6,7 @@ import my.blog.board.domain.Board;
 import my.blog.board.domain.BoardRepository;
 import my.blog.comments.domain.Comments;
 import my.blog.comments.domain.CommentsRepository;
-import my.blog.comments.dto.*;
-import my.blog.comments.dto.request.CommentDeleteRequest;
+import my.blog.comments.dto.HierarchicalComment;
 import my.blog.comments.dto.request.CommentEditRequest;
 import my.blog.comments.dto.request.CommentRequest;
 import my.blog.comments.dto.response.CommentResponse;
@@ -32,10 +31,10 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<Long, CommentResponse> getComments(Long boardId) {
+    public Map<Long, CommentResponse> getComments(Long boardId, String email) {
         List<Comments> comments = commentsRepository.findCommentsByBoardId(boardId);
 
-        return HierarchicalComment.createHierarchicalComment(comments);
+        return HierarchicalComment.createHierarchicalComment(comments, email);
     }
 
     @Override
@@ -63,13 +62,7 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public void removeComment(CommentDeleteRequest commentDeleteRequest) {
-        if (commentDeleteRequest.isParentComment()) {
-            commentsRepository.deleteParentComment(commentDeleteRequest.getCommentId(),
-                    commentDeleteRequest.getBoardId());
-        } else {
-            commentsRepository.deleteChildComment(commentDeleteRequest.getCommentId(),
-                    commentDeleteRequest.getBoardId());
-        }
+    public void removeComment(Long commentId, Long boardId) {
+        commentsRepository.deleteParentComment(commentId, boardId);
     }
 }

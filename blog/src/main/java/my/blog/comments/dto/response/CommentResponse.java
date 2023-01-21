@@ -16,15 +16,15 @@ public class CommentResponse {
     // 삭제 가능 여부를 DTO에 넣어보내는 건 어떨까? 고려해보자
     private Long commentId;
     private Long parentId;
-    private Long userId;
+    private boolean isRemove;
     private String userName;
     private String userThumbnail;
     private String content;
     private String createDate;
     private final List<ChildCommentDto> childCommentDtos = new ArrayList<>();
 
-    public CommentResponse(Comments comments) {
-        this.userId = comments.getUser().getId();
+    public CommentResponse(Comments comments, String email) {
+        this.isRemove = comments.getUser().getEmail().equals(email);
         this.commentId = comments.getId();
         this.userName = comments.getUser().getName();
         this.userThumbnail = comments.getUser().getPicture();

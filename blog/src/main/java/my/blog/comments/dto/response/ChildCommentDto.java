@@ -11,15 +11,15 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class ChildCommentDto {
 
-    private Long userId;
+    private boolean isRemove;
     private Long commentId;
     private String content;
     private String createDate;
     private String userName;
     private String userThumbnail;
 
-    public ChildCommentDto(Comments comments) {
-        this.userId = comments.getUser().getId();
+    public ChildCommentDto(Comments comments, String email) {
+        this.isRemove = comments.getUser().getEmail().equals(email);
         this.commentId = comments.getId();
         this.content = comments.getContent();
         this.createDate = comments.getCreateDate().format(DateTimeFormatter.ISO_DATE);
