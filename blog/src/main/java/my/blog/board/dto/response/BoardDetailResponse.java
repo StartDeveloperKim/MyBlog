@@ -1,9 +1,11 @@
 package my.blog.board.dto.response;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import my.blog.board.domain.Board;
+import my.blog.user.domain.Role;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @ToString
@@ -17,12 +19,14 @@ public class BoardDetailResponse {
     private String createDate;
     private String thumbnail;
 
-    @Builder
-    public BoardDetailResponse(Long boardId, String title, String content, String createDate, String thumbnail) {
-        this.boardId = boardId;
-        this.title = title;
-        this.content = content;
-        this.createDate = createDate;
-        this.thumbnail = thumbnail;
+    private boolean isModify;
+
+    public BoardDetailResponse(Board board, Role role) {
+        this.boardId = board.getId();
+        this.title = board.getTitle();
+        this.content = board.getContent();
+        this.createDate = board.getCreateDate().format(DateTimeFormatter.ISO_DATE);
+        this.thumbnail = board.getThumbnail();
+        this.isModify = (role == Role.ADMIN);
     }
 }

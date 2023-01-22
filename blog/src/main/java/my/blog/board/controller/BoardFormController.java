@@ -2,7 +2,6 @@ package my.blog.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.blog.board.domain.Board;
 import my.blog.board.dto.response.*;
 import my.blog.board.service.BoardLookupService;
 import my.blog.board.service.BoardService;
@@ -15,10 +14,8 @@ import my.blog.user.dto.RecognizeUser;
 import my.blog.user.service.LoginUser;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -55,15 +52,9 @@ public class BoardFormController {
     }
 
     @GetMapping("/{id}")
-    public BoardDetailResponse boardDetailForm(@PathVariable("id") Long id) {
-        Board board = boardLookupService.getBoard(id);
-        BoardDetailResponse boardResponse = BoardDetailResponse.builder()
-                .boardId(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .thumbnail(board.getThumbnail())
-                .createDate(board.getCreateDate().format(DateTimeFormatter.ISO_DATE))
-                .build();
+    public BoardDetailResponse boardDetailForm(@PathVariable("id") Long id,
+                                               @LoginUser RecognizeUser user) {
+        BoardDetailResponse boardResponse = new BoardDetailResponse(boardLookupService.getBoard(id), user == null ? null : user.getRole());
         boardService.addHit(id);
 
         return boardResponse;
@@ -74,7 +65,7 @@ public class BoardFormController {
         if (user.getRole() == Role.ADMIN) {
             List<CategoryEditDto> allCategory = categoryService.getAllCategory();
             TemporalBoardResp recentTemporalBoard = temporalBoardService.getRecentTemporalBoard();
-            return ResponseEntity.ok(new BoardEditResponse(allCategory, recentTemporalBoard));
+            return ResponseEntity.ok(new BoardEditResponse<TemporalBoardResp>(allCategory, recentTemporalBoard));
         } else {
             log.error("권한이 {}인 사용자 {}가 editForm에 접근하려 합니다.", user.getRole(), user.getEmail());
             return ResponseEntity.badRequest().body("접근 권한이 없습니다.");
@@ -82,10 +73,11 @@ public class BoardFormController {
     }
 
     @GetMapping("/edit/{id}")
-    public BoardUpdateResponse boardDetailEditForm(@PathVariable("id") Long id, Model model) {
+    public ResponseEntity<?> boardDetailEditForm(@PathVariable("id") Long id) {
         BoardUpdateResponse boardUpdateRes = boardLookupService.getBoardUpdateDto(id);
+        List<CategoryEditDto> allCategory = categoryService.getAllCategory();
         log.info("BoardUpdateDto {}", boardUpdateRes.toString());
 
-        return boardUpdateRes;
+        return ResponseEntity.ok(new BoardEditResponse<BoardUpdateResponse>(allCategory, boardUpdateRes));
     }
 }

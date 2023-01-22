@@ -27,7 +27,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Object principal = securityContext.getAuthentication().getPrincipal();
-        System.out.println("principal = " + principal);
         return principal.equals("anonymousUser") ? null : principal;
     }
 }

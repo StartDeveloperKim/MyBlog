@@ -2,7 +2,7 @@ package my.blog.temporalBoard.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import my.blog.tag.tool.ParsingTool;
+import my.blog.tag.util.ParsingTool;
 import my.blog.temporalBoard.domain.TemporalBoard;
 import my.blog.temporalBoard.domain.TemporalBoardRepository;
 import my.blog.temporalBoard.dto.TemporalBoardReq;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -64,9 +65,11 @@ public class TemporalBoardServiceImpl implements TemporalBoardService{
     }
 
     private static TemporalBoardResp getTemporalBoardResp(TemporalBoard temporalBoard) {
+        log.info(temporalBoard.getTags());
         List<String> tags = ParsingTool.parsingTags(temporalBoard.getTags());
-        return new TemporalBoardResp(temporalBoard.getId(), temporalBoard.getTitle(),
+        return new TemporalBoardResp(
+                temporalBoard.getId(), temporalBoard.getTitle(),
                 temporalBoard.getContent(), temporalBoard.getThumbnail(),
-                temporalBoard.getCategoryId(), temporalBoard.getCreateDate(), tags);
+                temporalBoard.getCategoryId(), temporalBoard.getCreateDate().format(DateTimeFormatter.ISO_DATE), tags);
     }
 }

@@ -45,7 +45,7 @@ public class BoardController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> boardUpdate(@PathVariable("id") Long boardId,
+    public ResponseEntity<Long> boardUpdate(@PathVariable("id") Long boardId,
                                               @RequestBody BoardUpdate boardUpdate) {
         try {
             boardService.editBoard(boardUpdate, boardId);
@@ -53,10 +53,10 @@ public class BoardController {
             if (tags.size() != 0) {
                 boardTagService.editBoardTags(tags, boardId);
             }
-            return ResponseEntity.ok().body("success");
+            return ResponseEntity.ok().body(boardId);
         } catch (EntityNotFoundException e) {
             log.info("/board/edit error : {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(boardId);
         }
     }
 

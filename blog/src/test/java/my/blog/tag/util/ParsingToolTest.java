@@ -1,6 +1,5 @@
-package my.blog.tag.tool;
+package my.blog.tag.util;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,7 +11,7 @@ class ParsingToolTest {
     @Test
     void JSON형식의_문자열을_Map형태로_변환_후_Tag리스트를_파싱한다() {
         //given
-        String tags = "[{\"value\":\"테스트1\"},{\"value\":\"테스트2\"},{\"value\":\"테스트3\"}]";
+        String tags = "[테스트1,테스트2,테스트3]";
         //when
         List<String> result = ParsingTool.parsingTags(tags);
         //then

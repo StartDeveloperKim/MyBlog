@@ -17,7 +17,7 @@ public class TemporalBoardResp{
     private String content;
     private String thumbnail;
     private Long categoryId;
-    private LocalDateTime createDate;
+    private String createDate;
     private List<String> tags;
 
 

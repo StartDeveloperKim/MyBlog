@@ -18,15 +18,12 @@ public class TemporalBoardController {
 
     @PostMapping
     public Long saveTemporalBoard(@Valid @RequestBody TemporalBoardReq temporalBoardReq) {
-        log.info("temporalBoardDto {}", temporalBoardReq.toString());
         return temporalBoardService.saveTemporalBoard(temporalBoardReq);
     }
 
     @PostMapping("/{id}")
     public String updateTemporalBoard(@Valid @RequestBody TemporalBoardReq temporalBoardReq,
                                       @PathVariable("id") Long id) {
-        log.info("temporalBoardDto and Id {} {}", temporalBoardReq.toString(), id);
-
         try {
             temporalBoardService.updateTemporalBoard(temporalBoardReq, id);
             return "success";

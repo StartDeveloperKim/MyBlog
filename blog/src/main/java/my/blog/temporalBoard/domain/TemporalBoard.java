@@ -5,6 +5,7 @@ import my.blog.BaseTimeEntity;
 import my.blog.temporalBoard.dto.TemporalBoardReq;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -24,19 +25,19 @@ public class TemporalBoard extends BaseTimeEntity {
 
     private String thumbnail;
 
-    private String tags; // 임시저장 이기에 JSON으로 넘어온 태그 String을 그대로 저장한다.
+    private String tags;
 
     private Long categoryId;
 
     protected TemporalBoard() {
     }
 
-    public static TemporalBoard newInstance(String title, String content, String thumbnail, String tags, Long categoryId) {
+    public static TemporalBoard newInstance(String title, String content, String thumbnail, List<String> tags, Long categoryId) {
         TemporalBoard temporalBoard = new TemporalBoard();
         temporalBoard.title = title;
         temporalBoard.content = content;
         temporalBoard.thumbnail = thumbnail;
-        temporalBoard.tags = tags;
+        temporalBoard.tags = tags.toString();
         temporalBoard.categoryId = categoryId;
         return temporalBoard;
     }
@@ -45,7 +46,7 @@ public class TemporalBoard extends BaseTimeEntity {
         this.title = temporalBoardReq.getTitle();
         this.content = temporalBoardReq.getContent();
         this.thumbnail = temporalBoardReq.getThumbnail();
-        this.tags = temporalBoardReq.getTags();
+        this.tags = temporalBoardReq.getTags().toString();
         this.categoryId = temporalBoardReq.getCategoryId();
     }
 }

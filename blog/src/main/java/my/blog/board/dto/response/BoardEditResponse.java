@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class BoardEditResponse {
+public class BoardEditResponse<T> {
     private List<CategoryEditDto> categoryList;
-    private TemporalBoardResp temporalBoardResp;
+    private T boardResponse;
 }
