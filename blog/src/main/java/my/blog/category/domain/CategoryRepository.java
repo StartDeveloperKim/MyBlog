@@ -16,7 +16,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Custo
 
 
     Category findByCategoryName(String categoryName);
-    boolean existsByCategoryName(String categoryName);
+
+    @Query("select count(c) > 0 from Category c " +
+            "where c.parentCategoryId is null and c.categoryName=:name")
+    boolean existsByCategoryName(@Param("name") String categoryName);
 
     @Query("select count(c)>0 from Category c " +
             "where c.parentCategoryId=:parentId and c.categoryName=:name")

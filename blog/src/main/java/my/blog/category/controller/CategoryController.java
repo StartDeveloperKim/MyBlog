@@ -30,31 +30,28 @@ public class CategoryController {
     }
 
     @PostMapping
-    public CategoryResponseDto categoryAdd(@LoginUser RecognizeUser user,
+    public ResponseEntity<?> categoryAdd(@LoginUser RecognizeUser user,
                                            @RequestBody CategoryAddDto categoryAddDto) {
         log.info("CategoryAddDto {}", categoryAddDto.toString());
-
         try {
-            Long categoryId = categoryService.saveCategory(categoryAddDto.toEntity());
-            return new CategoryResponseDto(categoryId, "success");
+            categoryService.saveCategory(categoryAddDto.toEntity());
+            return ResponseEntity.ok(categoryService.getCategoryList());
         } catch (DuplicateCategoryException e) {
             log.info("Category Duplicate Exception : {}", e.getMessage());
-            return new CategoryResponseDto(null, "duplicate");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
 
-    @DeleteMapping
-    public String categoryRemove(@LoginUser RecognizeUser user,
-                                 @RequestBody CategoryRemoveDto removeDto) {
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<?> categoryRemove(@LoginUser RecognizeUser user,
+                                 @PathVariable("categoryId") Long categoryId) {
         try {
-            log.info("삭제요청 {}", removeDto.getCategoryId());
-
-            categoryService.deleteCategory(removeDto.getCategoryId());
-            return "success";
+            categoryService.deleteCategory(categoryId);
+            return ResponseEntity.ok(categoryService.getCategoryList());
         } catch (WritingExistException e) {
             log.error("WritingExistException {}", e.getMessage());
-            return "fail";
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
 

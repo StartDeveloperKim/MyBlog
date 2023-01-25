@@ -39,6 +39,15 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category).getId();
     }
 
+    private boolean checkDuplicateCategoryName(Category category) {
+        if (category.getParentCategoryId() == null) {
+            return categoryRepository.existsByCategoryName(category.getCategoryName());
+        } else {
+            return categoryRepository.existByNameAndParentId(category.getParentCategoryId(),
+                    category.getCategoryName());
+        }
+    }
+
     @Override
     public List<CategoryEditDto> getAllCategory() {
         List<Category> all = categoryRepository.findAll();
@@ -77,15 +86,6 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryInfoDto> categoryDto = categoryRepository.getCategoryInfoDto();
 
         return HierarchicalCategory.from(categoryDto);
-    }
-
-    private boolean checkDuplicateCategoryName(Category category) {
-        if (category.getParentCategoryId() == null) {
-            return categoryRepository.existsByCategoryName(category.getCategoryName());
-        } else {
-            return categoryRepository.existByNameAndParentId(category.getParentCategoryId(),
-                    category.getCategoryName());
-        }
     }
 
     /*더미 카테고리 생성 -> 글을 작성할 때 카테고리 설정을 하지 않으면 해당 카테고리에 들어간다.*/
