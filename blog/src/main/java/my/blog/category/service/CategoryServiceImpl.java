@@ -31,7 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
     @CacheEvict(value = "CategoryLayoutStore", allEntries = true)
     @Override
     public Long saveCategory(final Category category) {
-        //카테고리는 중복되면 안된다.
         if (checkDuplicateCategoryName(category)) {
             throw new DuplicateCategoryException("사용중인 카테고리 이름입니다.");
         }

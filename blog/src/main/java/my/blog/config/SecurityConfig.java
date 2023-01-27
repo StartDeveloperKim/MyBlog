@@ -1,6 +1,7 @@
 package my.blog.config;
 
 import lombok.RequiredArgsConstructor;
+import my.blog.auth.ExceptionHandlerFilter;
 import my.blog.auth.jwt.JwtAuthenticationFilter;
 import my.blog.auth.oauth.OAuthSuccessHandler;
 import my.blog.user.domain.Role;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+//    private final ExceptionHandlerFilter exceptionHandlerFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -41,8 +44,8 @@ public class SecurityConfig {
 //                                .antMatchers(HttpMethod.POST, "/board").hasRole(Role.ADMIN.getKey())
 //                                .antMatchers(HttpMethod.DELETE, "/board/**").hasRole(Role.ADMIN.getKey())
 //                                .antMatchers(HttpMethod.PATCH, "/board/**").hasRole(Role.ADMIN.getKey())
-                                .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
-                                .antMatchers(HttpMethod.POST, "/category/**").hasRole(Role.ADMIN.getKey())
+                .antMatchers(HttpMethod.POST, "/comment/**").authenticated()
+//                .antMatchers(HttpMethod.POST, "/category/**").hasRole(Role.ADMIN.getKey())
                 .anyRequest().permitAll()
 
                 .and()

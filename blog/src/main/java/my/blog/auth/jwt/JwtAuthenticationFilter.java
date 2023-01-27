@@ -1,7 +1,9 @@
 package my.blog.auth.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.blog.exception.UnauthorizedException;
 import my.blog.user.dto.RecognizeUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -42,6 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 securityContext.setAuthentication(authentication);
                 SecurityContextHolder.setContext(securityContext);
             }
+        } catch (ExpiredJwtException e) {
+            log.error("JWT가 만료되었습니다.");
+            throw new UnauthorizedException("로그인이 만료되었습니다. 다시 로그인해주세요");
         } catch (Exception e) {
             e.printStackTrace();
             log.error("인증에 실패하였습니다!!!");

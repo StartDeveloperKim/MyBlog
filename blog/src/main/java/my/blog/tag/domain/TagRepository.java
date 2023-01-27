@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TagRepository extends JpaRepository<Tag, Long>, CustomTagRepository {
 
+    List<Tag> findTop30ByOrderByIdDesc();
+
 }

@@ -33,7 +33,6 @@ public class TagServiceImpl implements TagService {
         return tags;
     }
 
-
     private Set<Tag> getTagsExceptDuplicateTagAtMemory(List<String> tags) {
         Set<Tag> result = new HashSet<>();
         for (String tag : tags) {
@@ -43,6 +42,13 @@ public class TagServiceImpl implements TagService {
             }
         }
         return result;
+    }
+
+    @Override
+    public List<String> getTags() {
+        return tagRepository.findTop30ByOrderByIdDesc()
+                .stream().map(Tag::getTagName)
+                .collect(Collectors.toList());
     }
 
     @PostConstruct
