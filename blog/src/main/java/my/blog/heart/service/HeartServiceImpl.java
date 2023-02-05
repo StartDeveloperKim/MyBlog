@@ -23,9 +23,15 @@ public class HeartServiceImpl implements HeartService {
     private final BoardRepository boardRepository;
 
     @Override
+    @Transactional(readOnly = true)
+    public boolean isUserHaveHeart(String email, Long boardId) {
+        User user = getUser(email);
+        return heartRepository.existHeart(boardId, user.getId());
+    }
+
+    @Override
     public void saveHeart(String email, Long boardId) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("회원이 없습니다."));
+        User user = getUser(email);
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
 
@@ -34,16 +40,17 @@ public class HeartServiceImpl implements HeartService {
 
     @Override
     public void deleteHeart(String email, Long boardId) {
-        heartRepository.removeHeart(boardId, email);
+        User user = getUser(email);
+        heartRepository.removeHeart(boardId, user.getId());
+    }
+
+    private User getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("회원이 없습니다."));
     }
 
     @Override
     public Long getHeartCount(Long boardId) {
         return heartRepository.countByBoard_Id(boardId);
-    }
-
-    @Override
-    public boolean isUserLikeBoard(Long boardId, Long userId) {
-        return heartRepository.existHeart(boardId, userId);
     }
 }

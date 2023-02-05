@@ -19,12 +19,11 @@ public class HeartController {
 
     private final HeartService heartService;
 
-    // 좋아요 기능에 대한 리팩토링이 필요하다. GET 요청에서 좋아요 개수 보내수거 대신 좋아요 여부 등을 보내야 할 듯 하다.
     @GetMapping("/{boardId}")
-    public ResponseEntity<HeartResponse> getHeartCount(@PathVariable("boardId") Long boardId) {
-        Long heartCount = heartService.getHeartCount(boardId);
-        HeartResponse heartResponse = new HeartResponse(heartCount);
-
+    public ResponseEntity<HeartResponse> getHeart(@PathVariable("boardId") Long boardId,
+                                                       @LoginUser RecognizeUser user) {
+        HeartResponse heartResponse =
+                new HeartResponse(heartService.isUserHaveHeart(user.getEmail(), boardId));
         return ResponseEntity.ok().body(heartResponse);
     }
 

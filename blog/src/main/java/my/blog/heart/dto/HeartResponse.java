@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HeartResponse {
 
-    private Long heartCount;
+    private boolean isHeartBoard; // 사용자가 해당 글에 좋아요를 눌렀나 안눌렀나 여부를 전송하자
 
-    public HeartResponse(Long heartCount) {
-        this.heartCount = heartCount;
+    public HeartResponse(boolean isHeartBoard) {
+        this.isHeartBoard = isHeartBoard;
     }
 }
