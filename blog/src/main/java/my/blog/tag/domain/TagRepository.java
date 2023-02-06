@@ -10,4 +10,7 @@ public interface TagRepository extends JpaRepository<Tag, Long>, CustomTagReposi
 
     List<Tag> findTop30ByOrderByIdDesc();
 
+    Tag findByTagName(String name);
+    void deleteByTagName(String name);
+
 }

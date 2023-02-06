@@ -1,6 +1,7 @@
 package my.blog.tag.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class InMemoryTagRepository {
@@ -23,5 +24,15 @@ public class InMemoryTagRepository {
 
     public static void addTags(Set<String> tags) {
         inMemoryTagRepository.addAll(tags);
+    }
+
+    public static HashSet<String> getInstance() {
+        return inMemoryTagRepository;
+    }
+
+    public static void removeTags(List<String> tags) {
+        for (String tag : tags) {
+            inMemoryTagRepository.remove(tag);
+        }
     }
 }

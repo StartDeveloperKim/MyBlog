@@ -26,7 +26,6 @@ public class TagServiceImpl implements TagService {
         if (tags.size() == 0) {
             return new ArrayList<>();
         }
-        //List<String> tagList = ParsingTool.parsingTags(tags);
         Set<Tag> tagSet = getTagsExceptDuplicateTagAtMemory(tags);
         tagRepository.saveAll(tagSet);
 
